@@ -95,6 +95,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Ressources\DNA_DATA\genome-greshake.txt" />
+    <Resource Include="Ressources\DNA_DATA\genome-kennethreitz.txt" />
+    <Resource Include="Ressources\DNA_DATA\genome-kukushkin.txt" />
+    <Resource Include="Ressources\DNA_DATA\genome-manusporny.txt" />
+    <Resource Include="Ressources\DNA_DATA\genome-quartzjer.txt" />
+    <Resource Include="Ressources\DNA_DATA\genome-soffes.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
