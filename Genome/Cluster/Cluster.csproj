@@ -55,6 +55,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ICalculable.cs" />
     <Compile Include="Interfaces\IClusterizable.cs" />
     <Compile Include="Classes\Noeud.cs" />
     <Compile Include="Classes\Orchestrateur.cs" />

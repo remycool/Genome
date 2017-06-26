@@ -1,4 +1,5 @@
 ﻿using Cluster.Classes;
+using Cluster.Protocole;
 using Cluster.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,16 @@ namespace Cluster
     public class Orchestrateur
     {
         public const int PORT = 8888;
-        public const string NOEUD = "192.168.0.25";
+        public const string NOEUD = "192.168.0.21";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
+        public Communication com { get; set; }
 
         public Orchestrateur()
         {
             AdressesNoeuds = new List<IPAddress>();
             AdresseIP = Utility.GetLocalIP();
+            com = Communication.Instance; 
         }
 
         /// <summary>
@@ -121,64 +124,69 @@ namespace Cluster
         public void EnvoyerCalcul(Calcul<byte[]> calcul)
         {
 
-         //   Console.WriteLine($"Calcul envoyé par l'orchestrateur : {calcul.Type} {calcul.Nb1} et {calcul.Nb2}");
-            IPEndPoint IPNoeud = new IPEndPoint(IPAddress.Parse(NOEUD), PORT);
-            TcpClient orchestrateur = new TcpClient();
-            orchestrateur.Connect(IPNoeud);
+            //   Console.WriteLine($"Calcul envoyé par l'orchestrateur : {calcul.Type} {calcul.Nb1} et {calcul.Nb2}");
+            //IPEndPoint IPNoeud = new IPEndPoint(IPAddress.Parse(NOEUD), PORT);
+            //TcpClient orchestrateur = new TcpClient();
+            //orchestrateur.Connect(IPNoeud);
 
-            byte[] ba = Utility.Serialize(calcul);
-            using (NetworkStream ns = orchestrateur.GetStream())
-            {
-                ns.Write(ba, 0, ba.Length);
-            };
+            //byte[] ba = Utility.Serialize(calcul);
+            //using (NetworkStream ns = orchestrateur.GetStream())
+            //{
+            //    ns.Write(ba, 0, ba.Length);
+            //};
 
 
-            orchestrateur.Close();
+            //orchestrateur.Close();
+            //AttenteResultatCalcul();
+
+            com.Envoyer(IPAddress.Parse(NOEUD), calcul);
             AttenteResultatCalcul();
         }
 
         public void AttenteResultatCalcul()
         {
-            //Initialisation du listener
-            TcpListener orchestrateur = new TcpListener(AdresseIP, PORT);
+            // //Initialisation du listener
+            // TcpListener orchestrateur = new TcpListener(AdresseIP, PORT);
 
-            //Débuter l'écoute
-            orchestrateur.Start();
-            Console.WriteLine("En attente d'un resultat.....\n");
+            // //Débuter l'écoute
+            // orchestrateur.Start();
+            //// Console.WriteLine("En attente d'un resultat.....\n");
 
 
-            TcpClient noeud = orchestrateur.AcceptTcpClient();
-            NetworkStream ns = noeud.GetStream();
+            // TcpClient noeud = orchestrateur.AcceptTcpClient();
+            // NetworkStream ns = noeud.GetStream();
 
-            ResultatCalcul resultat = RecevoirResultatCalcul(ns);
-            AfficherResultatCalcul(resultat);
+            // ResultatCalcul resultat = RecevoirResultatCalcul(ns);
+            // AfficherResultatCalcul(resultat);
+
+            ResultatCalcul resultat = (ResultatCalcul)com.Recevoir();
+
         }
 
-        public ResultatCalcul RecevoirResultatCalcul(NetworkStream ns)
-        {
-            ResultatCalcul resultat = null;
-            int i = 0;
-            byte[] resultFromNoeud = new byte[1024];
-            string data = string.Empty;
-            //Lecture du flux
-            while ((i = ns.Read(resultFromNoeud, 0, resultFromNoeud.Length)) != 0)
-            {
-                data = Encoding.UTF8.GetString(resultFromNoeud, 0, i);
-                Console.WriteLine($"Donnees : {data}");
-            }
+        //public ResultatCalcul RecevoirResultatCalcul(NetworkStream ns)
+        //{
+        //    ResultatCalcul resultat = null;
+        //    int i = 0;
+        //    byte[] resultFromNoeud = new byte[1024];
+        //    string data = string.Empty;
+        //    //Lecture du flux
+        //    while ((i = ns.Read(resultFromNoeud, 0, resultFromNoeud.Length)) != 0)
+        //    {
+        //        data = Encoding.UTF8.GetString(resultFromNoeud, 0, i);
+        //        Console.WriteLine($"Donnees : {data}");
+        //    }
 
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            resultat = js.Deserialize<ResultatCalcul>(data);
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    resultat = js.Deserialize<ResultatCalcul>(data);
 
 
-            return resultat;
-        }
+        //    return resultat;
+        //}
 
         public void AfficherResultatCalcul(ResultatCalcul r)
         {
-          //  Console.WriteLine($">>> Résultat : {r.Resultat} effectué en {r.TempsExecution} ms");
+           Console.WriteLine($">>> Résultat : {r.Resultat} effectué en {r.TempsExecution} ms");
 
-            //Console.ReadKey();
         }
     }
 }

@@ -40,41 +40,41 @@ namespace Cluster.Protocole
 
         public void Envoyer(IPAddress remote, IClusterizable obj)
         {
-            IPEndPoint noeud = new IPEndPoint(remote, PORT);
-            TcpClient orchestrateur = new TcpClient();
-            orchestrateur.Connect(noeud);
+            IPEndPoint remoteEP = new IPEndPoint(remote, PORT);
+            TcpClient local = new TcpClient();
+            local.Connect(remoteEP);
 
             byte[] ba = Utility.Serialize(obj);
-            using (NetworkStream ns = orchestrateur.GetStream())
+            using (NetworkStream ns = local.GetStream())
             {
                 ns.Write(ba, 0, ba.Length);
             };
 
 
-            orchestrateur.Close();
+            local.Close();
         }
 
         public IClusterizable Recevoir()
         {
             //Initialisation du listener
-            TcpListener orchestrateur = new TcpListener(AdresseIpLocale, PORT);
+            TcpListener localListener = new TcpListener(AdresseIpLocale, PORT);
 
             //Débuter l'écoute
-            orchestrateur.Start();
+            localListener.Start();
             //Console.WriteLine("En attente d'un resultat.....\n");
 
 
-            TcpClient noeud = orchestrateur.AcceptTcpClient();
-            NetworkStream ns = noeud.GetStream();
+            TcpClient remote = localListener.AcceptTcpClient();
+            NetworkStream ns = remote.GetStream();
 
             IClusterizable obj = null;
             int i = 0;
-            byte[] resultFromNoeud = new byte[1024];
+            byte[] remoteData = new byte[1024];
             string data = string.Empty;
             //Lecture du flux
-            while ((i = ns.Read(resultFromNoeud, 0, resultFromNoeud.Length)) != 0)
+            while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
             {
-                data = Encoding.UTF8.GetString(resultFromNoeud, 0, i);
+                data = Encoding.UTF8.GetString(remoteData, 0, i);
                 //Console.WriteLine($"Donnees : {data}");
             }
 
