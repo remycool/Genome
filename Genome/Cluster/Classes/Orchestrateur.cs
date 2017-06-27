@@ -22,7 +22,12 @@ namespace Cluster
         {
             AdressesNoeuds = new List<IPAddress>();
             AdresseIP = Utility.GetLocalIP();
-            com = Communication.Instance; 
+            com = Communication.Instance;
+        }
+
+        public override string ToString()
+        {
+            return $"@ IP : {AdresseIP.ToString()}";
         }
 
         /// <summary>

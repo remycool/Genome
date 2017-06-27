@@ -31,6 +31,10 @@ namespace Cluster
             Com = Communication.Instance;
         }
 
+        public override string ToString()
+        {
+            return $"@ IP : {AdresseIP.ToString()}";
+        }
 
         public void AttenteCalcul()
         {
