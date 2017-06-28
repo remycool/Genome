@@ -1,5 +1,7 @@
-﻿using Cluster.Interfaces;
+﻿using Cluster.Classes;
+using Cluster.Interfaces;
 using Cluster.Utils;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -15,9 +17,10 @@ namespace Cluster.Protocole
 
 
 
-        private Communication() {
+        private Communication()
+        {
 
-            
+
         }
 
         public static Communication Instance
@@ -38,47 +41,67 @@ namespace Cluster.Protocole
         }
 
 
-        public void Envoyer(IPAddress remote, IClusterizable obj)
+        public void Envoyer(IPAddress remote, Operation obj)
         {
             IPEndPoint remoteEP = new IPEndPoint(remote, PORT);
             TcpClient local = new TcpClient();
             local.Connect(remoteEP);
-
-            byte[] ba = Utility.Serialize(obj);
-            using (NetworkStream ns = local.GetStream())
+            try
             {
-                ns.Write(ba, 0, ba.Length);
-            };
-
-
-            local.Close();
+                byte[] ba = Utility.Serialize(obj);
+                using (NetworkStream ns = local.GetStream())
+                {
+                    ns.Write(ba, 0, ba.Length);
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message + ex.StackTrace);
+            }
+            finally
+            {
+                local.Close();
+            }
         }
 
-        public IClusterizable Recevoir()
+        public Operation Recevoir(IPAddress AdresseIpLocale)
         {
+            Operation obj = null;
+
             //Initialisation du listener
             TcpListener localListener = new TcpListener(AdresseIpLocale, PORT);
-
             //Débuter l'écoute
             localListener.Start();
-            //Console.WriteLine("En attente d'un resultat.....\n");
 
 
-            TcpClient remote = localListener.AcceptTcpClient();
-            NetworkStream ns = remote.GetStream();
-
-            IClusterizable obj = null;
-            int i = 0;
-            byte[] remoteData = new byte[1024];
-            string data = string.Empty;
-            //Lecture du flux
-            while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+            try
             {
-                data = Encoding.UTF8.GetString(remoteData, 0, i);
-                //Console.WriteLine($"Donnees : {data}");
+                using (TcpClient remote = localListener.AcceptTcpClient())
+                using (NetworkStream ns = remote.GetStream())
+                {
+                    int i = 0;
+                    byte[] remoteData = new byte[1024];
+                    string data = string.Empty;
+                    //Lecture du flux
+                    if (ns.CanRead)
+                    {
+                        while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+                        {
+                            data += Encoding.UTF8.GetString(remoteData, 0, i);
+                            //Console.WriteLine($"Donnees : {data}");
+                        }
+                        obj = Utility.Deserialize(data);
+                    }
+                }
             }
-
-            obj = Utility.Deserialize(data);
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message + ex.StackTrace);
+            }
+            finally
+            {
+                localListener.Stop();
+            }
 
             return obj;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cluster.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -40,6 +41,15 @@ namespace Cluster
             Orchestrateur_Btn.Enabled = false;
             Noeud_Btn.BackColor = Color.DarkGray;
             AdresseIP_Lbl.Text = N.ToString();
+            try
+            {
+                N.AttenteCalcul();
+            }
+            catch(Exception ex)
+            {
+                string err = $"{ex.Message} \n{ex.StackTrace}";
+                MessageBox.Show(err);
+            }
         }
 
         private void ToggleBackColor(Button btn)
@@ -52,10 +62,11 @@ namespace Cluster
 
         private void LancerCalcul_Btn_Click(object sender, EventArgs e)
         {
-            byte[] fileContent = GetFile();
+           string fileContent = GetFile();
 
             try {
-                O.EnvoyerCalcul(new Calcul<byte[]> { Type = "CountChars", Param = fileContent });
+                Operation retour = O.EnvoyerCalcul(new Operation { Type = "CountChars", Param = fileContent });
+                Resultat_Lbl.Text = retour.ToString();
             }
             catch(Exception ex)
             {
@@ -65,18 +76,28 @@ namespace Cluster
             
         }
 
-        private byte[] GetFile()
+        private string GetFile()
         {
             string emplacement = Assembly.GetExecutingAssembly().Location;
             string repertoire = Path.GetDirectoryName(emplacement);
             string cheminVersFichier = Path.Combine(repertoire, @"genome-kukushkin.txt");
+            string fileContent = string.Empty;
 
-            using (FileStream fs = new FileStream(cheminVersFichier, FileMode.Open, FileAccess.Read))
-            using (StreamReader reader = new StreamReader(fs, Encoding.UTF8))
+            try
             {
-                string fileContent = reader.ReadToEnd();
-                return Encoding.UTF8.GetBytes(fileContent);
+                using (FileStream fs = new FileStream(cheminVersFichier, FileMode.Open, FileAccess.Read))
+                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8))
+                {
+                    fileContent = reader.ReadToEnd();
+                }
             }
+            catch(Exception ex)
+            {
+                string err = $"{ex.Message} \n{ex.StackTrace}";
+                MessageBox.Show(err);
+            }
+
+            return fileContent;
         }
     }
 }

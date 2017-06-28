@@ -1,4 +1,5 @@
-﻿using Cluster.Interfaces;
+﻿using Cluster.Classes;
+using Cluster.Interfaces;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -83,19 +84,20 @@ namespace Cluster.Utils
         /// </summary>
         /// <param name="c"></param>
         /// <returns>L'objet sous forme de tableau</returns>
-        public static byte[] Serialize(IClusterizable  c ){
+        public static byte[] Serialize(Operation  c ){
             string serializedObject = null;
             byte[] b = null;
             JavaScriptSerializer js = new JavaScriptSerializer();
             try
             {
                 serializedObject = js.Serialize(c);
+                Console.WriteLine(serializedObject);
                 b = Encoding.UTF8.GetBytes(serializedObject);
 
             }
-            catch
+            catch(Exception ex)
             {
-                //TODO faire un log
+                Console.Write(ex.Message + ex.StackTrace);
             }
 
             return b;
@@ -106,20 +108,20 @@ namespace Cluster.Utils
         /// </summary>
         /// <param name="serializedObject"></param>
         /// <returns>Un objet de type IClusterizable </returns>
-        public static IClusterizable Deserialize(string serializedObject) {
+        public static Operation Deserialize(string serializedObject) {
 
-            IClusterizable result = null;
+            Operation result = null;
             JavaScriptSerializer js = new JavaScriptSerializer();
             try
             {
-                result = js.Deserialize<IClusterizable>(serializedObject);
+                result = js.Deserialize<Operation>(serializedObject);
             }
-            catch
+            catch(Exception ex)
             {
-                //TODO log
+                Console.Write(ex.Message +  ex.StackTrace);
             }
             
-            return  result;
+            return result;
         }
     }
 }

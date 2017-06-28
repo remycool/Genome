@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cluster.Classes;
 
 namespace Cluster.Interfaces
 {
     public interface ICalculable
     {
-        IClusterizable CountChars(char charToCount, string chaine);
+        Operation CountChars(char charToCount, string chaine);
     }
 }
