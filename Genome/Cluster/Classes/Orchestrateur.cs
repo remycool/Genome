@@ -1,10 +1,9 @@
-﻿using Cluster.Classes;
-using Cluster.Protocole;
+﻿using Cluster.Protocole;
 using Cluster.Utils;
 using System.Collections.Generic;
 using System.Net;
 
-namespace Cluster
+namespace Cluster.Classes
 {
     public class Orchestrateur
     {

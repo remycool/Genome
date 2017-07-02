@@ -1,4 +1,4 @@
-﻿namespace Cluster
+﻿namespace Cluster_UI
 {
     partial class Form1
     {

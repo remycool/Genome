@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster", "Cluster\Cluster.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{F08481F9-ABE5-464D-A6DE-9358FC9C3685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster_UI", "Cluster_UI\Cluster_UI.csproj", "{0BD1BBED-4F32-40F8-AFC6-B480411B95CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{7573A927-433D-4D9D-B0B4-518DB35AAE22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{1EDC06FE-A870-4EFE-B266-660C1B5F1A46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,11 +29,17 @@ Global
 		{382344EF-7A01-49DD-8B95-5A7B60643490}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{382344EF-7A01-49DD-8B95-5A7B60643490}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{382344EF-7A01-49DD-8B95-5A7B60643490}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD1BBED-4F32-40F8-AFC6-B480411B95CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD1BBED-4F32-40F8-AFC6-B480411B95CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD1BBED-4F32-40F8-AFC6-B480411B95CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD1BBED-4F32-40F8-AFC6-B480411B95CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E647228A-C07D-477A-BE8A-0F5BF706182B} = {1EDC06FE-A870-4EFE-B266-660C1B5F1A46}
 		{382344EF-7A01-49DD-8B95-5A7B60643490} = {F08481F9-ABE5-464D-A6DE-9358FC9C3685}
+		{0BD1BBED-4F32-40F8-AFC6-B480411B95CA} = {7573A927-433D-4D9D-B0B4-518DB35AAE22}
 	EndGlobalSection
 EndGlobal

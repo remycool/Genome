@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Cluster
+namespace Cluster_UI
 {
     static class Program
     {

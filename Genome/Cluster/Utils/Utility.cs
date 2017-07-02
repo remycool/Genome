@@ -111,7 +111,7 @@ namespace Cluster.Utils
         public static Operation Deserialize(string serializedObject) {
 
             Operation result = null;
-            JavaScriptSerializer js = new JavaScriptSerializer();
+            JavaScriptSerializer js = new JavaScriptSerializer() {MaxJsonLength = 20971520 };
             try
             {
                 result = js.Deserialize<Operation>(serializedObject);

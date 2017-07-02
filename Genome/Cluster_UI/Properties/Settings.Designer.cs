@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cluster.Properties
+namespace Cluster_UI.Properties
 {
 
 

@@ -1,17 +1,13 @@
 ﻿using Cluster.Classes;
+using Genome.GenomeBusiness;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Cluster
+namespace Cluster_UI
 {
     public partial class Form1 : Form
     {
@@ -20,10 +16,11 @@ namespace Cluster
 
         public Form1()
         {
+            IBusinessFactory service = new BusinessFactory(new GenomeBusiness());
             InitializeComponent();
             Calcul_Btn.Enabled = false;
-            O = new Orchestrateur();
-            N = new Noeud();
+           // O = new Orchestrateur();
+            N = new Noeud(service);
         }
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
@@ -65,7 +62,7 @@ namespace Cluster
            string fileContent = GetFile();
 
             try {
-                Operation retour = O.EnvoyerCalcul(new Operation { Type = "CountChars", Param = fileContent });
+                Operation retour = O.EnvoyerCalcul(new Operation { Type = "Calcul1", Param = fileContent });
                 Resultat_Lbl.Text = retour.ToString();
             }
             catch(Exception ex)
