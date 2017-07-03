@@ -87,7 +87,7 @@ namespace Cluster.Utils
         public static byte[] Serialize(Operation  c ){
             string serializedObject = null;
             byte[] b = null;
-            JavaScriptSerializer js = new JavaScriptSerializer();
+            JavaScriptSerializer js = new JavaScriptSerializer() { MaxJsonLength = 30000000 };
             try
             {
                 serializedObject = js.Serialize(c);
@@ -111,7 +111,7 @@ namespace Cluster.Utils
         public static Operation Deserialize(string serializedObject) {
 
             Operation result = null;
-            JavaScriptSerializer js = new JavaScriptSerializer() {MaxJsonLength = 20971520 };
+            JavaScriptSerializer js = new JavaScriptSerializer() {MaxJsonLength = 30000000 };
             try
             {
                 result = js.Deserialize<Operation>(serializedObject);

@@ -13,19 +13,21 @@ namespace Cluster_UI
     {
         public Orchestrateur O { get; set; }
         public Noeud N { get; set; }
+        IBusinessFactory Service { get; set; }
 
         public Form1()
         {
-            IBusinessFactory service = new BusinessFactory(new GenomeBusiness());
+            Service = new BusinessFactory(new GenomeBusiness());
             InitializeComponent();
             Calcul_Btn.Enabled = false;
            // O = new Orchestrateur();
-            N = new Noeud(service);
+            
         }
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
         {
             //Logique d'interface
+            O = new Orchestrateur();
             Noeud_Btn.Enabled = false;
             Calcul_Btn.Enabled = true;
             Orchestrateur_Btn.BackColor = Color.DarkGray;
@@ -35,6 +37,7 @@ namespace Cluster_UI
 
         private void Noeud_Btn_Click(object sender, EventArgs e)
         {
+            N = new Noeud(Service);
             Orchestrateur_Btn.Enabled = false;
             Noeud_Btn.BackColor = Color.DarkGray;
             AdresseIP_Lbl.Text = N.ToString();

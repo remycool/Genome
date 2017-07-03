@@ -47,25 +47,5 @@ namespace Cluster.Classes
             string chaine = Convert.ToString(calcul.Param);
             calcul = (Operation)info.Invoke(Service, new object[] { chaine });
         }
-
-        //Operation ICalculable.CountChars(char charToCount, string chaine)
-        //{
-        //    Console.WriteLine("Calcul en cours");
-        //    //On lance le chrono
-        //    Stopwatch sw = Stopwatch.StartNew();
-        //    //opération
-        //    int count = 0;
-        //    for (int i = 0; i < chaine.Length; i++)
-        //    {
-        //        if (chaine[i] == charToCount)
-        //            count++;
-        //    }
-
-        //    Thread.Sleep(1000);
-        //    //On arrête le chrono
-        //    sw.Stop();
-
-        //    return new Operation { Resultat = count, TempsExecution = sw.ElapsedMilliseconds };
-        //}
     }
 }
