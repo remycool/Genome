@@ -30,9 +30,10 @@
         {
             this.Orchestrateur_Btn = new System.Windows.Forms.Button();
             this.Noeud_Btn = new System.Windows.Forms.Button();
-            this.Calcul_Btn = new System.Windows.Forms.Button();
+            this.Calcul1_Btn = new System.Windows.Forms.Button();
             this.Resultat_Lbl = new System.Windows.Forms.Label();
             this.AdresseIP_Lbl = new System.Windows.Forms.Label();
+            this.Calcul2_Btn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Orchestrateur_Btn
@@ -55,15 +56,15 @@
             this.Noeud_Btn.UseVisualStyleBackColor = true;
             this.Noeud_Btn.Click += new System.EventHandler(this.Noeud_Btn_Click);
             // 
-            // Calcul_Btn
+            // Calcul1_Btn
             // 
-            this.Calcul_Btn.Location = new System.Drawing.Point(83, 204);
-            this.Calcul_Btn.Name = "Calcul_Btn";
-            this.Calcul_Btn.Size = new System.Drawing.Size(204, 75);
-            this.Calcul_Btn.TabIndex = 2;
-            this.Calcul_Btn.Text = "Lancer Calcul";
-            this.Calcul_Btn.UseVisualStyleBackColor = true;
-            this.Calcul_Btn.Click += new System.EventHandler(this.LancerCalcul_Btn_Click);
+            this.Calcul1_Btn.Location = new System.Drawing.Point(83, 204);
+            this.Calcul1_Btn.Name = "Calcul1_Btn";
+            this.Calcul1_Btn.Size = new System.Drawing.Size(204, 32);
+            this.Calcul1_Btn.TabIndex = 2;
+            this.Calcul1_Btn.Text = "Lancer Calcul 1";
+            this.Calcul1_Btn.UseVisualStyleBackColor = true;
+            this.Calcul1_Btn.Click += new System.EventHandler(this.Calcul1_Btn_Click);
             // 
             // Resultat_Lbl
             // 
@@ -81,14 +82,25 @@
             this.AdresseIP_Lbl.Size = new System.Drawing.Size(0, 13);
             this.AdresseIP_Lbl.TabIndex = 4;
             // 
+            // Calcul2_Btn
+            // 
+            this.Calcul2_Btn.Location = new System.Drawing.Point(83, 257);
+            this.Calcul2_Btn.Name = "Calcul2_Btn";
+            this.Calcul2_Btn.Size = new System.Drawing.Size(204, 32);
+            this.Calcul2_Btn.TabIndex = 5;
+            this.Calcul2_Btn.Text = "Lancer Calcul 2";
+            this.Calcul2_Btn.UseVisualStyleBackColor = true;
+            this.Calcul2_Btn.Click += new System.EventHandler(this.Calcul2_Btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 351);
+            this.Controls.Add(this.Calcul2_Btn);
             this.Controls.Add(this.AdresseIP_Lbl);
             this.Controls.Add(this.Resultat_Lbl);
-            this.Controls.Add(this.Calcul_Btn);
+            this.Controls.Add(this.Calcul1_Btn);
             this.Controls.Add(this.Noeud_Btn);
             this.Controls.Add(this.Orchestrateur_Btn);
             this.Name = "Form1";
@@ -102,9 +114,10 @@
 
         private System.Windows.Forms.Button Orchestrateur_Btn;
         private System.Windows.Forms.Button Noeud_Btn;
-        private System.Windows.Forms.Button Calcul_Btn;
+        private System.Windows.Forms.Button Calcul1_Btn;
         private System.Windows.Forms.Label Resultat_Lbl;
         private System.Windows.Forms.Label AdresseIP_Lbl;
+        private System.Windows.Forms.Button Calcul2_Btn;
     }
 }
 

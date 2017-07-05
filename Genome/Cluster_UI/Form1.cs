@@ -21,14 +21,14 @@ namespace Cluster_UI
         {
             Service = new BusinessFactory(new GenomeBusiness());
             InitializeComponent();
-            Calcul_Btn.Enabled = false;
+            Calcul1_Btn.Enabled = false;
         }
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
         {
             O = new Orchestrateur();
             Noeud_Btn.Enabled = false;
-            Calcul_Btn.Enabled = true;
+            Calcul1_Btn.Enabled = true;
             Orchestrateur_Btn.BackColor = Color.DarkGray;
             AdresseIP_Lbl.Text = O.ToString();
         }
@@ -58,7 +58,7 @@ namespace Cluster_UI
                 btn.BackColor = Color.DarkGray;
         }
 
-        private void LancerCalcul_Btn_Click(object sender, EventArgs e)
+        private void Calcul1_Btn_Click(object sender, EventArgs e)
         {
             string file = GetFile();
             string fileContentZip = file.Compress();
@@ -99,6 +99,25 @@ namespace Cluster_UI
                 MessageBox.Show(err);
             }
             return fileContent;
+        }
+
+        private void Calcul2_Btn_Click(object sender, EventArgs e)
+        {
+            string file = GetFile();
+            string fileContentZip = file.Compress();
+
+            try
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                Operation retour = O.EnvoyerCalcul(new Operation { Type = "GetCalcul2", Param = fileContentZip });
+                sw.Stop();
+                Resultat_Lbl.Text = $"Temps réseau : {sw.ElapsedMilliseconds} ms\n" + retour.ToString();
+            }
+            catch (Exception ex)
+            {
+                string err = $"{ex.Message} \n{ex.StackTrace}";
+                MessageBox.Show(err);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Cluster.Classes
         public void AttenteCalcul()
         {
             Operation calcul = Com.Recevoir(AdresseIP);
-            calcul.Param.Decompress();
+           
            
             ExecuterCalcul(ref calcul);
             Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), calcul);

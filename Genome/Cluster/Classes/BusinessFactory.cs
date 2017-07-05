@@ -15,5 +15,10 @@ namespace Cluster.Classes
         {
             return _clusterizableBusiness.Calcul1(chunckFile);
         }
+
+        public Operation GetCalcul2(string chunckFile)
+        {
+            return _clusterizableBusiness.Calcul2(chunckFile);
+        }
     }
 }

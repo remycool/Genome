@@ -10,5 +10,6 @@ namespace Cluster.Interfaces
     public interface IClusterizable
     {
         Operation Calcul1(string chunkFile);
+        Operation Calcul2(string chunkfile);
     }
 }
