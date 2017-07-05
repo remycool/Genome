@@ -49,7 +49,6 @@ namespace Cluster.Protocole
             try
             {
                 byte[] ba = Utility.Serialize(obj);
-                ba.Compress();
                 using (NetworkStream ns = local.GetStream())
                 {
                     ns.Write(ba, 0, ba.Length);
@@ -88,13 +87,16 @@ namespace Cluster.Protocole
                     {
                         while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
                         {
-                            
                             data += Encoding.UTF8.GetString(remoteData, 0, i);
-                            //Console.WriteLine($"Donnees : {data}");
                         }
                         obj = Utility.Deserialize(data);
                     }
                 }
+
+                //Décompresser le fichier 
+                string unzipFile = obj.Param.Decompress();
+                obj.Param = string.Empty;
+                obj.Param = unzipFile;
             }
             catch (Exception ex)
             {

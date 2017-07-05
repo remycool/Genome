@@ -1,6 +1,8 @@
 ﻿using Cluster.Classes;
+using Cluster.Utils;
 using Genome.GenomeBusiness;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -20,18 +22,14 @@ namespace Cluster_UI
             Service = new BusinessFactory(new GenomeBusiness());
             InitializeComponent();
             Calcul_Btn.Enabled = false;
-           // O = new Orchestrateur();
-            
         }
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
         {
-            //Logique d'interface
             O = new Orchestrateur();
             Noeud_Btn.Enabled = false;
             Calcul_Btn.Enabled = true;
             Orchestrateur_Btn.BackColor = Color.DarkGray;
-
             AdresseIP_Lbl.Text = O.ToString();
         }
 
@@ -45,7 +43,7 @@ namespace Cluster_UI
             {
                 N.AttenteCalcul();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string err = $"{ex.Message} \n{ex.StackTrace}";
                 MessageBox.Show(err);
@@ -62,18 +60,22 @@ namespace Cluster_UI
 
         private void LancerCalcul_Btn_Click(object sender, EventArgs e)
         {
-           string fileContent = GetFile();
-
-            try {
-                Operation retour = O.EnvoyerCalcul(new Operation { Type = "Calcul1", Param = fileContent });
-                Resultat_Lbl.Text = retour.ToString();
+            string file = GetFile();
+            string fileContentZip = file.Compress();
+           
+            try
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                Operation retour = O.EnvoyerCalcul(new Operation { Type = "GetCalcul1", Param = fileContentZip });
+                sw.Stop();
+                Resultat_Lbl.Text = $"Temps réseau : {sw.ElapsedMilliseconds} ms\n" + retour.ToString();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string err = $"{ex.Message} \n{ex.StackTrace}";
                 MessageBox.Show(err);
             }
-            
+
         }
 
         private string GetFile()
@@ -86,17 +88,16 @@ namespace Cluster_UI
             try
             {
                 using (FileStream fs = new FileStream(cheminVersFichier, FileMode.Open, FileAccess.Read))
-                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8))
+                using (StreamReader reader = new StreamReader(fs,Encoding.UTF8))
                 {
                     fileContent = reader.ReadToEnd();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string err = $"{ex.Message} \n{ex.StackTrace}";
                 MessageBox.Show(err);
             }
-
             return fileContent;
         }
     }

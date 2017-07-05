@@ -34,6 +34,8 @@ namespace Cluster.Classes
         public void AttenteCalcul()
         {
             Operation calcul = Com.Recevoir(AdresseIP);
+            calcul.Param.Decompress();
+           
             ExecuterCalcul(ref calcul);
             Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), calcul);
         }
@@ -44,7 +46,7 @@ namespace Cluster.Classes
             Type type = typeof(IBusinessFactory);
             MethodInfo info = type.GetMethod(calcul.Type);
             //Transformer le tableau de byte en string
-            string chaine = Convert.ToString(calcul.Param);
+            string chaine = calcul.Param;
             calcul = (Operation)info.Invoke(Service, new object[] { chaine });
         }
     }
