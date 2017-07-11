@@ -21,7 +21,7 @@ namespace Cluster_DAL
         /// <param name="nomBdd"></param>
         public DAL(string nomBdd)
         {
-            connectionStringMySql = ConfigurationManager.ConnectionStrings["HouseMaderaDBMySql"].ConnectionString;
+            connectionStringMySql = ConfigurationManager.ConnectionStrings["ClusterDbMySql"].ConnectionString;
           
             //Console.WriteLine(connectionStringSQLite.Replace("%USERNAME%", Environment.GetEnvironmentVariable("username")));
             Bdd = nomBdd;
