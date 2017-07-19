@@ -50,10 +50,12 @@
   <ItemGroup>
     <Compile Include="ClusterDAL.cs" />
     <Compile Include="DAL.cs" />
+    <Compile Include="Etat.cs" />
     <Compile Include="IDbConnection.cs" />
     <Compile Include="MysqlConnect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -12,61 +12,6 @@ namespace Cluster.Utils
 {
     public static class Utility
     {
-        /// <summary>
-        /// Methode d'extension permettant de compresser un tableau de byte
-        /// </summary>
-        /// <param name="tocompress"></param>
-        /// <returns>Un tableau de byte compressé</returns>
-        //public static string Compress(this string tocompress)
-        //{
-        //    Console.WriteLine($"Taille avant compression : {tocompress.Length}");
-        //    byte[] stringToArray = Encoding.UTF8.GetBytes(tocompress);
-        //    string compressedString = string.Empty;
-        //    using (MemoryStream ms = new MemoryStream())
-        //    using (GZipStream zip = new GZipStream(ms, CompressionMode.Compress, true))
-        //    {
-        //        zip.Write(stringToArray, 0, stringToArray.Length);
-        //        zip.Close();
-        //        ms.Position = 0;
-
-        //        byte[] compressed = new byte[ms.Length];
-        //        ms.Read(compressed, 0, compressed.Length);
-        //        ms.Close();
-        //        ms.Dispose();
-        //        byte[] gzBuffer = new byte[compressed.Length + 4];
-        //        Buffer.BlockCopy(compressed, 0, gzBuffer, 4, compressed.Length);
-        //        Buffer.BlockCopy(BitConverter.GetBytes(tocompress.Length), 0, gzBuffer, 0, 4);
-        //        compressedString = Convert.ToBase64String(gzBuffer);
-        //    }
-
-        //    Console.WriteLine($"Taille après compression : {compressedString.Length}");
-        //    return compressedString;
-        //}
-
-        ///// <summary>
-        ///// Methode d'extension permettant de decompresser un tableau de byte
-        ///// </summary>
-        ///// <param name="tocompress"></param>
-        ///// <returns>Un tableau de byte décompressé</returns>
-        //public static string Decompress(this string toDecompress)
-        //{
-        //    Console.WriteLine($"Taille avant decompression : {toDecompress.Length}");
-        //    byte[] stringToArray = Convert.FromBase64String(toDecompress);
-
-        //    MemoryStream ms = new MemoryStream();
-        //    int msgLength = BitConverter.ToInt32(stringToArray, 0);
-        //    ms.Write(stringToArray, 4, stringToArray.Length - 4);
-
-        //    byte[] buffer = new byte[msgLength];
-
-        //    ms.Position = 0;
-        //    GZipStream zip = new GZipStream(ms, CompressionMode.Decompress);
-        //    zip.Read(buffer, 0, buffer.Length);
-        //    string stringDecompressed = Encoding.UTF8.GetString(buffer);
-        //    Console.WriteLine($"Taille après décompression : {stringDecompressed.Length}");
-        //    return stringDecompressed;
-        //}
-
         public static string Decompress(this string input)
         {
             byte[] compressed = Convert.FromBase64String(input);
@@ -108,7 +53,6 @@ namespace Cluster.Utils
                 using (GZipStream compressionStream = new GZipStream(result,CompressionMode.Compress))
                 {
                     compressionStream.Write(input, 0, input.Length);
-                   // compressionStream.Flush();
                 }
                 return result.ToArray();
             }
@@ -144,7 +88,7 @@ namespace Cluster.Utils
             try
             {
                 serializedObject = js.Serialize(c);
-                Console.WriteLine(serializedObject);
+               // Console.WriteLine(serializedObject);
                 b = Encoding.UTF8.GetBytes(serializedObject);
 
             }

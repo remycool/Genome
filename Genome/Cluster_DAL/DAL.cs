@@ -22,8 +22,6 @@ namespace Cluster_DAL
         public DAL(string nomBdd)
         {
             connectionStringMySql = ConfigurationManager.ConnectionStrings["ClusterDbMySql"].ConnectionString;
-          
-            //Console.WriteLine(connectionStringSQLite.Replace("%USERNAME%", Environment.GetEnvironmentVariable("username")));
             Bdd = nomBdd;
             switch (Bdd)
             {

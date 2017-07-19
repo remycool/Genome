@@ -31,11 +31,13 @@ namespace Cluster_DAL
                     liste.Add(IPAddress.Parse(adresse));
                 }
             }
-
-
             return liste;
         }
 
+        /// <summary>
+        /// Obtient toutes les entrées du registre cluster
+        /// </summary>
+        /// <returns>Une concaténation de tous les résultats sous forme de chaine de caractères</returns>
         public string GetClusterRegistry()
         {
             string result = string.Empty;
@@ -55,6 +57,8 @@ namespace Cluster_DAL
 
             return result;
         }
+
+      
 
         /// <summary>
         /// Appelle une fonction stockée de la bdd
@@ -83,6 +87,28 @@ namespace Cluster_DAL
            
             return result;
         }
+
+        /// <summary>
+        /// Obtient l'adresse IP de l'orchestrateur connecté
+        /// </summary>
+        /// <returns>L'IP sous forme de chaine de caractère</returns>
+        public string GetOrchestrateurIp()
+        {
+            string ip = string.Empty;
+            string sql = @"SELECT ip FROM cluster_view WHERE etat = @1 AND role = @2";
+            Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@1", (int)etat.connected }, { "@2", (int)role.orchestrateur } };
+
+            using (DbDataReader reader = Get(sql, parameters))
+            {
+                while (reader.Read())
+                {
+                     ip = Convert.ToString(reader[0]);
+                }
+            }
+
+            return ip;
+        }
+
 
         private bool isCorrectIp(string adresseIp)
         {

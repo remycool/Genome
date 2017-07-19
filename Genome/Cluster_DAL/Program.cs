@@ -7,19 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cluster_DAL
 {
-    public enum role
-    {
-        orchestrateur = 1,
-        noeud = 2
-    }
-
-    public enum etat
-    {
-        connected = 4,
-        workInProgress = 5,
-        workDone = 6,
-        notConnected = 7
-    }
+   
 
     class Program
     {
@@ -45,7 +33,7 @@ namespace Cluster_DAL
                 Console.ReadKey();
 
                 //Mettre à jour le registre
-                dal.UpdateCluster("192.168.0.25", etat.connected, role.orchestrateur);
+                dal.UpdateCluster("192.168.0.21", etat.connected, role.noeud);
                 //etat du cluster
                 Console.WriteLine(dal.GetClusterRegistry());
                 Console.ReadKey();
