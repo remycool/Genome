@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genome", "Genome\Genome.csproj", "{E647228A-C07D-477A-BE8A-0F5BF706182B}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{1EDC06FE-A870-4EFE-B266-660C1B5F1A46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster_DAL", "Cluster_DAL\Cluster_DAL.csproj", "{EE9C865A-1544-4175-91B1-C9EE43C980DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IhmMain", "..\..\IhmMain\IhmMain\IhmMain.csproj", "{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{EE9C865A-1544-4175-91B1-C9EE43C980DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE9C865A-1544-4175-91B1-C9EE43C980DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE9C865A-1544-4175-91B1-C9EE43C980DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
