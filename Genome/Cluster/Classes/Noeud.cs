@@ -2,7 +2,6 @@
 using Cluster.Interfaces;
 using Cluster.Protocole;
 using Cluster.Utils;
-using Cluster_DAL;
 using System;
 using System.Net;
 using System.Reflection;
@@ -20,81 +19,90 @@ namespace Cluster.Classes
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
         public Communication Com { get; set; }
-        public IBusinessFactory Service { get; set; }
+        public IBusinessFactory BusinessService { get; set; }
+        public IDALFactory DALService { get; set; }
 
-        public Noeud(IBusinessFactory service)
+        public Noeud(IBusinessFactory BuService, IDALFactory DalService)
         {
             AdresseIP = Utility.GetLocalIP();
             Com = Communication.Instance;
-            Service = service;
+            BusinessService = BuService;
+            DALService = DalService;
             Initialize();
         }
-
-
 
         public override string ToString()
         {
             return $"@ IP : {AdresseIP.ToString()}";
         }
 
-        public void AttenteCalcul()
+        /// <summary>
+        /// Permet d'ecouter une operation émanant de l'orchestrateur
+        /// </summary>
+        /// <returns>un objet operation résultant du traitement effectué sur le noeud</returns>
+        public Operation Attente()
         {
             Operation calcul = Com.Recevoir(AdresseIP);
-            using(ClusterDAL dal = new ClusterDAL("MYSQL"))
-            {
-                Thread th = new Thread(()=>dal.UpdateCluster(AdresseIP.ToString(), etat.workInProgress, role.noeud));
-                th.Start();
-            }
-            
             ExecuterCalcul(ref calcul);
-
-            Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), calcul);
+            return Envoyer(calcul);
         }
 
+        /// <summary>
+        /// Permet d'executer la méthode du business invoqué par l'opération passée en parametre 
+        /// </summary>
+        /// <param name="calcul">Objet parametre qui contient la méthode à executer et le morceaux de fichier</param>
         private void ExecuterCalcul(ref Operation calcul)
         {
-            //executer la methode invoquée en utilisant la réflexion
+            //On utilise la réflexion pour obtenir la méthode depuis la factory
             Type type = typeof(IBusinessFactory);
             MethodInfo info = type.GetMethod(calcul.Type);
-            //Transformer le tableau de byte en string
             string chaine = calcul.Param;
-            calcul = (Operation)info.Invoke(Service, new object[] { chaine });
+            //On execute la fonction
+            calcul = (Operation)info.Invoke(BusinessService, new object[] { chaine });
         }
-        
+
         /// <summary>
         /// Met à jour l'état du le registre du cluster 
         /// </summary>
         public void Initialize()
         {
-            using (ClusterDAL dal = new ClusterDAL("MYSQL"))
-            {
-                //Mettre à jour info du noeud courant dans le registre
-                dal.UpdateCluster(AdresseIP.ToString(), etat.connected, role.noeud);
-                Console.WriteLine(dal.GetClusterRegistry());
-                //obtenir l'IP de l'orchestrateur
-                string ip = dal.GetOrchestrateurIp();
 
-                if (!string.IsNullOrEmpty(ip))
-                    OrchestrateurIP = IPAddress.Parse(ip);
-            }
+            //Mettre à jour info du noeud courant dans le registre
+            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
+            Console.WriteLine(DALService.GetClusterView());
+            //obtenir l'IP de l'orchestrateur
+            string ip = DALService.GetOrchestrateurIP();
+
+            if (!string.IsNullOrEmpty(ip))
+                OrchestrateurIP = IPAddress.Parse(ip);
         }
 
         /// <summary>
-        /// Met à jour l'état du noeud à "déconnecté" dans le registre du cluster 
+        /// Permet de mettre à jour le registre du cluster
         /// </summary>
-        public void Close()
+        public void Dispose()
         {
-            using (ClusterDAL dal = new ClusterDAL("MYSQL"))
-            {
-                //Mettre à jour info du noeud courant dans le registre
-                dal.UpdateCluster(AdresseIP.ToString(), etat.notConnected, role.noeud);
-                Console.WriteLine(dal.GetClusterRegistry());
-            }
+
+            //Mettre à jour info du noeud courant dans le registre
+            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
+            Console.WriteLine(DALService.GetClusterView());
+
         }
 
-        public Operation EnvoyerCalcul(Operation operation)
+        /// <summary>
+        /// Permet d'envoyer une opération résultante à destination de l'orchestrateur
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns>Un objet Operation</returns>
+        public Operation Envoyer(Operation operation)
         {
-            throw new NotImplementedException();
+            string paramCompressed = string.Empty;
+            if (string.IsNullOrEmpty(operation.Param))
+                paramCompressed = operation.Param.Compress();
+            operation.Param = paramCompressed;
+            Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), operation);
+            return Attente();
         }
     }
 }
+

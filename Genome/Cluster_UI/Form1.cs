@@ -1,6 +1,7 @@
 ﻿using Cluster.Classes;
 using Cluster.Interfaces;
 using Cluster.Utils;
+using Cluster.Exceptions;
 using Genome.GenomeBusiness;
 using System;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Cluster_DAL;
 
 namespace Cluster_UI
 {
@@ -17,11 +19,13 @@ namespace Cluster_UI
         //public Orchestrateur O { get; set; }
         //public Noeud N { get; set; }
         public INoeud N { get; set; }
-        IBusinessFactory Service { get; set; }
+        IBusinessFactory ServiceBusiness { get; set; }
+        IDALFactory ServiceDAL { get; set; }
 
         public Form1()
         {
-            Service = new BusinessFactory(new GenomeBusiness());
+            ServiceBusiness = new BusinessFactory(new GenomeBusiness());
+            ServiceDAL = new DALFactory(new ClusterDAL());
             InitializeComponent();
             Calcul1_Btn.Enabled = false;
             Calcul2_Btn.Enabled = false;
@@ -29,7 +33,7 @@ namespace Cluster_UI
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
         {
-            N = new Orchestrateur();
+            N = new Orchestrateur(ServiceDAL);
             Noeud_Btn.Enabled = false;
             Calcul1_Btn.Enabled = true;
             Calcul2_Btn.Enabled = true;
@@ -41,11 +45,11 @@ namespace Cluster_UI
         {
             try
             {
-                N = new Noeud(Service);
+                N = new Noeud(ServiceBusiness, ServiceDAL);
                 Orchestrateur_Btn.Enabled = false;
                 Noeud_Btn.BackColor = Color.DarkGray;
                 AdresseIP_Lbl.Text = N.ToString();
-                //N.AttenteCalcul();
+                N.Attente();
             }
             catch (Exception ex)
             {
@@ -69,17 +73,14 @@ namespace Cluster_UI
 
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
-                Operation retour = N.EnvoyerCalcul(new Operation { Type = "GetCalcul1", Param = fileContentZip });
-                sw.Stop();
-                Resultat_Lbl.Text = $"Temps réseau : {sw.ElapsedMilliseconds} ms\n" + retour.ToString();
+                Operation retour1 = N.Envoyer(new Operation { Type = "GetCalcul1", Param = fileContentZip });
+                Resultat_Lbl.Text = retour1.ToString();
             }
-            catch (Exception ex)
+            catch (ClusterException ex)
             {
-                string err = $"{ex.Message} \n{ex.StackTrace}";
-                MessageBox.Show(err);
+                ex.Log();
+                MessageBox.Show(ex.Message);
             }
-
         }
 
         private string GetFile()
@@ -112,10 +113,8 @@ namespace Cluster_UI
 
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
-                Operation retour = N.EnvoyerCalcul(new Operation { Type = "GetCalcul2", Param = fileContentZip });
-                sw.Stop();
-                Resultat_Lbl.Text = $"Temps réseau : {sw.ElapsedMilliseconds} ms\n" + retour.ToString();
+                Operation retour = N.Envoyer(new Operation { Type = "GetCalcul2", Param = fileContentZip });
+                Resultat_Lbl.Text = $"{retour.Param.Substring(0,150)}";
             }
             catch (Exception ex)
             {
@@ -127,7 +126,7 @@ namespace Cluster_UI
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (N != null)
-                N.Close();
+                N.Dispose();
         }
     }
 }

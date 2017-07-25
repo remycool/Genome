@@ -77,12 +77,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cluster\Cluster.csproj">
       <Project>{382344ef-7a01-49dd-8b95-5a7b60643490}</Project>
       <Name>Cluster</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cluster_DAL\Cluster_DAL.csproj">
+      <Project>{EE9C865A-1544-4175-91B1-C9EE43C980DB}</Project>
+      <Name>Cluster_DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Genome\Genome.csproj">
       <Project>{e647228a-c07d-477a-be8a-0f5bf706182b}</Project>

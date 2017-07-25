@@ -19,10 +19,12 @@ namespace Cluster_DAL
         /// Permet de gérer la connexion aux bases de données MySQL / SQLite
         /// </summary>
         /// <param name="nomBdd"></param>
-        public DAL(string nomBdd)
+        public DAL()
         {
             connectionStringMySql = ConfigurationManager.ConnectionStrings["ClusterDbMySql"].ConnectionString;
-            Bdd = nomBdd;
+            Bdd = ConfigurationManager.AppSettings["BDD"];
+            if (string.IsNullOrEmpty(Bdd))
+                throw new Exception("Le type de base de donnée n'est pas précisé dans le fichier de configuration App.config");
             switch (Bdd)
             {
                 case "MYSQL":

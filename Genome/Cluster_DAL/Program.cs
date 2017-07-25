@@ -11,10 +11,10 @@ namespace Cluster_DAL
 
     class Program
     {
-        const string BDD = "MYSQL";
+        
         static void Main(string[] args)
         {
-            using (ClusterDAL dal = new ClusterDAL(BDD))
+            using (ClusterDAL dal = new ClusterDAL())
             {
                 Console.WriteLine("Récupération des IP du cluster");
 
@@ -33,7 +33,7 @@ namespace Cluster_DAL
                 Console.ReadKey();
 
                 //Mettre à jour le registre
-                dal.UpdateCluster("192.168.0.21", etat.connected, role.noeud);
+                dal.UpdateCluster("192.168.0.21",4,1);
                 //etat du cluster
                 Console.WriteLine(dal.GetClusterRegistry());
                 Console.ReadKey();

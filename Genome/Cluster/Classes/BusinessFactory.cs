@@ -4,9 +4,9 @@ namespace Cluster.Classes
 {
     public class BusinessFactory:IBusinessFactory
     {
-        private IClusterizable _clusterizableBusiness;
+        private IClusterizableBusiness _clusterizableBusiness;
 
-        public BusinessFactory(IClusterizable business)
+        public BusinessFactory(IClusterizableBusiness business)
         {
             _clusterizableBusiness = business;
         }

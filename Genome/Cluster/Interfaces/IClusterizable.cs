@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cluster.Interfaces
 {
-    public interface IClusterizable
+    public interface IClusterizableBusiness
     {
         Operation Calcul1(string chunkFile);
         Operation Calcul2(string chunkfile);

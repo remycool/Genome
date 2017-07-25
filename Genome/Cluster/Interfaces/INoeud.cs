@@ -1,12 +1,12 @@
 ﻿using Cluster.Classes;
+using System;
 
 namespace Cluster.Interfaces
 {
-    public interface INoeud
+    public interface INoeud:IDisposable
     {
-         void Initialize();
-         void Close();
-        void AttenteCalcul();
-        Operation EnvoyerCalcul(Operation operation);
+        void Initialize();
+        Operation Attente();
+        Operation Envoyer(Operation operation);
     }
 }

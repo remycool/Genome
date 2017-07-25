@@ -24,19 +24,7 @@ namespace Cluster_DAL
         /// </summary>
         public void Open()
         {
-            try
-            {
-                Connection.Open();
-
-            }
-            catch (MySqlException)
-            {
-
-            }
-            catch (Exception ex)
-            {
-
-            }
+            Connection.Open();
         }
         /// <summary>
         /// Dispose

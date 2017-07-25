@@ -104,7 +104,7 @@ namespace Cluster.Utils
         /// Désérialyse la chaine représentant l'objet
         /// </summary>
         /// <param name="serializedObject"></param>
-        /// <returns>Un objet de type IClusterizable </returns>
+        /// <returns>Un objet de type IClusterizableBusiness </returns>
         public static Operation Deserialize(string serializedObject)
         {
 
@@ -121,5 +121,6 @@ namespace Cluster.Utils
 
             return result;
         }
+
     }
 }

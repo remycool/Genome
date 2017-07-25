@@ -1,19 +1,13 @@
 ﻿using Cluster.Classes;
 using Cluster.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Genome.GenomeBusiness
 {
-    public class GenomeBusiness:IClusterizable
+    public class GenomeBusiness:IClusterizableBusiness
     {
 
-        Operation IClusterizable.Calcul1(string chunk)
+        Operation IClusterizableBusiness.Calcul1(string chunk)
         {
             char charToCount = 'C';
             Stopwatch sw = Stopwatch.StartNew();
@@ -30,7 +24,7 @@ namespace Genome.GenomeBusiness
             return new Operation { Resultat = count, TempsExecution = sw.ElapsedMilliseconds };
         }
 
-        Operation IClusterizable.Calcul2(string chunck)
+        Operation IClusterizableBusiness.Calcul2(string chunck)
         {
             string brin1=string.Empty;
             string brin2=string.Empty;

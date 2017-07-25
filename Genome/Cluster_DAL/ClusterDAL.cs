@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cluster.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Cluster_DAL
 {
-    public class ClusterDAL : DAL
+    public class ClusterDAL : DAL,IClusterizableDAL
     {
-        public ClusterDAL(string nomBdd) : base(nomBdd)
+        public ClusterDAL()
         {
         }
 
@@ -58,8 +59,6 @@ namespace Cluster_DAL
             return result;
         }
 
-      
-
         /// <summary>
         /// Appelle une fonction stockée de la bdd
         /// </summary>
@@ -67,7 +66,7 @@ namespace Cluster_DAL
         /// <param name="etat">l'id de l'état</param>
         /// <param name="role">l'id du role</param>
         /// <returns>le code retour</returns>
-        public int UpdateCluster(string adresseIP, etat etat, role role)
+        public int UpdateCluster(string adresseIP, int etat, int role)
         {
             int result = 0;
 
@@ -75,7 +74,7 @@ namespace Cluster_DAL
                 throw new Exception("L'adresse IP n'est pas au format valide");
 
             string sql = "select cluster_db.maj_cluster(@1, @2, @3)";
-            Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@1", adresseIP }, { "@2", (int)etat }, { "@3", (int)role } };
+            Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@1", adresseIP }, { "@2", etat }, { "@3", role } };
 
             using (DbDataReader reader = Get(sql, parameters))
             {
@@ -95,10 +94,10 @@ namespace Cluster_DAL
         public string GetOrchestrateurIp()
         {
             string ip = string.Empty;
-            string sql = @"SELECT ip FROM cluster_view WHERE etat = @1 AND role = @2";
-            Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@1", (int)etat.connected }, { "@2", (int)role.orchestrateur } };
+            string sql = @"SELECT ip FROM cluster_view WHERE etat = 4 AND role = 2";
+          
 
-            using (DbDataReader reader = Get(sql, parameters))
+            using (DbDataReader reader = Get(sql, null))
             {
                 while (reader.Read())
                 {
@@ -108,7 +107,6 @@ namespace Cluster_DAL
 
             return ip;
         }
-
 
         private bool isCorrectIp(string adresseIp)
         {

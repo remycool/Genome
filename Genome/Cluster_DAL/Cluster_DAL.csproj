@@ -50,19 +50,24 @@
   <ItemGroup>
     <Compile Include="ClusterDAL.cs" />
     <Compile Include="DAL.cs" />
-    <Compile Include="Etat.cs" />
     <Compile Include="IDbConnection.cs" />
     <Compile Include="MysqlConnect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClusterDbDump20170711-1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cluster\Cluster.csproj">
+      <Project>{382344ef-7a01-49dd-8b95-5a7b60643490}</Project>
+      <Name>Cluster</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
