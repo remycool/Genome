@@ -15,7 +15,8 @@ namespace Cluster.Classes
         #region PROPRIETES
         public const int PORT = 8888;
         //public const string NOEUD = "192.168.0.25";
-        public const string NOEUD = "10.131.129.3";
+        //public const string NOEUD = "10.131.129.3";
+        public const string NOEUD = "192.168.0.9";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
         public Communication com { get; set; }
@@ -37,19 +38,58 @@ namespace Cluster.Classes
             return $"@ IP : {AdresseIP.ToString()}";
         }
 
-        public async void Map(string chunck)
-        {
+        //public IEnumerable<string> ChunkFactory(string fileText)
+        //{
+        //    int blockSize = 250;
+        //    int startPos = 0;
+        //    int len = 0;
 
+        //    for (int i = 0; i < fileText.Length; i++)
+        //    {
+        //        i = i + blockSize > fileText.Length - 1 ? fileText.Length - 1 : i + blockSize;
+
+        //        while (i >= startPos && fileText[i] != ' ')
+        //        {
+        //            i--;
+        //        }
+
+        //        if (i == startPos)
+        //        {
+        //            i = i + blockSize > (fileText.Length - 1) ? fileText.Length - 1 : i + blockSize;
+        //            len = (i - startPos) + 1;
+        //        }
+        //        else
+        //        {
+        //            len = i - startPos;
+        //        }
+
+        //        yield return  fileText.Substring(startPos, len).Trim();
+        //        startPos = i;
+        //    }
+        //}
+
+
+
+        public int Map(string chunck)
+        {
+            chunck = "testsetsetsetsqyFÖKZOBKQE.YBO¨BKR^;ov%POZEJTV?ùpoaej,vpùOJ?¨`ok;PE¨ZTV.pêt,bÔZET?NBozv,ùpOZETV?ùpzetvù,pOZE";
+               
             //Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
             MapReduce mr = new MapReduce();
             List<Operation> ops = new List<Operation>();
             ops.Add(new Operation { Type = "GetCalcul1", Param = chunck });
-            Operation result = await mr.MapRed<Operation, Operation, Operation>(ops, op => Envoyer(op), r => Reduce(r));
+
+            return  mr.MapRed<Operation, Operation, int>(ops, op => Envoyer(op), r => Reduce(r));
 
         }
 
-       
-        
+        private int Reduce(IEnumerable<Operation> results)
+        {
+            int reduce =0;
+            Parallel.ForEach(results, r => reduce += r.Resultat);
+            return reduce;
+        }
+
 
         /// <summary>
         /// Permet d'envoyer un objet opérateur sur le réseau TCP/IP

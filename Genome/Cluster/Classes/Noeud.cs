@@ -13,8 +13,8 @@ namespace Cluster.Classes
     {
         public const int PORT = 8888;
         // public const string ORCHESTRATEUR = "192.168.0.21";
-        public const string ORCHESTRATEUR = "10.131.128.243";
-
+        //public const string ORCHESTRATEUR = "10.131.128.243";
+        public const string ORCHESTRATEUR = "192.168.0.41";
 
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
@@ -102,6 +102,11 @@ namespace Cluster.Classes
             operation.Param = paramCompressed;
             Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), operation);
             return Attente();
+        }
+
+        public int Map(string chunck)
+        {
+            throw new NotImplementedException();
         }
     }
 }

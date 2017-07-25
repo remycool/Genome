@@ -73,8 +73,9 @@ namespace Cluster_UI
 
             try
             {
-                Operation retour1 = N.Envoyer(new Operation { Type = "GetCalcul1", Param = fileContentZip });
-                Resultat_Lbl.Text = retour1.ToString();
+                //Operation retour1 = N.Envoyer(new Operation { Type = "GetCalcul1", Param = fileContentZip });
+                Resultat_Lbl.Text = $"{N.Map(file)}";    
+                //Resultat_Lbl.Text = retour1.ToString();
             }
             catch (ClusterException ex)
             {

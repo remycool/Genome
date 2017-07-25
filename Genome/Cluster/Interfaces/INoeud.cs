@@ -8,5 +8,6 @@ namespace Cluster.Interfaces
         void Initialize();
         Operation Attente();
         Operation Envoyer(Operation operation);
+        int Map(string chunck);
     }
 }
