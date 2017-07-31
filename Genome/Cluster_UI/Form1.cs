@@ -45,11 +45,24 @@ namespace Cluster_UI
         {
             try
             {
+                richTextBox_Results.Clear();
+                string file = GetFile();
+                Console.WriteLine(file.Length);
                 N = new Noeud(ServiceBusiness, ServiceDAL);
                 Orchestrateur_Btn.Enabled = false;
                 Noeud_Btn.BackColor = Color.DarkGray;
                 AdresseIP_Lbl.Text = N.ToString();
-                N.Attente();
+                richTextBox_Results.Multiline = true;
+                Stopwatch sw1 = Stopwatch.StartNew();
+                int result = N.Map(file);
+                sw1.Stop();
+                richTextBox_Results.AppendText($"\nAVEC MAP REDUCE : {result} en {sw1.ElapsedMilliseconds} ms");
+                Stopwatch sw2 = Stopwatch.StartNew();
+                result = N.CountChars(file, 'A');
+                richTextBox_Results.AppendText($"\nSANS MAP REDUCE : {result} en {sw2.ElapsedMilliseconds} ms");
+                sw2.Stop();
+
+                //N.Attente();
             }
             catch (Exception ex)
             {

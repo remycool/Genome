@@ -3,9 +3,12 @@ using Cluster.Interfaces;
 using Cluster.Protocole;
 using Cluster.Utils;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace Cluster.Classes
 {
@@ -104,10 +107,59 @@ namespace Cluster.Classes
             return Attente();
         }
 
-        public int Map(string chunck)
+        public IEnumerable<string> ChunkFactory(string fileText)
         {
-            throw new NotImplementedException();
+            int startPos = 0;
+            int blocksize = 1000;
+            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
+            for (int i = 0; i < iterations - 1; i++)
+            {
+                yield return fileText.Substring(startPos, blocksize);
+                startPos += blocksize;
+            }
+            yield return fileText.Substring(startPos, fileText.Length - startPos);
         }
+
+
+        public List<string> ChunkFactoryTest(string fileText)
+        {
+            List<string> chunks = new List<string>();
+            int startPos = 0;
+            int blocksize = 250;
+            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
+            for (int i = 0; i < iterations - 1; i++)
+            {
+
+                chunks.Add(fileText.Substring(startPos, blocksize));
+                startPos += blocksize;
+            }
+            chunks.Add(fileText.Substring(startPos, fileText.Length - startPos));
+            return chunks;
+        }
+
+        public int Map(string file)
+        {
+            int count = 0;
+            //Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
+            MapReduce<string,int> mr = new MapReduce<string,int>();
+            mr.mapReduce(ChunkFactory(file), chunk => CountChars(chunk,'A'));
+            return mr.resultStore.Sum(v => v.Value);
+            
+        }
+
+        private int Reduce(IEnumerable<int> results)
+        {
+            int reduce = 0;
+            Parallel.ForEach(results, r => reduce += r);
+            return reduce;
+        }
+
+        public int CountChars(string chunk, char charToCount)
+        {
+            return chunk.Count(c=>c == charToCount);
+        }
+
+
     }
 }
 

@@ -72,14 +72,15 @@ namespace Cluster.Classes
 
         public int Map(string chunck)
         {
-            chunck = "testsetsetsetsqyFÖKZOBKQE.YBO¨BKR^;ov%POZEJTV?ùpoaej,vpùOJ?¨`ok;PE¨ZTV.pêt,bÔZET?NBozv,ùpOZETV?ùpzetvù,pOZE";
-               
-            //Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
-            MapReduce mr = new MapReduce();
-            List<Operation> ops = new List<Operation>();
-            ops.Add(new Operation { Type = "GetCalcul1", Param = chunck });
+            //chunck = "testsetsetsetsqyFÖKZOBKQE.YBO¨BKR^;ov%POZEJTV?ùpoaej,vpùOJ?¨`ok;PE¨ZTV.pêt,bÔZET?NBozv,ùpOZETV?ùpzetvù,pOZE";
 
-            return  mr.MapRed<Operation, Operation, int>(ops, op => Envoyer(op), r => Reduce(r));
+            ////Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
+            //MapReduce mr = new MapReduce();
+            //List<Operation> ops = new List<Operation>();
+            //ops.Add(new Operation { Type = "GetCalcul1", Param = chunck });
+
+            //return  mr.MapRed<Operation, Operation, int>(ops, op => Envoyer(op), r => Reduce(r));
+            return 0;
 
         }
 
@@ -132,6 +133,11 @@ namespace Cluster.Classes
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
             Console.WriteLine(DALService.GetClusterView());
             DALService.Dispose();
+        }
+
+        public int CountChars(string chunk, char charToCount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

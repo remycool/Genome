@@ -34,6 +34,7 @@
             this.Resultat_Lbl = new System.Windows.Forms.Label();
             this.AdresseIP_Lbl = new System.Windows.Forms.Label();
             this.Calcul2_Btn = new System.Windows.Forms.Button();
+            this.richTextBox_Results = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // Orchestrateur_Btn
@@ -92,11 +93,20 @@
             this.Calcul2_Btn.UseVisualStyleBackColor = true;
             this.Calcul2_Btn.Click += new System.EventHandler(this.Calcul2_Btn_Click);
             // 
+            // richTextBox_Results
+            // 
+            this.richTextBox_Results.Location = new System.Drawing.Point(312, 181);
+            this.richTextBox_Results.Name = "richTextBox_Results";
+            this.richTextBox_Results.Size = new System.Drawing.Size(316, 108);
+            this.richTextBox_Results.TabIndex = 7;
+            this.richTextBox_Results.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 351);
+            this.Controls.Add(this.richTextBox_Results);
             this.Controls.Add(this.Calcul2_Btn);
             this.Controls.Add(this.AdresseIP_Lbl);
             this.Controls.Add(this.Resultat_Lbl);
@@ -119,6 +129,7 @@
         private System.Windows.Forms.Label Resultat_Lbl;
         private System.Windows.Forms.Label AdresseIP_Lbl;
         private System.Windows.Forms.Button Calcul2_Btn;
+        private System.Windows.Forms.RichTextBox richTextBox_Results;
     }
 }
 
