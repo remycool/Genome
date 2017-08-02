@@ -139,7 +139,6 @@ namespace Cluster.Classes
 
         public int Map(string file)
         {
-            int count = 0;
             //Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
             MapReduce<string,int> mr = new MapReduce<string,int>();
             mr.mapReduce(ChunkFactory(file), chunk => CountChars(chunk,'A'));

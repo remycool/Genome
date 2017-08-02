@@ -7,28 +7,30 @@ using System.Threading.Tasks;
 
 namespace Cluster.Classes
 {
-    public class MapReduce<TInput,TResult>
+    public class MapReduce<TInput,TResult> 
     {
         public static ConcurrentBag<TResult> resultBag = new ConcurrentBag<TResult>();
         public BlockingCollection<TResult> mapingInputs = new BlockingCollection<TResult>(resultBag);
 
         public void map(IEnumerable<TInput> inputs, Func<TInput, TResult> mapDelegate)
         {
+          
             Parallel.ForEach(inputs, i =>
             {   
                 mapingInputs.Add(mapDelegate(i));
             });
-
             mapingInputs.CompleteAdding();
         }
 
-        public ConcurrentDictionary<TResult, int> resultStore = new ConcurrentDictionary<TResult, int>();
+        public ConcurrentDictionary<int, TResult> resultStore = new ConcurrentDictionary<int, TResult>();
 
+        
         public void reduce()
         {
+            int i = 1;
             Parallel.ForEach(mapingInputs.GetConsumingEnumerable(), input =>
             {   
-                resultStore.AddOrUpdate(input, 1, (key, oldValue) => Interlocked.Increment(ref oldValue));
+                resultStore.TryAdd(i++,input);
             });
         }
 

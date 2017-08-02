@@ -2,6 +2,7 @@
 {
     public class Operation
     {
+        public string IpNoeud { get; set; }
         public string Type { get; set; }
         public string Param { get; set; }
         public int Resultat { get; set; }
