@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{1E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster_DAL", "Cluster_DAL\Cluster_DAL.csproj", "{EE9C865A-1544-4175-91B1-C9EE43C980DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IhmMain", "..\..\IhmMain\IhmMain\IhmMain.csproj", "{921A2FAC-F2D7-4121-B76F-12C5E2BE6515}"
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
