@@ -7,9 +7,7 @@ namespace Cluster.Interfaces
     {
         void Initialize();
         Operation Attente();
-        Operation Envoyer(Operation operation);
-        int Map(string chunck);
-        //test
-        int CountChars(string chunk, char charToCount);
+        Operation Envoyer(Operation op);
+        void RepartirCalcul(string file,string methode);
     }
 }

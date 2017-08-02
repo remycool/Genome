@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cluster.Interfaces;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,15 @@ using System.Threading.Tasks;
 
 namespace Cluster.Classes
 {
-    public class MapReduce<TInput,TResult> 
+    public class MapReduce<TInput,TResult>
     {
         public static ConcurrentBag<TResult> resultBag = new ConcurrentBag<TResult>();
         public BlockingCollection<TResult> mapingInputs = new BlockingCollection<TResult>(resultBag);
 
-        public void map(IEnumerable<TInput> inputs, Func<TInput, TResult> mapDelegate)
+        
+
+
+        private void map(IEnumerable<TInput> inputs, Func<TInput, TResult> mapDelegate)
         {
           
             Parallel.ForEach(inputs, i =>
@@ -25,7 +29,7 @@ namespace Cluster.Classes
         public ConcurrentDictionary<int, TResult> resultStore = new ConcurrentDictionary<int, TResult>();
 
         
-        public void reduce()
+        private void reduce()
         {
             int i = 1;
             Parallel.ForEach(mapingInputs.GetConsumingEnumerable(), input =>

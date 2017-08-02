@@ -10,36 +10,18 @@ namespace Cluster.Protocole
 {
     public class Communication
     {
-        private static Communication instance;
-        private static object syncRoot = new object();
         public IPAddress AdresseIpLocale { get; set; }
         public const int PORT = 8888;
+        TcpListener LocalListener { get; set; }
 
 
 
-        private Communication()
+        public  Communication(IPAddress adressIpLocale )
         {
-
-
+            AdresseIpLocale = adressIpLocale;
+            LocalListener = new TcpListener(AdresseIpLocale, PORT);
+            LocalListener.Start();
         }
-
-        public static Communication Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (instance == null)
-                            instance = new Communication();
-                    }
-                }
-
-                return instance;
-            }
-        }
-
 
         public void Envoyer(IPAddress remote, Operation obj)
         {
@@ -68,15 +50,9 @@ namespace Cluster.Protocole
         {
             Operation obj = null;
 
-            //Initialisation du listener
-            TcpListener localListener = new TcpListener(AdresseIpLocale, PORT);
-            //Débuter l'écoute
-            localListener.Start();
-
-
             try
             {
-                using (TcpClient remote = localListener.AcceptTcpClient())
+                using (TcpClient remote = LocalListener.AcceptTcpClient())
                 using (NetworkStream ns = remote.GetStream())
                 {
                     int i = 0;
@@ -104,7 +80,7 @@ namespace Cluster.Protocole
             }
             finally
             {
-                localListener.Stop();
+                LocalListener.Stop();
             }
 
             return obj;

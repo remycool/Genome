@@ -14,21 +14,20 @@ namespace Cluster.Classes
     {
         #region PROPRIETES
         public const int PORT = 8888;
-        //public const string NOEUD = "192.168.0.25";
-        //public const string NOEUD = "10.131.129.3";
-        public const string NOEUD = "192.168.0.9";
+        public const string NOEUD = "192.168.0.21";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
         public Communication com { get; set; }
         public List<string> Chuncks { get; set; }
         public IDALFactory DALService { get; set; }
+        public MapReduce<Operation,Operation> MapRed { get; set; }
         #endregion
 
         public Orchestrateur(IDALFactory DalService)
         {
             AdressesNoeuds = new List<IPAddress>();
             AdresseIP = Utility.GetLocalIP();
-            com = Communication.Instance;
+            com = new Communication(AdresseIP);
             DALService = DalService;
             Initialize();
         }
@@ -37,70 +36,36 @@ namespace Cluster.Classes
         {
             return $"@ IP : {AdresseIP.ToString()}";
         }
-
-        //public IEnumerable<string> ChunkFactory(string fileText)
-        //{
-        //    int blockSize = 250;
-        //    int startPos = 0;
-        //    int len = 0;
-
-        //    for (int i = 0; i < fileText.Length; i++)
-        //    {
-        //        i = i + blockSize > fileText.Length - 1 ? fileText.Length - 1 : i + blockSize;
-
-        //        while (i >= startPos && fileText[i] != ' ')
-        //        {
-        //            i--;
-        //        }
-
-        //        if (i == startPos)
-        //        {
-        //            i = i + blockSize > (fileText.Length - 1) ? fileText.Length - 1 : i + blockSize;
-        //            len = (i - startPos) + 1;
-        //        }
-        //        else
-        //        {
-        //            len = i - startPos;
-        //        }
-
-        //        yield return  fileText.Substring(startPos, len).Trim();
-        //        startPos = i;
-        //    }
-        //}
-
-
-
-        public int Map(string chunck)
-        {
-            //chunck = "testsetsetsetsqyFÖKZOBKQE.YBO¨BKR^;ov%POZEJTV?ùpoaej,vpùOJ?¨`ok;PE¨ZTV.pêt,bÔZET?NBozv,ùpOZETV?ùpzetvù,pOZE";
-
-            ////Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
-            //MapReduce mr = new MapReduce();
-            //List<Operation> ops = new List<Operation>();
-            //ops.Add(new Operation { Type = "GetCalcul1", Param = chunck });
-
-            //return  mr.MapRed<Operation, Operation, int>(ops, op => Envoyer(op), r => Reduce(r));
-            return 0;
-
-        }
-
-        private int Reduce(IEnumerable<Operation> results)
-        {
-            int reduce =0;
-            Parallel.ForEach(results, r => reduce += r.Resultat);
-            return reduce;
-        }
-
-
+       
         /// <summary>
-        /// Permet d'envoyer un objet opérateur sur le réseau TCP/IP
+        /// Permet d'envoyer un objet operation sur le réseau TCP/IP
         /// </summary>
         /// <param name="op">L'objet Operation qui contient la fonction à invoquer et le morceau de fichier</param>
         /// <returns>Le résultat de l'opération demandée depuis le noeud distant</returns>
         public Operation Envoyer(Operation op)
         {
-            com.Envoyer(IPAddress.Parse(NOEUD), op);
+            com.Envoyer(IPAddress.Parse(op.IpNoeud), op);
             return Attente();
+        }
+
+        public void RepartirCalcul(string fileText, string methode)
+        {
+           
+            MapRed.mapReduce(ChunkFactory(fileText, methode), c => Envoyer(c));
+        }
+
+        public IEnumerable<Operation> ChunkFactory(string fileText , string methode)
+        {
+            int startPos = 0;
+            int blocksize = 1000;
+            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
+            for (int i = 0; i < iterations - 1; i++)
+            {
+                yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, blocksize), Type = methode }; 
+                
+                startPos += blocksize;
+            }
+            yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, fileText.Length - startPos), Type = methode }; 
         }
 
         public Operation Attente()
@@ -119,6 +84,7 @@ namespace Cluster.Classes
             Console.WriteLine(DALService.GetClusterView());
             //obtenir l'IP des noeuds connectés
             AdressesNoeuds = DALService.GetAllNodeIPs();
+            MapRed = new MapReduce<Operation, Operation>();
         }
 
         public void AttenteCalcul()

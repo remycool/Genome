@@ -15,9 +15,7 @@ namespace Cluster.Classes
     public class Noeud : INoeud
     {
         public const int PORT = 8888;
-        // public const string ORCHESTRATEUR = "192.168.0.21";
-        //public const string ORCHESTRATEUR = "10.131.128.243";
-        public const string ORCHESTRATEUR = "192.168.0.41";
+         public const string ORCHESTRATEUR = "192.168.0.25";
 
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
@@ -28,7 +26,7 @@ namespace Cluster.Classes
         public Noeud(IBusinessFactory BuService, IDALFactory DalService)
         {
             AdresseIP = Utility.GetLocalIP();
-            Com = Communication.Instance;
+            Com = new Communication(AdresseIP);
             BusinessService = BuService;
             DALService = DalService;
             Initialize();
@@ -107,58 +105,15 @@ namespace Cluster.Classes
             return Attente();
         }
 
-        public IEnumerable<string> ChunkFactory(string fileText)
-        {
-            int startPos = 0;
-            int blocksize = 1000;
-            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
-            for (int i = 0; i < iterations - 1; i++)
-            {
-                yield return fileText.Substring(startPos, blocksize);
-                startPos += blocksize;
-            }
-            yield return fileText.Substring(startPos, fileText.Length - startPos);
-        }
-
-
-        public List<string> ChunkFactoryTest(string fileText)
-        {
-            List<string> chunks = new List<string>();
-            int startPos = 0;
-            int blocksize = 250;
-            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
-            for (int i = 0; i < iterations - 1; i++)
-            {
-
-                chunks.Add(fileText.Substring(startPos, blocksize));
-                startPos += blocksize;
-            }
-            chunks.Add(fileText.Substring(startPos, fileText.Length - startPos));
-            return chunks;
-        }
-
-        public int Map(string file)
-        {
-            //Découper le fichier, associer chaque morceau à un calcul l'envoyer à une adresse IP 
-            MapReduce<string,int> mr = new MapReduce<string,int>();
-            mr.mapReduce(ChunkFactory(file), chunk => CountChars(chunk,'A'));
-            return mr.resultStore.Sum(v => v.Value);
-            
-        }
-
-        private int Reduce(IEnumerable<int> results)
-        {
-            int reduce = 0;
-            Parallel.ForEach(results, r => reduce += r);
-            return reduce;
-        }
-
         public int CountChars(string chunk, char charToCount)
         {
             return chunk.Count(c=>c == charToCount);
         }
 
-
+        public void RepartirCalcul(string file, string methode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
