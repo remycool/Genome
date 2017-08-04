@@ -21,8 +21,8 @@ namespace DisplayIhm
             //textToArray = System.IO.File.ReadAllLines("@"+ loadFile(filePath));
             Console.WriteLine("List Generated:");
             lines = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
-            /*sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length;
-            arrFromFile = "ok "; */
+            sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length;
+            arrFromFile = "ok "; 
         }
 
 
@@ -66,16 +66,18 @@ namespace DisplayIhm
           
 
 
-           /// List<string> ss = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToList();
+            string[] ss = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
           //  int cycle = 1;
             int chunksize = 10;
 
             var chunk = lines.Take(chunksize);
             var rem = lines.Skip(chunksize);
-            foreach (string s in lines)
+            string filename = @"E:\Projet_Cesi\DNA\DNA-Data\test1.txt";
+            using (StreamWriter sw = new StreamWriter(filename))
+                foreach (string s in chunk)
             {
-                Console.WriteLine(s);
-                Console.ReadKey();
+                sw.WriteLine(s);
+           
             }
           //  Console.WriteLine("c");
             /*while (chunk.Take(3).Count() <10)

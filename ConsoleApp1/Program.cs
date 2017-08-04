@@ -10,11 +10,10 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            //Lazy<DisplayIhm.DisplayIhm> h = new Lazy<DisplayIhm.DisplayIhm>();
-            // Console.WriteLine("IsValueCreated = {0}", h.IsValueCreated);
-            // DisplayIhm.DisplayIhm test = h.Value;
+            Lazy<DisplayIhm.DisplayIhm> h = new Lazy<DisplayIhm.DisplayIhm>();
+            Console.WriteLine("IsValueCreated = {0}", h.IsValueCreated);
+             DisplayIhm.DisplayIhm test = h.Value;
             // Console.WriteLine("Length = {0}", test.meth);
-            DisplayIhm.DisplayIhm test = new DisplayIhm.DisplayIhm();
             test.regroup();
            /* foreach (string tmp in test.hyi)
 
