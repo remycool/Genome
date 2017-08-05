@@ -11,18 +11,16 @@ namespace DisplayIhm
     public class DisplayIhm
     {
         /* private TextBox filePath= null;*/
-        private string arrFromFile;
         private long sizeFile;
-        private string[] lines = null;
+        private string[] fileTransform = null;
+        private string filenameNew;
+        private StreamWriter writeInFile;
 
-        
 
         public DisplayIhm(){
-            //textToArray = System.IO.File.ReadAllLines("@"+ loadFile(filePath));
             Console.WriteLine("List Generated:");
-            lines = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
-            sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length;
-            arrFromFile = "ok "; 
+            fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
+            sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length; 
         }
 
 
@@ -40,17 +38,6 @@ namespace DisplayIhm
         }
 
 
-
-        public string[] hyi
-        {
-            get
-            {
-               
-                return lines;
-            }
-            
-        }
-
         public long meth
         {
             get
@@ -61,40 +48,33 @@ namespace DisplayIhm
 
         }
 
-      public void regroup()
+      public void splitFile()
         {
           
+           int tour = 1;
+           int chunksize = 15;
+           var chunk = fileTransform.Take(chunksize);
+           var removePrevious = fileTransform.Skip(chunksize);
 
-
-            string[] ss = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
-          //  int cycle = 1;
-            int chunksize = 10;
-
-            var chunk = lines.Take(chunksize);
-            var rem = lines.Skip(chunksize);
-            string filename = @"E:\Projet_Cesi\DNA\DNA-Data\test1.txt";
-            using (StreamWriter sw = new StreamWriter(filename))
-                foreach (string s in chunk)
+            while (chunk.Take(1).Count() > 0)
             {
-                sw.WriteLine(s);
-           
+                filenameNew = @"E:\Projet_Cesi\DNA\DNA-Data\"+"adnPart_"+ tour + ".txt";
+                using (writeInFile = new StreamWriter(filenameNew))
+                    foreach (string element in chunk)
+                    {
+                        writeInFile.WriteLine(element);  
+                        
+                    }
+                chunk = removePrevious.Take(chunksize);
+                removePrevious = removePrevious.Skip(chunksize);
+                tour++;
+
+                if (writeInFile.BaseStream == null)
+                {
+                    Console.WriteLine("Le fihcier à  terminé son processus");
+                }
             }
-          //  Console.WriteLine("c");
-            /*while (chunk.Take(3).Count() <10)
-            {
-                 string filename = @"E:\Projet_Cesi\DNA\DNA-Data\test.txt";
-                 using (StreamWriter sw = new StreamWriter(filename))
-                 {
-                     foreach (string line in chunk)
-                     {
-                        // sw.WriteLine(line);                    
-                         Console.WriteLine(line);
-                     }
-                 }
-                 chunk = rem.Take(chunksize);
-                 rem = rem.Skip(chunksize);
-                 cycle++;
-             }*/
+         
         }
 
        

@@ -14,7 +14,7 @@ namespace ConsoleApp1
             Console.WriteLine("IsValueCreated = {0}", h.IsValueCreated);
              DisplayIhm.DisplayIhm test = h.Value;
             // Console.WriteLine("Length = {0}", test.meth);
-            test.regroup();
+            test.splitFile();
            /* foreach (string tmp in test.hyi)
 
             {
