@@ -15,7 +15,8 @@ namespace DisplayIhm
         private string[] fileTransform = null;
         private string filenameNew;
         private StreamWriter writeInFile;
-
+        public delegate void splitFileEvent();
+        public event splitFileEvent OnFileReached;
 
         public DisplayIhm(){
             Console.WriteLine("List Generated:");
