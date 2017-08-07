@@ -14,8 +14,9 @@ namespace ConsoleApp1
             Console.WriteLine("IsValueCreated = {0}", h.IsValueCreated);
              DisplayIhm.DisplayIhm test = h.Value;
             // Console.WriteLine("Length = {0}", test.meth);
-            test.splitFile();
+            DisplayIhm.DisplayIhm.splitFileEvent fileEvent = new DisplayIhm.DisplayIhm.splitFileEvent(test.splitFile);
             test.OnFileReached += new DisplayIhm.DisplayIhm.splitFileEvent(a_FileReached);
+            test.splitFile();
             Console.ReadLine();
             Console.ReadKey();
         }
