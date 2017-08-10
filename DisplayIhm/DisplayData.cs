@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FileManagement;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace DisplayIhm
 {
@@ -16,7 +18,7 @@ namespace DisplayIhm
         private string filenameNew;
         private StreamWriter writeInFile;
         public delegate void splitFileEvent();
-        public event splitFileEvent OnFileReached;
+        public event EventHandler<EventsModel> OnFileReached;
 
         public DisplayIhm(){
             Console.WriteLine("List Generated:");
@@ -34,7 +36,6 @@ namespace DisplayIhm
             {
                 tbFilePath.Text = fileDialog.FileName;
             }
-
             return tbFilePath.Text;
         }
 
@@ -72,7 +73,8 @@ namespace DisplayIhm
 
                 if (writeInFile.BaseStream == null)
                 {
-                    Console.WriteLine("Le fihcier à  terminé son processus");
+                    // Console.WriteLine("Le fihcier à  terminé son processus");
+                    OnFileReached(this, new EventsModel());   
                 }
             }
          

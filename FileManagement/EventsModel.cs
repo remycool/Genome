@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FileManagement
 {
     public delegate string MyDel(string str);
-    class EventsModel
+    public class EventsModel : EventArgs
     {
         event MyDel pickFileEvent;
         public EventsModel()
@@ -18,6 +18,10 @@ namespace FileManagement
         public string getFile(string fileName)
         {
             return "Id du ficheir" + fileName;
+        }
+        public void fileCreated()
+        {
+
         }
 
     }

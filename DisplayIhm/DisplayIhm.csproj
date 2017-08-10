@@ -44,5 +44,11 @@
     <Compile Include="DisplayData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileManagement\FileManagement.csproj">
+      <Project>{C342A2B5-BE96-4690-A8B5-543ABB7CE4A3}</Project>
+      <Name>FileManagement</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
