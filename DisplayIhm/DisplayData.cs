@@ -27,7 +27,7 @@ namespace DisplayIhm
         }
 
 
-        public string loadFile(TextBox tbFilePath)
+        public static string loadFile(TextBox tbFilePath)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             DialogResult dialogResult = fileDialog.ShowDialog();
