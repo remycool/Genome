@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventsModel.cs" />
+    <Compile Include="GeneomeFonction.cs" />
     <Compile Include="LazyLoading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
