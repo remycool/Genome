@@ -31,16 +31,17 @@
             this.adnTitle = new System.Windows.Forms.Label();
             this.panelTitre = new System.Windows.Forms.Panel();
             this.panelBrowse = new System.Windows.Forms.Panel();
-            this.textBoxPathFile = new System.Windows.Forms.TextBox();
+            this.buttonLaunch = new System.Windows.Forms.Button();
             this.buttonBrowse = new System.Windows.Forms.Button();
+            this.textBoxPathFile = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonReset = new System.Windows.Forms.Button();
             this.listViewModule1 = new System.Windows.Forms.ListView();
             this.paireDeBase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.buttonReset = new System.Windows.Forms.Button();
             this.panelTitre.SuspendLayout();
             this.panelBrowse.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -70,12 +71,38 @@
             // 
             // panelBrowse
             // 
+            this.panelBrowse.Controls.Add(this.buttonLaunch);
             this.panelBrowse.Controls.Add(this.buttonBrowse);
             this.panelBrowse.Controls.Add(this.textBoxPathFile);
             this.panelBrowse.Location = new System.Drawing.Point(0, 50);
             this.panelBrowse.Name = "panelBrowse";
             this.panelBrowse.Size = new System.Drawing.Size(678, 93);
             this.panelBrowse.TabIndex = 2;
+            // 
+            // buttonLaunch
+            // 
+            this.buttonLaunch.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonLaunch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLaunch.Location = new System.Drawing.Point(0, 58);
+            this.buttonLaunch.Name = "buttonLaunch";
+            this.buttonLaunch.Size = new System.Drawing.Size(89, 28);
+            this.buttonLaunch.TabIndex = 2;
+            this.buttonLaunch.Text = "Launch";
+            this.buttonLaunch.UseVisualStyleBackColor = false;
+            this.buttonLaunch.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // buttonBrowse
+            // 
+            this.buttonBrowse.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.buttonBrowse.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonBrowse.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.buttonBrowse.Location = new System.Drawing.Point(316, 55);
+            this.buttonBrowse.Name = "buttonBrowse";
+            this.buttonBrowse.Size = new System.Drawing.Size(72, 31);
+            this.buttonBrowse.TabIndex = 1;
+            this.buttonBrowse.Text = "Browse";
+            this.buttonBrowse.UseVisualStyleBackColor = false;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
             // 
             // textBoxPathFile
             // 
@@ -84,19 +111,6 @@
             this.textBoxPathFile.Size = new System.Drawing.Size(190, 20);
             this.textBoxPathFile.TabIndex = 0;
             // 
-            // buttonBrowse
-            // 
-            this.buttonBrowse.BackColor = System.Drawing.SystemColors.MenuBar;
-            this.buttonBrowse.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonBrowse.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.buttonBrowse.Location = new System.Drawing.Point(316, 54);
-            this.buttonBrowse.Name = "buttonBrowse";
-            this.buttonBrowse.Size = new System.Drawing.Size(72, 31);
-            this.buttonBrowse.TabIndex = 1;
-            this.buttonBrowse.Text = "Browse";
-            this.buttonBrowse.UseVisualStyleBackColor = false;
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.listViewModule1);
@@ -104,17 +118,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(678, 271);
             this.panel1.TabIndex = 3;
-            // 
-            // buttonReset
-            // 
-            this.buttonReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonReset.Location = new System.Drawing.Point(305, 432);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(83, 23);
-            this.buttonReset.TabIndex = 4;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.button1_Click);
             // 
             // listViewModule1
             // 
@@ -136,6 +139,7 @@
             // paireDeBase
             // 
             this.paireDeBase.Text = "Nombre paire de base";
+            this.paireDeBase.Width = 125;
             // 
             // columnHeader1
             // 
@@ -150,12 +154,23 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Nombre de Base Inconnues";
-            this.columnHeader3.Width = 150;
+            this.columnHeader3.Width = 163;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "occurrence séquence de 4 bases";
-            this.columnHeader4.Width = 176;
+            this.columnHeader4.Width = 193;
+            // 
+            // buttonReset
+            // 
+            this.buttonReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonReset.Location = new System.Drawing.Point(305, 432);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(83, 23);
+            this.buttonReset.TabIndex = 4;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -192,6 +207,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.Button buttonLaunch;
     }
 }
 

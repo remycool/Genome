@@ -83,6 +83,10 @@
       <Project>{70716426-3379-4479-89A8-EBD73DE34908}</Project>
       <Name>DisplayIhm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileManagement\FileManagement.csproj">
+      <Project>{c342a2b5-be96-4690-a8b5-543abb7ce4a3}</Project>
+      <Name>FileManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

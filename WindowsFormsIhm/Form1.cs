@@ -31,7 +31,9 @@ namespace WindowsFormsIhm
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            FileManagement.geneomeFonction.arrayFromFile(textBoxPathFile.Text);
         }
+
+        
     }
 }

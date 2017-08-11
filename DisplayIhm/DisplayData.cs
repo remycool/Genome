@@ -12,13 +12,13 @@ namespace DisplayIhm
 {
     public class DisplayIhm
     {
-        /* private TextBox filePath= null;*/
+     
         private long sizeFile;
         private string[] fileTransform = null;
-        private string filenameNew;
-        private StreamWriter writeInFile;
+        private  string filenameNew;
+        private static StreamWriter writeInFile;
         public delegate void splitFileEvent();
-        public event EventHandler<EventsModel> OnFileReached;
+        public static event EventHandler<EventsModel> OnFileReached;
 
         public DisplayIhm(){
             Console.WriteLine("List Generated:");
@@ -27,7 +27,7 @@ namespace DisplayIhm
         }
 
 
-        public static string loadFile(TextBox tbFilePath)
+        public string loadFile(TextBox tbFilePath)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             DialogResult dialogResult = fileDialog.ShowDialog();
@@ -35,7 +35,9 @@ namespace DisplayIhm
             if (dialogResult == DialogResult.OK)
             {
                 tbFilePath.Text = fileDialog.FileName;
+                splitFile(File.ReadLines(tbFilePath.Text).ToArray());
             }
+            
             return tbFilePath.Text;
         }
 
@@ -50,7 +52,7 @@ namespace DisplayIhm
 
         }
 
-      public void splitFile()
+      public void splitFile(string[] fileTransform)
         {
           
            int tour = 1;

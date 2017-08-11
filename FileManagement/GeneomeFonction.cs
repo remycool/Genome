@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace FileManagement
     {
         
             public string Text { get; set; }
-            public string[] Lines { get; set; }
-            public List<string> newList = new ArrayList<string>();
+            public static string[] Lines { get; set; }
+            public static List<string> fileToArray = new ArrayList<string>();
             public List<string> second = new ArrayList<string>();
             public List<string> secondColumn = new ArrayList<string>();
             public List<string> firstColumn = new ArrayList<string>();
@@ -21,7 +22,7 @@ namespace FileManagement
             public int nombreCodonStop = 0;
             private int baseInconnue { get; set; }
             private int nbPaireBase { get; set; }
-            public string verifFile;
+            public static string verifFile;
             public delegate List<string> TestColumn(List<string> meth);
 
             public geneomeFonction()
@@ -31,7 +32,7 @@ namespace FileManagement
             }
 
             //Cette méthode permet de récupérer les génotype du fichier texte envoyer par l'utilisateur
-            public List<string> arrayFromFile(string file)
+            public static List<string> arrayFromFile(string file)
             {
                 verifFile = Path.GetExtension(file);
                 //Lines = File.ReadAllLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt"); 
@@ -50,7 +51,7 @@ namespace FileManagement
                                 {
                                     //récupère les derniers caractère d'une ligne
                                     string t = line.Substring(line.Length - 2, 2).Trim();
-                                    newList.Add(t);
+                                    fileToArray.Add(t);
                                     //Console.WriteLine($"{t}\t : " + i);
                                     i++;
                                 }
@@ -58,6 +59,7 @@ namespace FileManagement
                             else
                             {
                                 Console.WriteLine("Avertissement : Votre fichier n'est pas valide manque d'en-tête");
+                            
                             }
                         }
                         else
@@ -70,7 +72,7 @@ namespace FileManagement
                 {
                     Console.WriteLine("Le chemin vers le fichier est null");
                 }
-                return newList;
+                return fileToArray;
             }
 
 
