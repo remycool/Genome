@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace DisplayIhm
 {
+
     public class DisplayIhm
     {
      
@@ -18,7 +19,8 @@ namespace DisplayIhm
         private  string filenameNew;
         private static StreamWriter writeInFile;
         public delegate void splitFileEvent();
-        public static event EventHandler<EventsModel> OnFileReached;
+        public event splitFileEvent OnFileSplit;
+   
 
         public DisplayIhm(){
             Console.WriteLine("List Generated:");
@@ -36,6 +38,7 @@ namespace DisplayIhm
             {
                 tbFilePath.Text = fileDialog.FileName;
                 splitFile(File.ReadLines(tbFilePath.Text).ToArray());
+                pickUpFile();
             }
             
             return tbFilePath.Text;
@@ -51,7 +54,7 @@ namespace DisplayIhm
             }
 
         }
-
+      //Cette méthode permet de divisier le fichien entré par l'utilisateur en plusieur partie
       public void splitFile(string[] fileTransform)
         {
           
@@ -62,7 +65,7 @@ namespace DisplayIhm
 
             while (chunk.Take(1).Count() > 0)
             {
-                filenameNew = @"E:\Projet_Cesi\DNA\DNA-Data\"+"adnPart_"+ tour + ".txt";
+                filenameNew = @"E:\Projet_Cesi\DNA\DNA-Data\SplitFile\" + "adnPart_"+ tour + ".txt";
                 using (writeInFile = new StreamWriter(filenameNew))
                     foreach (string element in chunk)
                     {
@@ -71,18 +74,54 @@ namespace DisplayIhm
                     }
                 chunk = removePrevious.Take(chunksize);
                 removePrevious = removePrevious.Skip(chunksize);
-                tour++;
 
-                if (writeInFile.BaseStream == null)
-                {
-                    // Console.WriteLine("Le fihcier à  terminé son processus");
-                    OnFileReached(this, new EventsModel());   
-                }
+               
+                tour++;
             }
-         
+            if (writeInFile.BaseStream == null)
+            {
+
+              // Console.WriteLine("Le fihcier à  terminé son processus");
+                //OnFileSplit();
+                MessageBox.Show("Découpage du fichier  Terminé");
+            }
+        }
+    
+      public void pickUpFile()
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = @"E:\Projet_Cesi\DNA\DNA-Data\SplitFile";
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            
+            watcher.Filter = "*.txt";
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            //watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.EnableRaisingEvents = true;
+            MessageBox.Show("Ok ");
+
         }
 
-       
+        public static void OnChanged(object source, FileSystemEventArgs e)
+        {
+            //Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            MessageBox.Show("File: " + e.FullPath + " " + e.ChangeType);
+
+        }
+        public void isEmpty(string path)
+        {
+            if (Directory.GetFileSystemEntries(path).Length == 0)
+            {
+                MessageBox.Show("File is not there");
+            }
+            else
+            {
+                MessageBox.Show("File exist");
+            }
+        }
+
+    
     }
 
 

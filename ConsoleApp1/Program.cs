@@ -24,9 +24,9 @@ namespace ConsoleApp1
 
             DisplayIhm.DisplayIhm ihm = new DisplayIhm.DisplayIhm();
 
-            ihm.OnFileReached += a_FileReached;
-            dgPointer pAdder = new dgPointer(ihm.splitFile);
-            pAdder();
+            ihm.OnFileSplit += a_FileReached;
+           // dgPointer pAdder = new dgPointer(ihm.splitFile);
+           // pAdder();
             Console.ReadLine();
             Console.ReadKey();
         }
