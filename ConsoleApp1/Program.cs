@@ -13,9 +13,9 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Lazy<DisplayIhm.DisplayIhm> h = new Lazy<DisplayIhm.DisplayIhm>();
+           /* Lazy<DisplayIhm.DisplayIhm> h = new Lazy<DisplayIhm.DisplayIhm>();
             Console.WriteLine("IsValueCreated = {0}", h.IsValueCreated);
-            DisplayIhm.DisplayIhm msgLazyLoading = h.Value;
+            DisplayIhm.DisplayIhm msgLazyLoading = h.Value;*/
 
             // Console.WriteLine("Length = {0}", test.meth);
             // DisplayIhm.DisplayIhm.splitFileEvent fileEvent = new DisplayIhm.DisplayIhm.splitFileEvent(test.splitFile);
@@ -25,12 +25,13 @@ namespace ConsoleApp1
             DisplayIhm.DisplayIhm ihm = new DisplayIhm.DisplayIhm();
 
             ihm.OnFileSplit += a_FileReached;
+            ihm.isEmpty(@"E:\Projet_Cesi\DNA\DNA-Data\SplitFile");
            // dgPointer pAdder = new dgPointer(ihm.splitFile);
            // pAdder();
             Console.ReadLine();
             Console.ReadKey();
         }
-        static void a_FileReached(object sender, EventsModel e)
+        static void a_FileReached()
         {
             Console.WriteLine("File created!");
         }

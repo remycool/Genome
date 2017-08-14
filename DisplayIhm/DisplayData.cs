@@ -26,9 +26,10 @@ namespace DisplayIhm
             Console.WriteLine("List Generated:");
             fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
             sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length; 
+
         }
 
-
+        //Cette méthode permet de charger un fichier
         public string loadFile(TextBox tbFilePath)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -74,15 +75,16 @@ namespace DisplayIhm
                     }
                 chunk = removePrevious.Take(chunksize);
                 removePrevious = removePrevious.Skip(chunksize);
-
-               
                 tour++;
             }
             if (writeInFile.BaseStream == null)
             {
-
               // Console.WriteLine("Le fihcier à  terminé son processus");
-                //OnFileSplit();
+                if(OnFileSplit != null)
+                {
+                    OnFileSplit();
+                   
+                }
                 MessageBox.Show("Découpage du fichier  Terminé");
             }
         }
@@ -99,8 +101,6 @@ namespace DisplayIhm
             watcher.Deleted += new FileSystemEventHandler(OnChanged);
             //watcher.Renamed += new RenamedEventHandler(OnRenamed);
             watcher.EnableRaisingEvents = true;
-            MessageBox.Show("Ok ");
-
         }
 
         public static void OnChanged(object source, FileSystemEventArgs e)
@@ -109,19 +109,27 @@ namespace DisplayIhm
             MessageBox.Show("File: " + e.FullPath + " " + e.ChangeType);
 
         }
+
+        //Cette méthode permet de vérifier si les fichier d
         public void isEmpty(string path)
         {
             if (Directory.GetFileSystemEntries(path).Length == 0)
             {
-                MessageBox.Show("File is not there");
+                if (OnFileSplit != null)
+                {
+                    OnFileSplit();
+                }
+                MessageBox.Show("Folder is empty");
             }
             else
             {
-                MessageBox.Show("File exist");
+                if (OnFileSplit != null)
+                {
+                    OnFileSplit();
+                }
+                MessageBox.Show("File exists");
             }
         }
-
-    
     }
 
 
