@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FileManagement
 {
-    public class geneomeFonction
+    public class genomeFonction
     {
         
             public string Text { get; set; }
@@ -25,10 +25,11 @@ namespace FileManagement
             public static string verifFile;
             public delegate List<string> TestColumn(List<string> meth);
 
-            public geneomeFonction()
+            public genomeFonction()
             {
                 nbPaireBase = 0;
                 baseInconnue = 0;
+
             }
 
             //Cette méthode permet de récupérer les génotype du fichier texte envoyer par l'utilisateur

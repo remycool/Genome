@@ -1,4 +1,4 @@
-﻿using FileManagement;
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,16 +17,18 @@ namespace DisplayIhm
         private long sizeFile;
         private string[] fileTransform = null;
         private  string filenameNew;
+        private List<string> allSplitFile ;
         private static StreamWriter writeInFile;
         public delegate void splitFileEvent();
+        private static string targetDirectory = @"E:\Projet_Cesi\DNA\DNA-Data\SplitFile";
+        public delegate void filePickUpEvent();
         public event splitFileEvent OnFileSplit;
    
 
         public DisplayIhm(){
             Console.WriteLine("List Generated:");
             fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
-            sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length; 
-
+            sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length;
         }
 
         //Cette méthode permet de charger un fichier
@@ -38,8 +40,7 @@ namespace DisplayIhm
             if (dialogResult == DialogResult.OK)
             {
                 tbFilePath.Text = fileDialog.FileName;
-                splitFile(File.ReadLines(tbFilePath.Text).ToArray());
-                pickUpFile();
+                splitFile(File.ReadLines(tbFilePath.Text).ToArray());            
             }
             
             return tbFilePath.Text;
@@ -55,10 +56,10 @@ namespace DisplayIhm
             }
 
         }
-      //Cette méthode permet de divisier le fichien entré par l'utilisateur en plusieur partie
+      //Cette méthode permet de divisier le fichien entré par l'utilisateur en plusieurs parties et écris les fichiers dans un dossier spécifique
       public void splitFile(string[] fileTransform)
-        {
-          
+      {
+           
            int tour = 1;
            int chunksize = 15;
            var chunk = fileTransform.Take(chunksize);
@@ -70,8 +71,7 @@ namespace DisplayIhm
                 using (writeInFile = new StreamWriter(filenameNew))
                     foreach (string element in chunk)
                     {
-                        writeInFile.WriteLine(element);  
-                        
+                        writeInFile.WriteLine(element);
                     }
                 chunk = removePrevious.Take(chunksize);
                 removePrevious = removePrevious.Skip(chunksize);
@@ -79,16 +79,15 @@ namespace DisplayIhm
             }
             if (writeInFile.BaseStream == null)
             {
-              // Console.WriteLine("Le fihcier à  terminé son processus");
                 if(OnFileSplit != null)
                 {
-                    OnFileSplit();
-                   
+                    OnFileSplit();                   
                 }
-                MessageBox.Show("Découpage du fichier  Terminé");
             }
-        }
+           
+      }
     
+        //Cette méthode permet de notifier si les fichier séparer ont été modifier
       public void pickUpFile()
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
@@ -103,21 +102,16 @@ namespace DisplayIhm
             watcher.EnableRaisingEvents = true;
         }
 
-        public static void OnChanged(object source, FileSystemEventArgs e)
-        {
-            //Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
-            MessageBox.Show("File: " + e.FullPath + " " + e.ChangeType);
+       
 
-        }
-
-        //Cette méthode permet de vérifier si les fichier d
+        //Cette méthode permet de vérifier si le dossier ou se trouve les fichiers séparer  est vide
         public void isEmpty(string path)
         {
             if (Directory.GetFileSystemEntries(path).Length == 0)
             {
                 if (OnFileSplit != null)
                 {
-                    OnFileSplit();
+                    a_FileSplit();
                 }
                 MessageBox.Show("Folder is empty");
             }
@@ -125,12 +119,46 @@ namespace DisplayIhm
             {
                 if (OnFileSplit != null)
                 {
-                    OnFileSplit();
+                    a_FileSplit();
                 }
                 MessageBox.Show("File exists");
             }
         }
+
+
+        public List<string>  listFileFolder_Node()
+        {
+            allSplitFile = new ArrayList<string>();
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            foreach (string tmp in fileEntries)
+            {
+                string fileName = Path.GetFileName(tmp);
+                allSplitFile.Add(tmp);
+                MessageBox.Show(fileName);
+            }
+            return allSplitFile;
+        }
+
+
+
+        /*********************** Events  ******************************************/
+        static void a_FileSplit()
+        {
+            // Console.WriteLine("File created!");
+            
+            MessageBox.Show("EventFile :  File has been created");
+         
+        }
+
+        public static void OnChanged(object source, FileSystemEventArgs e)
+        {
+            //Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);         
+            MessageBox.Show("File: " + e.FullPath + " " + e.ChangeType);
+        }
+
     }
 
-
+    internal class ArrayList<T> : List<string>
+    {
+    }
 }

@@ -25,10 +25,6 @@ namespace FileManagement
 
         }
 
-        public void OnChanged(object source, FileSystemEventArgs e)
-        {
-            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
-            
-        }
+        
     }
 }
