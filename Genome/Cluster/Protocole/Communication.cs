@@ -25,31 +25,30 @@ namespace Cluster.Protocole
 
         public void Envoyer(IPAddress remote, Operation obj)
         {
-            IPEndPoint remoteEP = new IPEndPoint(remote, PORT);
-            TcpClient local = new TcpClient();
-            local.Connect(remoteEP);
+           
             try
             {
+                IPEndPoint remoteEP = new IPEndPoint(remote, PORT);
+                TcpClient local = new TcpClient();
+                local.Connect(remoteEP);
                 byte[] ba = Utility.Serialize(obj);
                 using (NetworkStream ns = local.GetStream())
                 {
                     ns.Write(ba, 0, ba.Length);
                 };
+                local.Close();
             }
             catch (Exception ex)
             {
                 Console.Write(ex.Message + ex.StackTrace);
             }
-            finally
-            {
-                local.Close();
-            }
+            
         }
 
         public Operation Recevoir(IPAddress AdresseIpLocale)
         {
             Operation obj = null;
-
+            
             try
             {
                 using (TcpClient remote = LocalListener.AcceptTcpClient())
@@ -77,10 +76,6 @@ namespace Cluster.Protocole
             catch (Exception ex)
             {
                 Console.Write(ex.Message + ex.StackTrace);
-            }
-            finally
-            {
-                LocalListener.Stop();
             }
 
             return obj;

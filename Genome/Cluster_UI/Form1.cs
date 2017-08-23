@@ -53,7 +53,7 @@ namespace Cluster_UI
                 Noeud_Btn.BackColor = Color.DarkGray;
                 AdresseIP_Lbl.Text = N.ToString();              
                
-                //N.Attente();
+                N.Attente();
             }
             catch (Exception ex)
             {

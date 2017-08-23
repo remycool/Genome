@@ -50,19 +50,17 @@ namespace Cluster.Classes
 
         public void RepartirCalcul(string fileText, string methode)
         {
-           
             MapRed.mapReduce(ChunkFactory(fileText, methode), c => Envoyer(c));
         }
 
         public IEnumerable<Operation> ChunkFactory(string fileText , string methode)
         {
             int startPos = 0;
-            int blocksize = 1000;
+            int blocksize = 10000000;
             var iterations = Math.Round((decimal)(fileText.Length / blocksize));
             for (int i = 0; i < iterations - 1; i++)
             {
                 yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, blocksize), Type = methode }; 
-                
                 startPos += blocksize;
             }
             yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, fileText.Length - startPos), Type = methode }; 
