@@ -7,7 +7,11 @@ namespace Genome.GenomeBusiness
 {
     public class GenomeBusiness : IClusterizableBusiness
     {
-
+        /// <summary>
+        /// méthode qui compte le nombre de charactère contenu dans la chaine de caractère passé en paramètre 
+        /// </summary>
+        /// <param name="chunk"></param>
+        /// <returns> un objet Operation qui contient le résultat</returns>
         Operation IClusterizableBusiness.Calcul1(string chunk)
         {
             char charToCount = 'C';
@@ -16,6 +20,11 @@ namespace Genome.GenomeBusiness
             return new Operation { Resultat = count, TempsExecution = 0 };
         }
 
+        /// <summary>
+        /// Méthode qui sépare les 2 brins du morceau de génome qui est une chaine de caractère passée en paramètre  
+        /// </summary>
+        /// <param name="chunck"></param>
+        /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Operation IClusterizableBusiness.Calcul2(string chunck)
         {
             string brin1 = string.Empty;

@@ -15,7 +15,7 @@ namespace Cluster.Classes
     public class Noeud : INoeud
     {
         public const int PORT = 8888;
-         public const string ORCHESTRATEUR = "192.168.0.25";
+        public const string ORCHESTRATEUR = "192.168.0.21";
 
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
@@ -26,7 +26,10 @@ namespace Cluster.Classes
         public Noeud(IBusinessFactory BuService, IDALFactory DalService)
         {
             AdresseIP = Utility.GetLocalIP();
-            Com = new Communication(AdresseIP);
+            Com = new Communication(AdresseIP,9999,8888);
+            Com.NouvelleOperation += onNouvelleOperation;
+            Thread ecouteNoeud = new Thread(Com.Recevoir);
+            ecouteNoeud.Start();
             BusinessService = BuService;
             DALService = DalService;
             Initialize();
@@ -37,15 +40,11 @@ namespace Cluster.Classes
             return $"@ IP : {AdresseIP.ToString()}";
         }
 
-        /// <summary>
-        /// Permet d'ecouter une operation émanant de l'orchestrateur
-        /// </summary>
-        /// <returns>un objet operation résultant du traitement effectué sur le noeud</returns>
-        public Operation Attente()
+        //Traitement de l'opération à effectuer
+        public void onNouvelleOperation(object sender, OperationEventArgs e)
         {
-            Operation calcul = Com.Recevoir(AdresseIP);
-            ExecuterCalcul(ref calcul);
-            return Envoyer(calcul);
+            ExecuterCalcul(ref e.Op);
+            Envoyer(e.Op);
         }
 
         /// <summary>
@@ -86,6 +85,8 @@ namespace Cluster.Classes
 
             //Mettre à jour info du noeud courant dans le registre
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
+            if (Com.LocalListener != null)
+                Com.LocalListener.Stop();
             Console.WriteLine(DALService.GetClusterView());
 
         }
@@ -95,22 +96,24 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="operation"></param>
         /// <returns>Un objet Operation</returns>
-        public Operation Envoyer(Operation operation)
+        public void Envoyer(Operation operation)
         {
             string paramCompressed = string.Empty;
-            if (string.IsNullOrEmpty(operation.Param))
+            //Si il y a des données en retour on les compresse 
+            if (!string.IsNullOrEmpty(operation.Param))
                 paramCompressed = operation.Param.Compress();
             operation.Param = paramCompressed;
-            Com.Envoyer(IPAddress.Parse(ORCHESTRATEUR), operation);
-            return Attente();
+            //On envoie la réponse
+            Com.Envoyer(OrchestrateurIP, operation);
         }
 
-        public int CountChars(string chunk, char charToCount)
-        {
-            return chunk.Count(c=>c == charToCount);
-        }
 
         public void RepartirCalcul(string file, string methode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Operation GetResultat()
         {
             throw new NotImplementedException();
         }

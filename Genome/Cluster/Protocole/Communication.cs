@@ -11,24 +11,35 @@ namespace Cluster.Protocole
     public class Communication
     {
         public IPAddress AdresseIpLocale { get; set; }
-        public const int PORT = 8888;
-        TcpListener LocalListener { get; set; }
+        public int PortEcoute { get; set; }
+        public int PortEnvoie { get; set; }
+        public TcpListener LocalListener { get; set; }
 
+        public delegate void OperationHandler(object sender, OperationEventArgs operationEventArgs);
+        public event OperationHandler NouvelleOperation;
 
+        public void SignalerNouvelleOperation(Operation o)
+        {
+            OperationEventArgs e = new OperationEventArgs(o);
+            NouvelleOperation?.Invoke(this, e);
+        }
 
-        public  Communication(IPAddress adressIpLocale )
+        public Communication(IPAddress adressIpLocale, int portIn, int portOut)
         {
             AdresseIpLocale = adressIpLocale;
-            LocalListener = new TcpListener(AdresseIpLocale, PORT);
+
+            PortEcoute = portIn;
+            PortEnvoie = portOut;
+            LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
             LocalListener.Start();
         }
 
         public void Envoyer(IPAddress remote, Operation obj)
         {
-           
+
             try
             {
-                IPEndPoint remoteEP = new IPEndPoint(remote, PORT);
+                IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoie);
                 TcpClient local = new TcpClient();
                 local.Connect(remoteEP);
                 byte[] ba = Utility.Serialize(obj);
@@ -42,44 +53,59 @@ namespace Cluster.Protocole
             {
                 Console.Write(ex.Message + ex.StackTrace);
             }
-            
+
         }
 
-        public Operation Recevoir(IPAddress AdresseIpLocale)
+        public void Recevoir()
         {
             Operation obj = null;
-            
+
             try
             {
-                using (TcpClient remote = LocalListener.AcceptTcpClient())
-                using (NetworkStream ns = remote.GetStream())
+                while (true)
                 {
-                    int i = 0;
-                    byte[] remoteData = new byte[1024];
-                    string data = string.Empty;
-                    //Lecture du flux
-                    if (ns.CanRead)
+                    using (TcpClient remote = LocalListener.AcceptTcpClient())
+                    using (NetworkStream ns = remote.GetStream())
                     {
-                        while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+                        int i = 0;
+                        byte[] remoteData = new byte[1024];
+                        string data = string.Empty;
+                        //Lecture du flux
+                        if (ns.CanRead)
                         {
-                            data += Encoding.UTF8.GetString(remoteData, 0, i);
+                            while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+                            {
+                                data += Encoding.UTF8.GetString(remoteData, 0, i);
+                            }
+                            obj = Utility.Deserialize(data);
                         }
-                        obj = Utility.Deserialize(data);
                     }
+
+                    //Décompresser le fichier
+                    if (!string.IsNullOrEmpty(obj.Param))
+                    {
+                        string unzipFile = obj.Param.Decompress();
+                        obj.Param = string.Empty;
+                        obj.Param = unzipFile;
+                    }
+                    SignalerNouvelleOperation(obj);
                 }
 
-                //Décompresser le fichier 
-                string unzipFile = obj.Param.Decompress();
-                obj.Param = string.Empty;
-                obj.Param = unzipFile;
+
             }
             catch (Exception ex)
             {
                 Console.Write(ex.Message + ex.StackTrace);
             }
 
-            return obj;
+
         }
 
+    }
+
+    public class OperationEventArgs
+    {
+        public Operation Op;
+        public OperationEventArgs(Operation o) { Op = o; }
     }
 }

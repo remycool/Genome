@@ -14,5 +14,10 @@
         {
             return $">>> Résultat : {Resultat} effectué en {TempsExecution} ms";
         }
+
+        public static Operation operator+ (Operation a, Operation b)
+        {
+            return new Operation() { Resultat = a.Resultat+b.Resultat };
+        }
     }
 }

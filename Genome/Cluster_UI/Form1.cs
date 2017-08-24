@@ -16,9 +16,9 @@ namespace Cluster_UI
 {
     public partial class Form1 : Form
     {
-        //public Orchestrateur O { get; set; }
-        //public Noeud N { get; set; }
-        public INoeud N { get; set; }
+        public Orchestrateur O { get; set; }
+        public Noeud N { get; set; }
+        //public INoeud N { get; set; }
         IBusinessFactory ServiceBusiness { get; set; }
         IDALFactory ServiceDAL { get; set; }
 
@@ -33,41 +33,42 @@ namespace Cluster_UI
 
         private void Orchestrateur_Btn_Click(object sender, EventArgs e)
         {
-            N = new Orchestrateur(ServiceDAL);
+            O = new Orchestrateur(ServiceDAL);
+            O.NouveauResultat += onResultatChanged;
             Noeud_Btn.Enabled = false;
             Calcul1_Btn.Enabled = true;
             Calcul2_Btn.Enabled = true;
             Orchestrateur_Btn.BackColor = Color.DarkGray;
-            AdresseIP_Lbl.Text = N.ToString();
+            AdresseIP_Lbl.Text = O.ToString();
         }
 
         private void Noeud_Btn_Click(object sender, EventArgs e)
         {
             try
             {
-                richTextBox_Results.Clear();
                 string file = GetFile();
                 Console.WriteLine(file.Length);
                 N = new Noeud(ServiceBusiness, ServiceDAL);
                 Orchestrateur_Btn.Enabled = false;
                 Noeud_Btn.BackColor = Color.DarkGray;
-                AdresseIP_Lbl.Text = N.ToString();              
-               
-                N.Attente();
+                AdresseIP_Lbl.Text = N.ToString();
             }
-            catch (Exception ex)
+            catch (ClusterException ex)
             {
                 string err = $"{ex.Message} \n{ex.StackTrace}";
-                MessageBox.Show(err);
+                ex.Log();
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void ToggleBackColor(Button btn)
+        /// <summary>
+        /// Dés que l'event résultant d'un calcul est receptionné on met à jour l'affichage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void onResultatChanged(object sender, ResultatEventArgs e)
         {
-            if (btn.BackColor == Color.DarkGray)
-                btn.BackColor = default(Color);
-            else
-                btn.BackColor = Color.DarkGray;
+            Invoke(new MethodInvoker(() => { Resultat_Lbl.Text = e.Op.ToString();}));
         }
 
         private void Calcul1_Btn_Click(object sender, EventArgs e)
@@ -77,10 +78,7 @@ namespace Cluster_UI
 
             try
             {
-                N.RepartirCalcul(file, "GetCalcul1");
-                //Operation retour1 = N.Envoyer(new Operation { Type = "GetCalcul1", Param = fileContentZip });
-                richTextBox_Results.AppendText($"");
-                //Resultat_Lbl.Text = retour1.ToString();
+                O.RepartirCalcul(fileContentZip, "GetCalcul1");
             }
             catch (ClusterException ex)
             {
@@ -119,8 +117,8 @@ namespace Cluster_UI
 
             try
             {
-                Operation retour = N.Envoyer(new Operation { Type = "GetCalcul2", Param = fileContentZip });
-                Resultat_Lbl.Text = $"{retour.Param.Substring(0,150)}";
+                O.Envoyer(new Operation { Type = "GetCalcul2", Param = fileContentZip });
+                Resultat_Lbl.Text = $"{N.GetResultat()}";
             }
             catch (Exception ex)
             {
@@ -133,6 +131,8 @@ namespace Cluster_UI
         {
             if (N != null)
                 N.Dispose();
+            if (O != null)
+                O.Dispose();
         }
     }
 }

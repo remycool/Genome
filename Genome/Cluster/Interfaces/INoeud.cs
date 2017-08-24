@@ -5,9 +5,12 @@ namespace Cluster.Interfaces
 {
     public interface INoeud : IDisposable
     {
+        Operation GetResultat();
+
         void Initialize();
-        Operation Attente();
-        Operation Envoyer(Operation op);
+        //Operation Recevoir();
+        void Envoyer(Operation op);
         void RepartirCalcul(string file,string methode);
+
     }
 }

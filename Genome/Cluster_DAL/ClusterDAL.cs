@@ -94,7 +94,7 @@ namespace Cluster_DAL
         public string GetOrchestrateurIp()
         {
             string ip = string.Empty;
-            string sql = @"SELECT ip FROM cluster_view WHERE etat = 4 AND role = 2";
+            string sql = @"SELECT ip FROM cluster_view WHERE  role = 2";
           
 
             using (DbDataReader reader = Get(sql, null))
