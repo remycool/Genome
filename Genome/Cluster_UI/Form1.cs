@@ -78,7 +78,7 @@ namespace Cluster_UI
 
             try
             {
-                O.RepartirCalcul(fileContentZip, "GetCalcul1");
+                O.RepartirCalcul(file, "GetCalcul1");
             }
             catch (ClusterException ex)
             {
@@ -118,7 +118,7 @@ namespace Cluster_UI
             try
             {
                 O.Envoyer(new Operation { Type = "GetCalcul2", Param = fileContentZip });
-                Resultat_Lbl.Text = $"{N.GetResultat()}";
+               // Resultat_Lbl.Text = $"{N.GetResultat()}";
             }
             catch (Exception ex)
             {

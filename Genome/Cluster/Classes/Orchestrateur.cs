@@ -8,6 +8,7 @@ using Cluster.Exceptions;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
+using Cluster.Events;
 
 namespace Cluster.Classes
 {
@@ -17,11 +18,11 @@ namespace Cluster.Classes
         public const string NOEUD = "192.168.0.25";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
-        public Communication com { get; set; }
+        public Communication<Operation,Resultat> com { get; set; }
         public List<string> Chuncks { get; set; }
         public IDALFactory DALService { get; set; }
         public MapReduce<Operation, Operation> MapRed { get; set; }
-        public Operation Resultat { get; set; }
+        public Resultat Result { get; set; }
 
 
         #endregion
@@ -43,28 +44,34 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void onNouvelleOperation(object sender, OperationEventArgs e)
+        public void onNouvelleReception(object sender, ReceptionEventArgs<Resultat> e)
         {
-            if (Resultat == null)
-                Resultat = e.Op;
+            if (Result == null)
+                Result = e.Op;
             else
-                Resultat += e.Op;
-            SignalerNouveauResultat(Resultat);
+                Result += e.Op;
+
+            Console.WriteLine($"reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
+            // SignalerNouveauResultat(Resultat);
         }
 
 
         public Orchestrateur(IDALFactory DalService)
         {
             AdressesNoeuds = new List<IPAddress>();
-            AdresseIP = Utility.GetLocalIP();
-            com = new Communication(AdresseIP, 8888, 9999);
-            com.NouvelleOperation += onNouvelleOperation;
-            Thread ecouteOrchestrateur = new Thread(new ThreadStart(com.Recevoir));
+            AdresseIP = IpConfig.GetLocalIP();
+            com = new Communication<Operation,Resultat>(AdresseIP, 8888, 9999);
+            com.NouvelleReception += onNouvelleReception;
+            Thread ecouteOrchestrateur = new Thread(com.Recevoir);
             ecouteOrchestrateur.Start();
             DALService = DalService;
             Initialize();
         }
 
+        /// <summary>
+        /// Affiche l'adresse IP de l'objet
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"@ IP : {AdresseIP.ToString()}";
@@ -80,15 +87,21 @@ namespace Cluster.Classes
             com.Envoyer(IPAddress.Parse(op.IpNoeud), op);
         }
 
+        /// <summary>
+        /// Appelle la méthode qui distribue un morceau du fichier passé en paramètre au noeuds 
+        /// </summary>
+        /// <param name="fileText"></param>
+        /// <param name="methode"></param>
         public void RepartirCalcul(string fileText, string methode)
         {
             // MapRed.mapReduce(ChunkFactoryToReduce(fileText, methode), c => Envoyer(c));
-            //ChunkFactory(fileText, methode);
-            foreach (IPAddress a in AdressesNoeuds)
-            {
-                //IPAddress remote = IPAddress.Parse(NOEUD);
-                com.Envoyer(a, new Operation() { IpNoeud = a.ToString(), Param = fileText, Type = methode });
-            }
+            ChunkFactory(fileText, methode);
+            //foreach (IPAddress a in AdressesNoeuds)
+            //{
+            //    //IPAddress remote = IPAddress.Parse(NOEUD);
+            //    com.Envoyer(a, new Operation() { IpNoeud = a.ToString(), Param = fileText, Type = methode });
+            //}
+            com.Envoyer(IPAddress.Parse("192.168.0.25"), new Operation() { Param = fileText, Type = methode });
         }
 
         public IEnumerable<Operation> ChunkFactoryToReduce(string fileText, string methode)
@@ -119,8 +132,8 @@ namespace Cluster.Classes
             var iterations = Math.Round((decimal)(fileText.Length / blocksize));
             for (int i = 0; i < iterations - 1; i++)
             {
-                IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
-                com.Envoyer(adresseNoeud, new Operation() { IpNoeud = adresseNoeud.ToString(), Param = fileText.Substring(startPos, blocksize), Type = methode });
+                //IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
+                com.Envoyer(IPAddress.Parse("192.168.0.25"), new Operation() { IpNoeud = "192.168.0.25", Param = fileText.Substring(startPos, blocksize), Type = methode });
                 if (posListeNoeud == posDernierNoeudDansListe)
                     posListeNoeud = 0;
                 else
@@ -128,12 +141,7 @@ namespace Cluster.Classes
                 startPos += blocksize;
             }
         }
-
-
-        //public Operation Recevoir()
-        //{
-        //   return Resultat += com.Recevoir(AdresseIP);
-        //}
+                    
 
         /// <summary>
         /// Met à jour les informations dans le registre Cluster et récupère
@@ -172,11 +180,9 @@ namespace Cluster.Classes
             DALService.Dispose();
         }
 
-        public Operation GetResultat()
-        {
-            return Resultat;
-        }
+       
     }
+
     public class ResultatEventArgs
     {
         public Operation Op;

@@ -9,7 +9,8 @@ namespace Cluster.Interfaces
 {
     public interface IClusterizableBusiness
     {
-        Operation Calcul1(string chunkFile);
-        Operation Calcul2(string chunkfile);
+        Resultat Calcul1(string chunkFile);
+        Resultat Calcul2(string chunkfile);
+        Resultat Calcul3(string chunkfile);
     }
 }

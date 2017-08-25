@@ -11,12 +11,12 @@ namespace Cluster.Classes
             _clusterizableBusiness = business;
         }
 
-        public Operation GetCalcul1(string chunckFile)
+        public Resultat GetCalcul1(string chunckFile)
         {
             return _clusterizableBusiness.Calcul1(chunckFile);
         }
 
-        public Operation GetCalcul2(string chunckFile)
+        public Resultat GetCalcul2(string chunckFile)
         {
             return _clusterizableBusiness.Calcul2(chunckFile);
         }

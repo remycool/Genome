@@ -67,6 +67,8 @@
     <Compile Include="Classes\BusinessFactory.cs" />
     <Compile Include="Classes\DALFactory.cs" />
     <Compile Include="Classes\MapReduce.cs" />
+    <Compile Include="Classes\Resultat.cs" />
+    <Compile Include="Events\OperationEventArgs.cs" />
     <Compile Include="Interfaces\IBusinessFactory.cs" />
     <Compile Include="Classes\IDALFactory.cs" />
     <Compile Include="Classes\Operation.cs" />
@@ -79,7 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocole\Communication.cs" />
     <Compile Include="Utils\ClusterConstantes.cs" />
+    <Compile Include="Utils\IpConfig.cs" />
     <Compile Include="Utils\Utility.cs" />
+    <Compile Include="Utils\Zip.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

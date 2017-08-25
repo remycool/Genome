@@ -2,7 +2,7 @@
 {
     public interface IBusinessFactory
     {
-        Operation GetCalcul1(string fileChunck);
-        Operation GetCalcul2(string fileChunck);
+        Resultat GetCalcul1(string fileChunck);
+        Resultat GetCalcul2(string fileChunck);
     }
 }

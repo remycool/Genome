@@ -10,77 +10,14 @@ using System.Web.Script.Serialization;
 
 namespace Cluster.Utils
 {
-    public static class Utility
+    public class Utility<T>
     {
-        public static string Decompress(this string input)
-        {
-            byte[] compressed = Convert.FromBase64String(input);
-            byte[] decompressed = Decompress(compressed);
-            return Encoding.UTF8.GetString(decompressed);
-        }
-
-        public static string Compress(this string input)
-        {
-            byte[] encoded = Encoding.UTF8.GetBytes(input);
-            byte[] compressed = Compress(encoded);
-            return Convert.ToBase64String(compressed);
-        }
-
-        public static byte[] Decompress( byte[] input)
-        {
-            using (MemoryStream source = new MemoryStream(input))
-            {
-                byte[] lengthBytes = new byte[4];
-                source.Read(lengthBytes, 0, 4);
-
-                int length = BitConverter.ToInt32(lengthBytes, 0);
-                using (var decompressionStream = new GZipStream(source, CompressionMode.Decompress))
-                {
-                    byte[] result = new byte[length];
-                    decompressionStream.Read(result, 0, length);
-                    return result;
-                }
-            }
-        }
-
-        public static byte[] Compress( byte[] input)
-        {
-            using (MemoryStream result = new MemoryStream())
-            {
-                byte[] lengthBytes = BitConverter.GetBytes(input.Length);
-                result.Write(lengthBytes, 0, 4);
-
-                using (GZipStream compressionStream = new GZipStream(result,CompressionMode.Compress))
-                {
-                    compressionStream.Write(input, 0, input.Length);
-                }
-                return result.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Obtient l'adresse IP de la machine 
-        /// </summary>
-        /// <returns>Un objet IPAdress</returns>
-        public static IPAddress GetLocalIP()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip;
-                }
-            }
-            throw new Exception("Impossible d'obtenir l'IP de la machine");
-        }
-
         /// <summary>
         /// Sérialise l'objet passé en paramètre et le transforme en tableau de bytes 
         /// </summary>
         /// <param name="c"></param>
         /// <returns>L'objet sous forme de tableau</returns>
-        public static byte[] Serialize(Operation c)
+        public static byte[] Serialize(T c)
         {
             string serializedObject = null;
             byte[] b = null;
@@ -105,14 +42,14 @@ namespace Cluster.Utils
         /// </summary>
         /// <param name="serializedObject"></param>
         /// <returns>Un objet de type IClusterizableBusiness </returns>
-        public static Operation Deserialize(string serializedObject)
+        public static T Deserialize(string serializedObject)
         {
 
-            Operation result = null;
+            T result = default(T);
             JavaScriptSerializer js = new JavaScriptSerializer() { MaxJsonLength = 30000000 };
             try
             {
-                result = js.Deserialize<Operation>(serializedObject);
+                result = js.Deserialize<T>(serializedObject);
             }
             catch (Exception ex)
             {
