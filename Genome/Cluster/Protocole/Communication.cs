@@ -16,6 +16,7 @@ namespace Cluster.Protocole
         public int PortEcoute { get; set; }
         public int PortEnvoie { get; set; }
         public TcpListener LocalListener { get; set; }
+        
 
         #region GESTION EVENEMENT
         public delegate void ReceptionHandler(object sender, ReceptionEventArgs<U> operationEventArgs);
@@ -34,7 +35,9 @@ namespace Cluster.Protocole
 
             PortEcoute = portIn;
             PortEnvoie = portOut;
-
+            LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
+            LocalListener.Start();
+            RecevoirAsync();
         }
 
         /// <summary>
@@ -47,7 +50,6 @@ namespace Cluster.Protocole
 
             try
             {
-                //obj.IpNoeud = AdresseIpLocale.ToString();
                 IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoie);
                 TcpClient local = new TcpClient();
                 local.Connect(remoteEP);
@@ -96,6 +98,21 @@ namespace Cluster.Protocole
             }
         }
 
+        public void OnClientConnected(IAsyncResult asyncResult)
+        {
+            try
+            {
+                TcpClient client = LocalListener.EndAcceptTcpClient(asyncResult);
+                if (client != null)
+                    TraitementRequete(client);
+            }
+            catch
+            {
+
+            }
+            RecevoirAsync();
+        }
+
         /// <summary>
         /// Initialise un TcpListener et créé un nouveau thread
         /// </summary>
@@ -109,9 +126,7 @@ namespace Cluster.Protocole
                 while (true)
                 {
                     TcpClient remote = LocalListener.AcceptTcpClient();
-                    Thread t = new Thread(TraitementRequete);
-                    t.Start(remote);
-
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(TraitementRequete), remote);
                     //Décompresser le fichier
                     //if (!string.IsNullOrEmpty(obj.Param))
                     //{
@@ -129,6 +144,11 @@ namespace Cluster.Protocole
             {
                 LocalListener.Stop();
             }
+        }
+
+        public void RecevoirAsync()
+        {
+            LocalListener.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
         }
     }
 

@@ -12,31 +12,31 @@ using Cluster.Events;
 
 namespace Cluster.Classes
 {
-    public class Orchestrateur : INoeud
+    public class Orchestrateur
     {
         #region PROPRIETES
         public const string NOEUD = "192.168.0.25";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
-        public Communication<Operation,Resultat> com { get; set; }
+        public Communication<Operation, Resultat> com { get; set; }
         public List<string> Chuncks { get; set; }
         public IDALFactory DALService { get; set; }
-        public MapReduce<Operation, Operation> MapRed { get; set; }
+        //public MapReduce<Operation, Operation> MapRed { get; set; }
         public Resultat Result { get; set; }
 
 
         #endregion
 
+        #region EVENT
         public delegate void ResultatHandler(object sender, ResultatEventArgs resultatEventArgs);
         public event ResultatHandler NouveauResultat;
 
-        public void SignalerNouveauResultat(Operation r)
+        public void SignalerNouveauResultat(Resultat r)
         {
             ResultatEventArgs e = new ResultatEventArgs(r);
             NouveauResultat?.Invoke(this, e);
         }
-
-
+        #endregion
 
 
         /// <summary>
@@ -50,20 +50,19 @@ namespace Cluster.Classes
                 Result = e.Op;
             else
                 Result += e.Op;
-
+            
             Console.WriteLine($"reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
-            // SignalerNouveauResultat(Resultat);
+            SignalerNouveauResultat(Result);
         }
-
 
         public Orchestrateur(IDALFactory DalService)
         {
             AdressesNoeuds = new List<IPAddress>();
             AdresseIP = IpConfig.GetLocalIP();
-            com = new Communication<Operation,Resultat>(AdresseIP, 8888, 9999);
+            com = new Communication<Operation, Resultat>(AdresseIP, 8888, 9999);
             com.NouvelleReception += onNouvelleReception;
-            Thread ecouteOrchestrateur = new Thread(com.Recevoir);
-            ecouteOrchestrateur.Start();
+            //Thread ecouteOrchestrateur = new Thread(com.RecevoirAsync);
+            //ecouteOrchestrateur.Start();
             DALService = DalService;
             Initialize();
         }
@@ -94,14 +93,7 @@ namespace Cluster.Classes
         /// <param name="methode"></param>
         public void RepartirCalcul(string fileText, string methode)
         {
-            // MapRed.mapReduce(ChunkFactoryToReduce(fileText, methode), c => Envoyer(c));
             ChunkFactory(fileText, methode);
-            //foreach (IPAddress a in AdressesNoeuds)
-            //{
-            //    //IPAddress remote = IPAddress.Parse(NOEUD);
-            //    com.Envoyer(a, new Operation() { IpNoeud = a.ToString(), Param = fileText, Type = methode });
-            //}
-            com.Envoyer(IPAddress.Parse("192.168.0.25"), new Operation() { Param = fileText, Type = methode });
         }
 
         public IEnumerable<Operation> ChunkFactoryToReduce(string fileText, string methode)
@@ -112,10 +104,10 @@ namespace Cluster.Classes
             for (int i = 0; i < iterations - 1; i++)
             {
 
-                yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, blocksize), Type = methode };
+                yield return new Operation() { IpNoeud = NOEUD, Chunck = fileText.Substring(startPos, blocksize), Methode = methode };
                 startPos += blocksize;
             }
-            yield return new Operation() { IpNoeud = NOEUD, Param = fileText.Substring(startPos, fileText.Length - startPos), Type = methode };
+            yield return new Operation() { IpNoeud = NOEUD, Chunck = fileText.Substring(startPos, fileText.Length - startPos), Methode = methode };
         }
 
         /// <summary>
@@ -128,12 +120,13 @@ namespace Cluster.Classes
             int startPos = 0;
             int blocksize = 1000;
             int posListeNoeud = 0;
-            int posDernierNoeudDansListe = AdressesNoeuds.Count - 1;
+            int posDernierNoeudDansListe = 0;
             var iterations = Math.Round((decimal)(fileText.Length / blocksize));
             for (int i = 0; i < iterations - 1; i++)
             {
-                //IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
-                com.Envoyer(IPAddress.Parse("192.168.0.25"), new Operation() { IpNoeud = "192.168.0.25", Param = fileText.Substring(startPos, blocksize), Type = methode });
+                IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
+
+                com.Envoyer(adresseNoeud, new Operation() { IpNoeud = adresseNoeud.ToString(), Chunck = fileText.Substring(startPos, blocksize), Methode = methode });
                 if (posListeNoeud == posDernierNoeudDansListe)
                     posListeNoeud = 0;
                 else
@@ -141,7 +134,6 @@ namespace Cluster.Classes
                 startPos += blocksize;
             }
         }
-                    
 
         /// <summary>
         /// Met à jour les informations dans le registre Cluster et récupère
@@ -154,21 +146,16 @@ namespace Cluster.Classes
             Console.WriteLine(DALService.GetClusterView());
             //obtenir l'IP des noeuds connectés
             AdressesNoeuds = DALService.GetAllNodeIPs();
-            MapRed = new MapReduce<Operation, Operation>();
         }
 
         private IPAddress SelectNoeud(int i)
         {
-            if (i > AdressesNoeuds.Count - 1)
+            List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("192.168.0.21")};
+            if (i > add.Count - 1)
                 throw new Exception($"Aucun noeud trouvé a l'emplacement {i} de la liste");
-            return AdressesNoeuds[i];
+            return add[i];
         }
-
-        public void AttenteCalcul()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void Dispose()
         {
 
@@ -180,13 +167,13 @@ namespace Cluster.Classes
             DALService.Dispose();
         }
 
-       
+
     }
 
     public class ResultatEventArgs
     {
-        public Operation Op;
-        public ResultatEventArgs(Operation o) { Op = o; }
+        public Resultat Op;
+        public ResultatEventArgs(Resultat r) { Op = r; }
     }
 }
 

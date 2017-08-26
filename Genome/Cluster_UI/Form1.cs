@@ -117,7 +117,7 @@ namespace Cluster_UI
 
             try
             {
-                O.Envoyer(new Operation { Type = "GetCalcul2", Param = fileContentZip });
+                O.Envoyer(new Operation { Methode = "GetCalcul2", Chunck = fileContentZip });
                // Resultat_Lbl.Text = $"{N.GetResultat()}";
             }
             catch (Exception ex)

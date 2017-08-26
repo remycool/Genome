@@ -14,7 +14,7 @@ using System.Net.Sockets;
 
 namespace Cluster.Classes
 {
-    public class Noeud : INoeud
+    public class Noeud
     {
         public const int PORT = 8888;
         public const string ORCHESTRATEUR = "192.168.0.21";
@@ -30,8 +30,6 @@ namespace Cluster.Classes
             AdresseIP = IpConfig.GetLocalIP();
             Com = new Communication<Resultat, Operation>(AdresseIP, 9999, 8888);
             Com.NouvelleReception += onNouvelleReception;
-            Thread ecouteNoeud = new Thread(Com.Recevoir);
-            ecouteNoeud.Start();
             BusinessService = BuService;
             DALService = DalService;
             Initialize();
@@ -61,9 +59,9 @@ namespace Cluster.Classes
         {
             //On utilise la réflexion pour obtenir la méthode depuis la factory
             Type type = typeof(IBusinessFactory);
-            MethodInfo methode = type.GetMethod(calcul.Type);
+            MethodInfo methode = type.GetMethod(calcul.Methode);
             Type typeRetourMethode = methode.ReturnType;
-            string chaine = calcul.Param;
+            string chaine = calcul.Chunck;
 
             //On éxécute la fonction
             return methode.Invoke(BusinessService, new object[] { chaine });
@@ -106,28 +104,11 @@ namespace Cluster.Classes
         /// <returns>Un objet Operation</returns>
         public void Envoyer(Resultat result)
         {
-            //string paramCompressed = string.Empty;
-            ////Si il y a des données en retour on les compresse 
-            //if (!string.IsNullOrEmpty(operation.Param))
-            //    paramCompressed = operation.Param.Compress();
-            //operation.Param = paramCompressed;
             result.IpNoeud = AdresseIP.ToString();
             //On envoie la réponse
             Com.Envoyer(IPAddress.Parse("192.168.0.25"), result);
         }
-
-        #region NOT IMPLEMENTED METHODS
-        public void RepartirCalcul(string file, string methode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Envoyer(Operation op)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
+       
     }
 }
 
