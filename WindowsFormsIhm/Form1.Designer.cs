@@ -31,25 +31,26 @@
             this.adnTitle = new System.Windows.Forms.Label();
             this.panelTitre = new System.Windows.Forms.Panel();
             this.panelBrowse = new System.Windows.Forms.Panel();
-            this.buttonNodePanel = new System.Windows.Forms.Button();
-            this.buttonModule1 = new System.Windows.Forms.Button();
-            this.buttonLaunch = new System.Windows.Forms.Button();
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.textBoxPathFile = new System.Windows.Forms.TextBox();
             this.panelModule1 = new System.Windows.Forms.Panel();
-            this.listViewModule1 = new System.Windows.Forms.ListView();
-            this.paireDeBase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panelNode = new System.Windows.Forms.Panel();
-            this.buttonOrchestrateur = new System.Windows.Forms.Button();
             this.buttonNode = new System.Windows.Forms.Button();
+            this.buttonOrchestrateur = new System.Windows.Forms.Button();
+            this.panelAffichResult = new System.Windows.Forms.Panel();
+            this.buttonPaireDeBase = new System.Windows.Forms.Button();
+            this.buttonOccurence = new System.Windows.Forms.Button();
+            this.buttonBaseInconnue = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.labelButtonClick = new System.Windows.Forms.Label();
+            this.panelButton = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panelTitre.SuspendLayout();
             this.panelBrowse.SuspendLayout();
-            this.panelModule1.SuspendLayout();
             this.panelNode.SuspendLayout();
+            this.panelAffichResult.SuspendLayout();
+            this.panelButton.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // adnTitle
@@ -57,7 +58,7 @@
             this.adnTitle.AutoSize = true;
             this.adnTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adnTitle.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.adnTitle.Location = new System.Drawing.Point(331, 8);
+            this.adnTitle.Location = new System.Drawing.Point(395, 8);
             this.adnTitle.Name = "adnTitle";
             this.adnTitle.Size = new System.Drawing.Size(57, 25);
             this.adnTitle.TabIndex = 0;
@@ -71,64 +72,19 @@
             this.panelTitre.ForeColor = System.Drawing.SystemColors.Desktop;
             this.panelTitre.Location = new System.Drawing.Point(0, 1);
             this.panelTitre.Name = "panelTitre";
-            this.panelTitre.Size = new System.Drawing.Size(788, 50);
+            this.panelTitre.Size = new System.Drawing.Size(847, 50);
             this.panelTitre.TabIndex = 1;
             // 
             // panelBrowse
             // 
             this.panelBrowse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBrowse.Controls.Add(this.buttonNodePanel);
-            this.panelBrowse.Controls.Add(this.buttonModule1);
-            this.panelBrowse.Controls.Add(this.buttonLaunch);
             this.panelBrowse.Controls.Add(this.buttonBrowse);
             this.panelBrowse.Controls.Add(this.textBoxPathFile);
             this.panelBrowse.Location = new System.Drawing.Point(0, 50);
             this.panelBrowse.Name = "panelBrowse";
-            this.panelBrowse.Size = new System.Drawing.Size(788, 131);
+            this.panelBrowse.Size = new System.Drawing.Size(847, 131);
             this.panelBrowse.TabIndex = 2;
             this.panelBrowse.UseWaitCursor = true;
-            // 
-            // buttonNodePanel
-            // 
-            this.buttonNodePanel.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonNodePanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonNodePanel.Location = new System.Drawing.Point(224, 101);
-            this.buttonNodePanel.Name = "buttonNodePanel";
-            this.buttonNodePanel.Size = new System.Drawing.Size(134, 28);
-            this.buttonNodePanel.TabIndex = 4;
-            this.buttonNodePanel.Text = "Node Window";
-            this.buttonNodePanel.UseVisualStyleBackColor = false;
-            this.buttonNodePanel.UseWaitCursor = true;
-            this.buttonNodePanel.Visible = false;
-            this.buttonNodePanel.Click += new System.EventHandler(this.buttonNodePanel_Click);
-            // 
-            // buttonModule1
-            // 
-            this.buttonModule1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonModule1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonModule1.Location = new System.Drawing.Point(110, 101);
-            this.buttonModule1.Name = "buttonModule1";
-            this.buttonModule1.Size = new System.Drawing.Size(92, 27);
-            this.buttonModule1.TabIndex = 3;
-            this.buttonModule1.Text = "Module 1";
-            this.buttonModule1.UseVisualStyleBackColor = false;
-            this.buttonModule1.UseWaitCursor = true;
-            this.buttonModule1.Visible = false;
-            this.buttonModule1.Click += new System.EventHandler(this.buttonModule1_Click);
-            // 
-            // buttonLaunch
-            // 
-            this.buttonLaunch.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonLaunch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonLaunch.Location = new System.Drawing.Point(3, 100);
-            this.buttonLaunch.Name = "buttonLaunch";
-            this.buttonLaunch.Size = new System.Drawing.Size(89, 28);
-            this.buttonLaunch.TabIndex = 2;
-            this.buttonLaunch.Text = "Launch";
-            this.buttonLaunch.UseVisualStyleBackColor = false;
-            this.buttonLaunch.UseWaitCursor = true;
-            this.buttonLaunch.Visible = false;
-            this.buttonLaunch.Click += new System.EventHandler(this.button1_Click);
             // 
             // buttonBrowse
             // 
@@ -154,92 +110,135 @@
             // 
             // panelModule1
             // 
-            this.panelModule1.Controls.Add(this.listViewModule1);
+            this.panelModule1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelModule1.Location = new System.Drawing.Point(0, 190);
             this.panelModule1.Name = "panelModule1";
-            this.panelModule1.Size = new System.Drawing.Size(788, 271);
+            this.panelModule1.Size = new System.Drawing.Size(847, 417);
             this.panelModule1.TabIndex = 3;
             this.panelModule1.Visible = false;
             // 
-            // listViewModule1
-            // 
-            this.listViewModule1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.paireDeBase,
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
-            this.listViewModule1.FullRowSelect = true;
-            this.listViewModule1.GridLines = true;
-            this.listViewModule1.Location = new System.Drawing.Point(28, 0);
-            this.listViewModule1.Name = "listViewModule1";
-            this.listViewModule1.Size = new System.Drawing.Size(741, 271);
-            this.listViewModule1.TabIndex = 0;
-            this.listViewModule1.UseCompatibleStateImageBehavior = false;
-            this.listViewModule1.View = System.Windows.Forms.View.Details;
-            // 
-            // paireDeBase
-            // 
-            this.paireDeBase.Text = "Nombre paire de base";
-            this.paireDeBase.Width = 125;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Occurrence A, T, G, C";
-            this.columnHeader1.Width = 137;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "% total Occurrence";
-            this.columnHeader2.Width = 119;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Nombre de Base Inconnues";
-            this.columnHeader3.Width = 163;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "occurrence séquence de 4 bases";
-            this.columnHeader4.Width = 193;
-            // 
             // panelNode
             // 
-            this.panelNode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelNode.Controls.Add(this.buttonNode);
-            this.panelNode.Controls.Add(this.buttonOrchestrateur);
+            this.panelNode.Controls.Add(this.panel1);
+            this.panelNode.Controls.Add(this.panelAffichResult);
+            this.panelNode.Controls.Add(this.panelButton);
             this.panelNode.Location = new System.Drawing.Point(1, 182);
             this.panelNode.Name = "panelNode";
-            this.panelNode.Size = new System.Drawing.Size(787, 333);
+            this.panelNode.Size = new System.Drawing.Size(846, 422);
             this.panelNode.TabIndex = 5;
+            // 
+            // buttonNode
+            // 
+            this.buttonNode.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.buttonNode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonNode.Location = new System.Drawing.Point(501, 42);
+            this.buttonNode.Name = "buttonNode";
+            this.buttonNode.Size = new System.Drawing.Size(209, 78);
+            this.buttonNode.TabIndex = 1;
+            this.buttonNode.Text = "Node";
+            this.buttonNode.UseVisualStyleBackColor = false;
             // 
             // buttonOrchestrateur
             // 
             this.buttonOrchestrateur.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.buttonOrchestrateur.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonOrchestrateur.Location = new System.Drawing.Point(31, 49);
+            this.buttonOrchestrateur.Location = new System.Drawing.Point(21, 42);
             this.buttonOrchestrateur.Name = "buttonOrchestrateur";
             this.buttonOrchestrateur.Size = new System.Drawing.Size(205, 78);
             this.buttonOrchestrateur.TabIndex = 0;
             this.buttonOrchestrateur.Text = "Orchestrateur";
             this.buttonOrchestrateur.UseVisualStyleBackColor = false;
             // 
-            // buttonNode
+            // panelAffichResult
             // 
-            this.buttonNode.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.buttonNode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonNode.Location = new System.Drawing.Point(511, 49);
-            this.buttonNode.Name = "buttonNode";
-            this.buttonNode.Size = new System.Drawing.Size(209, 78);
-            this.buttonNode.TabIndex = 1;
-            this.buttonNode.Text = "Noeux";
-            this.buttonNode.UseVisualStyleBackColor = false;
+            this.panelAffichResult.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panelAffichResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelAffichResult.Controls.Add(this.labelButtonClick);
+            this.panelAffichResult.Location = new System.Drawing.Point(200, 152);
+            this.panelAffichResult.Name = "panelAffichResult";
+            this.panelAffichResult.Size = new System.Drawing.Size(645, 270);
+            this.panelAffichResult.TabIndex = 0;
+            this.panelAffichResult.Visible = false;
+            // 
+            // buttonPaireDeBase
+            // 
+            this.buttonPaireDeBase.Location = new System.Drawing.Point(35, 34);
+            this.buttonPaireDeBase.Name = "buttonPaireDeBase";
+            this.buttonPaireDeBase.Size = new System.Drawing.Size(122, 27);
+            this.buttonPaireDeBase.TabIndex = 1;
+            this.buttonPaireDeBase.Text = "Total Paires de bases";
+            this.buttonPaireDeBase.UseVisualStyleBackColor = true;
+            this.buttonPaireDeBase.Click += new System.EventHandler(this.buttonPaireDeBase_Click);
+            // 
+            // buttonOccurence
+            // 
+            this.buttonOccurence.Location = new System.Drawing.Point(35, 69);
+            this.buttonOccurence.Name = "buttonOccurence";
+            this.buttonOccurence.Size = new System.Drawing.Size(122, 27);
+            this.buttonOccurence.TabIndex = 2;
+            this.buttonOccurence.Text = "Occurrence des bases";
+            this.buttonOccurence.UseVisualStyleBackColor = true;
+            this.buttonOccurence.Click += new System.EventHandler(this.buttonOccurence_Click);
+            // 
+            // buttonBaseInconnue
+            // 
+            this.buttonBaseInconnue.Location = new System.Drawing.Point(35, 101);
+            this.buttonBaseInconnue.Name = "buttonBaseInconnue";
+            this.buttonBaseInconnue.Size = new System.Drawing.Size(122, 27);
+            this.buttonBaseInconnue.TabIndex = 3;
+            this.buttonBaseInconnue.Text = "Base Inconnue";
+            this.buttonBaseInconnue.UseVisualStyleBackColor = true;
+            this.buttonBaseInconnue.Click += new System.EventHandler(this.buttonBaseInconnue_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(35, 135);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(122, 40);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "Occurrence base la plus frequente";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // labelButtonClick
+            // 
+            this.labelButtonClick.AutoSize = true;
+            this.labelButtonClick.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelButtonClick.Location = new System.Drawing.Point(35, 20);
+            this.labelButtonClick.Name = "labelButtonClick";
+            this.labelButtonClick.Size = new System.Drawing.Size(46, 18);
+            this.labelButtonClick.TabIndex = 0;
+            this.labelButtonClick.Text = "label1";
+            // 
+            // panelButton
+            // 
+            this.panelButton.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panelButton.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelButton.Controls.Add(this.button5);
+            this.panelButton.Controls.Add(this.buttonPaireDeBase);
+            this.panelButton.Controls.Add(this.buttonBaseInconnue);
+            this.panelButton.Controls.Add(this.buttonOccurence);
+            this.panelButton.Location = new System.Drawing.Point(1, 152);
+            this.panelButton.Name = "panelButton";
+            this.panelButton.Size = new System.Drawing.Size(201, 269);
+            this.panelButton.TabIndex = 5;
+            this.panelButton.Visible = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.buttonNode);
+            this.panel1.Controls.Add(this.buttonOrchestrateur);
+            this.panel1.Location = new System.Drawing.Point(1, -1);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(844, 154);
+            this.panel1.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(790, 637);
+            this.ClientSize = new System.Drawing.Size(848, 637);
             this.Controls.Add(this.panelNode);
             this.Controls.Add(this.panelModule1);
             this.Controls.Add(this.panelBrowse);
@@ -250,8 +249,11 @@
             this.panelTitre.PerformLayout();
             this.panelBrowse.ResumeLayout(false);
             this.panelBrowse.PerformLayout();
-            this.panelModule1.ResumeLayout(false);
             this.panelNode.ResumeLayout(false);
+            this.panelAffichResult.ResumeLayout(false);
+            this.panelAffichResult.PerformLayout();
+            this.panelButton.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -264,18 +266,17 @@
         private System.Windows.Forms.Button buttonBrowse;
         private System.Windows.Forms.TextBox textBoxPathFile;
         private System.Windows.Forms.Panel panelModule1;
-        private System.Windows.Forms.ListView listViewModule1;
-        private System.Windows.Forms.ColumnHeader paireDeBase;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.Button buttonLaunch;
         private System.Windows.Forms.Panel panelNode;
-        private System.Windows.Forms.Button buttonModule1;
-        private System.Windows.Forms.Button buttonNodePanel;
         private System.Windows.Forms.Button buttonNode;
         private System.Windows.Forms.Button buttonOrchestrateur;
+        private System.Windows.Forms.Panel panelAffichResult;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button buttonBaseInconnue;
+        private System.Windows.Forms.Button buttonOccurence;
+        private System.Windows.Forms.Button buttonPaireDeBase;
+        private System.Windows.Forms.Label labelButtonClick;
+        private System.Windows.Forms.Panel panelButton;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

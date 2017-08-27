@@ -18,11 +18,11 @@ namespace WindowsFormsIhm
     public partial class Form1 : Form
     {
         DisplayIhm.DisplayIhm meth;
-        private string[] fileTransform = null;
         private string filetPathLog = @"E:\Projet_Cesi\DNA\logs\";
         public Form1()
         {
             InitializeComponent();
+           
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -34,14 +34,14 @@ namespace WindowsFormsIhm
         {
             meth = new DisplayIhm.DisplayIhm();
             meth.loadFile(textBoxPathFile);
-            this.buttonLaunch.Visible = true;
+          
+            this.panelButton.Visible = true;
         }
 
         
         private void button1_Click(object sender, EventArgs e)
         {
             this.panelModule1.Visible = true;
-            buttonModule1.Visible = true;
             Lazy<Genome.LazyLoad> lazy = new Lazy<Genome.LazyLoad>();
 
             //Vérifie si la varibl lazy contient des donées
@@ -82,13 +82,37 @@ namespace WindowsFormsIhm
         {
             this.panelModule1.Visible = true;
             this.panelNode.Visible = false;
-            this.buttonNodePanel.Visible = true;
+            
         }
 
         private void buttonNodePanel_Click(object sender, EventArgs e)
         {
             this.panelNode.Visible = true;
             this.panelModule1.Visible = false;
+        }
+
+        private void buttonPaireDeBase_Click(object sender, EventArgs e)
+        {
+            this.panelAffichResult.Visible = true;
+            this.labelButtonClick.Text = "Nombre total de paires de bases";
+        }
+
+        private void buttonOccurence_Click(object sender, EventArgs e)
+        {
+            this.panelAffichResult.Visible = true;
+            this.labelButtonClick.Text = "Nombre d’occurrence des bases A, T, G ou C dans le génome et pourcentage relatif au total ";
+        }
+
+        private void buttonBaseInconnue_Click(object sender, EventArgs e)
+        {
+            this.panelAffichResult.Visible = true;
+            this.labelButtonClick.Text = " Nombre de bases inconnues(le tiret)";
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            this.panelAffichResult.Visible = true;
+            this.labelButtonClick.Text = " Nombre d’occurrence de la séquence de 4 bases la plus fréquente ";
         }
     }
 }
