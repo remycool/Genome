@@ -15,11 +15,8 @@ namespace Genome
 
     public class DisplayData
     {
-     
-        private  string filenameNew;
+         
         private string filetPathLog = @"E:\Projet_Cesi\DNA\logs\";
-        private List<string> allSplitFile = null ;
-        private static StreamWriter writeInFile;
         public delegate void splitFileEvent();
         
         public delegate void filePickUpEvent();
@@ -46,9 +43,7 @@ namespace Genome
             }catch(Exception e)
             {
                 File.AppendAllText(filetPathLog + "logPathFile.txt", "Erreur sur le chemin du fichier");
-            }
-           
-            
+            }                     
             return tbFilePath.Text;
         }
 
@@ -73,22 +68,30 @@ namespace Genome
         //Cette méthode permet de vérifier si le dossier ou se trouve les fichiers séparer  est vide
         public void isEmpty(string path)
         {
-            if (Directory.GetFileSystemEntries(path).Length == 0)
+            try
             {
-                if (OnFileSplit != null)
+                if (Directory.GetFileSystemEntries(path).Length == 0)
                 {
-                    a_FileSplit();
-                    MessageBox.Show("Folder is empty");
-                }               
+                    if (OnFileSplit != null)
+                    {
+                        a_FileSplit();
+                        MessageBox.Show("Folder is empty");
+                    }
+                }
+                else
+                {
+                    if (OnFileSplit != null)
+                    {
+                        a_FileSplit();
+                        MessageBox.Show("File exists");
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                if (OnFileSplit != null)
-                {
-                    a_FileSplit();
-                    MessageBox.Show("File exists");
-                }               
+                File.AppendAllText(filetPathLog + "logFolder.txt", "Le dossier n'existe pas");
             }
+            
         }
 
 

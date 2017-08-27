@@ -35,22 +35,22 @@
             this.textBoxPathFile = new System.Windows.Forms.TextBox();
             this.panelModule1 = new System.Windows.Forms.Panel();
             this.panelNode = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.buttonNode = new System.Windows.Forms.Button();
             this.buttonOrchestrateur = new System.Windows.Forms.Button();
             this.panelAffichResult = new System.Windows.Forms.Panel();
-            this.buttonPaireDeBase = new System.Windows.Forms.Button();
-            this.buttonOccurence = new System.Windows.Forms.Button();
-            this.buttonBaseInconnue = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.labelButtonClick = new System.Windows.Forms.Label();
             this.panelButton = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.button5 = new System.Windows.Forms.Button();
+            this.buttonPaireDeBase = new System.Windows.Forms.Button();
+            this.buttonBaseInconnue = new System.Windows.Forms.Button();
+            this.buttonOccurence = new System.Windows.Forms.Button();
             this.panelTitre.SuspendLayout();
             this.panelBrowse.SuspendLayout();
             this.panelNode.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.panelAffichResult.SuspendLayout();
             this.panelButton.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // adnTitle
@@ -127,6 +127,16 @@
             this.panelNode.Size = new System.Drawing.Size(846, 422);
             this.panelNode.TabIndex = 5;
             // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.buttonNode);
+            this.panel1.Controls.Add(this.buttonOrchestrateur);
+            this.panel1.Location = new System.Drawing.Point(1, -1);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(844, 154);
+            this.panel1.TabIndex = 6;
+            // 
             // buttonNode
             // 
             this.buttonNode.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -160,51 +170,11 @@
             this.panelAffichResult.TabIndex = 0;
             this.panelAffichResult.Visible = false;
             // 
-            // buttonPaireDeBase
-            // 
-            this.buttonPaireDeBase.Location = new System.Drawing.Point(35, 34);
-            this.buttonPaireDeBase.Name = "buttonPaireDeBase";
-            this.buttonPaireDeBase.Size = new System.Drawing.Size(122, 27);
-            this.buttonPaireDeBase.TabIndex = 1;
-            this.buttonPaireDeBase.Text = "Total Paires de bases";
-            this.buttonPaireDeBase.UseVisualStyleBackColor = true;
-            this.buttonPaireDeBase.Click += new System.EventHandler(this.buttonPaireDeBase_Click);
-            // 
-            // buttonOccurence
-            // 
-            this.buttonOccurence.Location = new System.Drawing.Point(35, 69);
-            this.buttonOccurence.Name = "buttonOccurence";
-            this.buttonOccurence.Size = new System.Drawing.Size(122, 27);
-            this.buttonOccurence.TabIndex = 2;
-            this.buttonOccurence.Text = "Occurrence des bases";
-            this.buttonOccurence.UseVisualStyleBackColor = true;
-            this.buttonOccurence.Click += new System.EventHandler(this.buttonOccurence_Click);
-            // 
-            // buttonBaseInconnue
-            // 
-            this.buttonBaseInconnue.Location = new System.Drawing.Point(35, 101);
-            this.buttonBaseInconnue.Name = "buttonBaseInconnue";
-            this.buttonBaseInconnue.Size = new System.Drawing.Size(122, 27);
-            this.buttonBaseInconnue.TabIndex = 3;
-            this.buttonBaseInconnue.Text = "Base Inconnue";
-            this.buttonBaseInconnue.UseVisualStyleBackColor = true;
-            this.buttonBaseInconnue.Click += new System.EventHandler(this.buttonBaseInconnue_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(35, 135);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(122, 40);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "Occurrence base la plus frequente";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // labelButtonClick
             // 
             this.labelButtonClick.AutoSize = true;
             this.labelButtonClick.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelButtonClick.Location = new System.Drawing.Point(35, 20);
+            this.labelButtonClick.Location = new System.Drawing.Point(7, 21);
             this.labelButtonClick.Name = "labelButtonClick";
             this.labelButtonClick.Size = new System.Drawing.Size(46, 18);
             this.labelButtonClick.TabIndex = 0;
@@ -224,15 +194,45 @@
             this.panelButton.TabIndex = 5;
             this.panelButton.Visible = false;
             // 
-            // panel1
+            // button5
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.buttonNode);
-            this.panel1.Controls.Add(this.buttonOrchestrateur);
-            this.panel1.Location = new System.Drawing.Point(1, -1);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(844, 154);
-            this.panel1.TabIndex = 6;
+            this.button5.Location = new System.Drawing.Point(35, 135);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(122, 40);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "Occurrence base la plus frequente";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // buttonPaireDeBase
+            // 
+            this.buttonPaireDeBase.Location = new System.Drawing.Point(35, 34);
+            this.buttonPaireDeBase.Name = "buttonPaireDeBase";
+            this.buttonPaireDeBase.Size = new System.Drawing.Size(122, 27);
+            this.buttonPaireDeBase.TabIndex = 1;
+            this.buttonPaireDeBase.Text = "Total Paires de bases";
+            this.buttonPaireDeBase.UseVisualStyleBackColor = true;
+            this.buttonPaireDeBase.Click += new System.EventHandler(this.buttonPaireDeBase_Click);
+            // 
+            // buttonBaseInconnue
+            // 
+            this.buttonBaseInconnue.Location = new System.Drawing.Point(35, 101);
+            this.buttonBaseInconnue.Name = "buttonBaseInconnue";
+            this.buttonBaseInconnue.Size = new System.Drawing.Size(122, 27);
+            this.buttonBaseInconnue.TabIndex = 3;
+            this.buttonBaseInconnue.Text = "Base Inconnue";
+            this.buttonBaseInconnue.UseVisualStyleBackColor = true;
+            this.buttonBaseInconnue.Click += new System.EventHandler(this.buttonBaseInconnue_Click);
+            // 
+            // buttonOccurence
+            // 
+            this.buttonOccurence.Location = new System.Drawing.Point(35, 69);
+            this.buttonOccurence.Name = "buttonOccurence";
+            this.buttonOccurence.Size = new System.Drawing.Size(122, 27);
+            this.buttonOccurence.TabIndex = 2;
+            this.buttonOccurence.Text = "Occurrence des bases";
+            this.buttonOccurence.UseVisualStyleBackColor = true;
+            this.buttonOccurence.Click += new System.EventHandler(this.buttonOccurence_Click);
             // 
             // Form1
             // 
@@ -250,10 +250,10 @@
             this.panelBrowse.ResumeLayout(false);
             this.panelBrowse.PerformLayout();
             this.panelNode.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.panelAffichResult.ResumeLayout(false);
             this.panelAffichResult.PerformLayout();
             this.panelButton.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
