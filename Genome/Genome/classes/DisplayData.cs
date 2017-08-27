@@ -35,9 +35,9 @@ namespace DisplayIhm
         }
 
         //Cette méthode permet de charger un fichier
-        public string loadFile(TextBox tbFilePath)
+        public string loadFile(System.Windows.Forms.TextBox tbFilePath)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
             DialogResult dialogResult = fileDialog.ShowDialog();
 
             if (dialogResult == DialogResult.OK)
