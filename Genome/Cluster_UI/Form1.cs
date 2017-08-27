@@ -1,6 +1,7 @@
 ﻿using Cluster.Classes;
 using Cluster.Interfaces;
 using Cluster.Utils;
+using Cluster.Events;
 using Cluster.Exceptions;
 using Genome.GenomeBusiness;
 using System;
@@ -68,7 +69,7 @@ namespace Cluster_UI
         /// <param name="e"></param>
         public void onResultatChanged(object sender, ResultatEventArgs e)
         {
-            Invoke(new MethodInvoker(() => { Resultat_Lbl.Text = e.Op.ToString();}));
+            Invoke(new MethodInvoker(() => { Resultat_Lbl.Text = $"Total Calcul 1 :{e.Op.Valeur}";}));
         }
 
         private void Calcul1_Btn_Click(object sender, EventArgs e)

@@ -1,13 +1,9 @@
-﻿using Cluster.Interfaces;
-using Cluster.Protocole;
+﻿using Cluster.Protocole;
 using Cluster.Utils;
 using System.Collections.Generic;
 using System.Net;
 using System;
-using Cluster.Exceptions;
-using System.Threading.Tasks;
 using System.Linq;
-using System.Threading;
 using Cluster.Events;
 
 namespace Cluster.Classes
@@ -51,7 +47,7 @@ namespace Cluster.Classes
             else
                 Result += e.Op;
             
-            Console.WriteLine($"reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
+            Console.WriteLine($"Retour operation {e.Op.Id} Résultat reçu de {e.Op.Valeur} reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
             SignalerNouveauResultat(Result);
         }
 
@@ -61,8 +57,6 @@ namespace Cluster.Classes
             AdresseIP = IpConfig.GetLocalIP();
             com = new Communication<Operation, Resultat>(AdresseIP, 8888, 9999);
             com.NouvelleReception += onNouvelleReception;
-            //Thread ecouteOrchestrateur = new Thread(com.RecevoirAsync);
-            //ecouteOrchestrateur.Start();
             DALService = DalService;
             Initialize();
         }
@@ -93,6 +87,11 @@ namespace Cluster.Classes
         /// <param name="methode"></param>
         public void RepartirCalcul(string fileText, string methode)
         {
+            //TEST
+            int expectedCount = fileText.Count(c => c == 'C');
+            Console.WriteLine($"Résultat attendu = {expectedCount}");
+            //
+
             ChunkFactory(fileText, methode);
         }
 
@@ -118,21 +117,49 @@ namespace Cluster.Classes
         public void ChunkFactory(string fileText, string methode)
         {
             int startPos = 0;
-            int blocksize = 1000;
+            int tailleChunk = 100000;
             int posListeNoeud = 0;
-            int posDernierNoeudDansListe = 0;
-            var iterations = Math.Round((decimal)(fileText.Length / blocksize));
-            for (int i = 0; i < iterations - 1; i++)
-            {
-                IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
+            int posDernierNoeudDansListe = 2;
+            int tailleFichier = fileText.Length;
+            int totalTailleFichierEnvoyee = 0;
+            bool decoupageTermine = false;
+            string chunk = string.Empty;
+            int IdOperation = 1;
 
-                com.Envoyer(adresseNoeud, new Operation() { IpNoeud = adresseNoeud.ToString(), Chunck = fileText.Substring(startPos, blocksize), Methode = methode });
+            while (!decoupageTermine)
+            {
+                int tailleRestanteFichier = tailleFichier - totalTailleFichierEnvoyee;
+                //On vérifie si la taille du morceau est trop grande auquel cas le moceau
+                //aura la taille de la taille restante et on précise que c'est fini
+                if ( tailleChunk > tailleRestanteFichier)
+                {
+                    tailleChunk = tailleFichier - totalTailleFichierEnvoyee;
+                    decoupageTermine = true;
+                }
+
+                chunk = fileText.Substring(startPos, tailleChunk);
+                totalTailleFichierEnvoyee += chunk.Length;
+                //On compresse les données avant envoie au noeud
+                string compressedChunk = chunk.Compress();
+                //On réupère l'adresse du noeud auquel envoyer l'opération 
+                IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
+                //On envoie l'opération au noeud
+                com.Envoyer(adresseNoeud, new Operation() { Id = IdOperation , IpNoeud = adresseNoeud.ToString(), Chunck = compressedChunk, Methode = methode });
+                //On précise ici parmi la liste des noeuds quel sera le prochain à recevoir une opération
                 if (posListeNoeud == posDernierNoeudDansListe)
                     posListeNoeud = 0;
                 else
                     posListeNoeud++;
-                startPos += blocksize;
+
+                startPos += tailleChunk;
+                IdOperation++;
+                //TEST
+                Console.WriteLine($" Operation : {IdOperation} envoyée");
+                //
             }
+           //TEST
+            Console.WriteLine($"Tous les morceaux de fichier ont été envoyés total envoyé : {totalTailleFichierEnvoyee} Octets taille du dernier fichier {tailleChunk}");
+           //
         }
 
         /// <summary>
@@ -150,7 +177,9 @@ namespace Cluster.Classes
 
         private IPAddress SelectNoeud(int i)
         {
-            List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("192.168.0.21")};
+            //TEST
+            List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("192.168.0.25"), IPAddress.Parse("192.168.0.21"), IPAddress.Parse("192.168.0.23") };
+            //
             if (i > add.Count - 1)
                 throw new Exception($"Aucun noeud trouvé a l'emplacement {i} de la liste");
             return add[i];
@@ -170,10 +199,6 @@ namespace Cluster.Classes
 
     }
 
-    public class ResultatEventArgs
-    {
-        public Resultat Op;
-        public ResultatEventArgs(Resultat r) { Op = r; }
-    }
+   
 }
 

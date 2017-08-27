@@ -69,6 +69,7 @@
     <Compile Include="Classes\MapReduce.cs" />
     <Compile Include="Classes\Resultat.cs" />
     <Compile Include="Events\OperationEventArgs.cs" />
+    <Compile Include="Events\ResultatEventArgs.cs" />
     <Compile Include="Interfaces\IBusinessFactory.cs" />
     <Compile Include="Classes\IDALFactory.cs" />
     <Compile Include="Classes\Operation.cs" />

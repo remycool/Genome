@@ -9,6 +9,7 @@ namespace Cluster.Classes
     public class Resultat
     {
         public string IpNoeud { get; set; }
+        public int Id { get; set; }
         public int Valeur { get; set; }
         public long TempsExecution { get; set; }
 

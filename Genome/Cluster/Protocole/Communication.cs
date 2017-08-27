@@ -127,13 +127,6 @@ namespace Cluster.Protocole
                 {
                     TcpClient remote = LocalListener.AcceptTcpClient();
                     ThreadPool.QueueUserWorkItem(new WaitCallback(TraitementRequete), remote);
-                    //Décompresser le fichier
-                    //if (!string.IsNullOrEmpty(obj.Param))
-                    //{
-                    //    string unzipFile = obj.Param.Decompress();
-                    //    obj.Param = string.Empty;
-                    //    obj.Param = unzipFile;
-                    //}
                 }
             }
             catch (Exception ex)

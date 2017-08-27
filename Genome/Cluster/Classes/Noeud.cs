@@ -29,7 +29,9 @@ namespace Cluster.Classes
         {
             AdresseIP = IpConfig.GetLocalIP();
             Com = new Communication<Resultat, Operation>(AdresseIP, 9999, 8888);
+           
             Com.NouvelleReception += onNouvelleReception;
+           
             BusinessService = BuService;
             DALService = DalService;
             Initialize();
@@ -47,7 +49,10 @@ namespace Cluster.Classes
         /// <param name="e"></param>
         public void onNouvelleReception(object sender, ReceptionEventArgs<Operation> e)
         {
+            string compressedChunk = e.Op.Chunck;
+            string decompressedChunk = compressedChunk.Decompress();
             Resultat res = (Resultat)ExecuterCalcul(e.Op);
+            res.Id = e.Op.Id;
             Envoyer(res);
         }
 
