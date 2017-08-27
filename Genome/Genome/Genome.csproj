@@ -58,6 +58,7 @@
     <Compile Include="Base.cs" />
     <Compile Include="classes\DisplayData.cs" />
     <Compile Include="classes\FileList.cs" />
+    <Compile Include="classes\LazyLoad.cs" />
     <Compile Include="GenomeBusiness.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -93,10 +94,6 @@
     <Resource Include="Ressources\DNA_DATA\genome-soffes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WindowsFormsIhm\WindowsFormsIhm.csproj">
-      <Project>{6e03037e-8e06-4d5c-ae42-4a4ff10c7a76}</Project>
-      <Name>WindowsFormsIhm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cluster\Cluster.csproj">
       <Project>{382344ef-7a01-49dd-8b95-5a7b60643490}</Project>
       <Name>Cluster</Name>

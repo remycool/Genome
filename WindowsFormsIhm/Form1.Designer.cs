@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.adnTitle = new System.Windows.Forms.Label();
             this.panelTitre = new System.Windows.Forms.Panel();
             this.panelBrowse = new System.Windows.Forms.Panel();
+            this.buttonNodePanel = new System.Windows.Forms.Button();
+            this.buttonModule1 = new System.Windows.Forms.Button();
             this.buttonLaunch = new System.Windows.Forms.Button();
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.textBoxPathFile = new System.Windows.Forms.TextBox();
@@ -42,25 +43,13 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonReset = new System.Windows.Forms.Button();
             this.panelNode = new System.Windows.Forms.Panel();
-            this.labelNodeTitle = new System.Windows.Forms.Label();
-            this.panelSelectNode = new System.Windows.Forms.Panel();
-            this.listBoxNode = new System.Windows.Forms.ListBox();
-            this.buttonValidNode = new System.Windows.Forms.Button();
-            this.panelStatNode = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.labelStatTitre = new System.Windows.Forms.Label();
-            this.labelNameCurrentNode = new System.Windows.Forms.Label();
-            this.buttonModule1 = new System.Windows.Forms.Button();
-            this.buttonNodePanel = new System.Windows.Forms.Button();
+            this.buttonOrchestrateur = new System.Windows.Forms.Button();
+            this.buttonNode = new System.Windows.Forms.Button();
             this.panelTitre.SuspendLayout();
             this.panelBrowse.SuspendLayout();
             this.panelModule1.SuspendLayout();
             this.panelNode.SuspendLayout();
-            this.panelSelectNode.SuspendLayout();
-            this.panelStatNode.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // adnTitle
@@ -98,6 +87,34 @@
             this.panelBrowse.Size = new System.Drawing.Size(788, 131);
             this.panelBrowse.TabIndex = 2;
             this.panelBrowse.UseWaitCursor = true;
+            // 
+            // buttonNodePanel
+            // 
+            this.buttonNodePanel.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonNodePanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonNodePanel.Location = new System.Drawing.Point(224, 101);
+            this.buttonNodePanel.Name = "buttonNodePanel";
+            this.buttonNodePanel.Size = new System.Drawing.Size(134, 28);
+            this.buttonNodePanel.TabIndex = 4;
+            this.buttonNodePanel.Text = "Node Window";
+            this.buttonNodePanel.UseVisualStyleBackColor = false;
+            this.buttonNodePanel.UseWaitCursor = true;
+            this.buttonNodePanel.Visible = false;
+            this.buttonNodePanel.Click += new System.EventHandler(this.buttonNodePanel_Click);
+            // 
+            // buttonModule1
+            // 
+            this.buttonModule1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonModule1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonModule1.Location = new System.Drawing.Point(110, 101);
+            this.buttonModule1.Name = "buttonModule1";
+            this.buttonModule1.Size = new System.Drawing.Size(92, 27);
+            this.buttonModule1.TabIndex = 3;
+            this.buttonModule1.Text = "Module 1";
+            this.buttonModule1.UseVisualStyleBackColor = false;
+            this.buttonModule1.UseWaitCursor = true;
+            this.buttonModule1.Visible = false;
+            this.buttonModule1.Click += new System.EventHandler(this.buttonModule1_Click);
             // 
             // buttonLaunch
             // 
@@ -186,138 +203,37 @@
             this.columnHeader4.Text = "occurrence séquence de 4 bases";
             this.columnHeader4.Width = 193;
             // 
-            // buttonReset
-            // 
-            this.buttonReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonReset.Location = new System.Drawing.Point(336, 521);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(83, 23);
-            this.buttonReset.TabIndex = 4;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.button1_Click);
-            // 
             // panelNode
             // 
             this.panelNode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelNode.Controls.Add(this.panelStatNode);
-            this.panelNode.Controls.Add(this.panelSelectNode);
+            this.panelNode.Controls.Add(this.buttonNode);
+            this.panelNode.Controls.Add(this.buttonOrchestrateur);
             this.panelNode.Location = new System.Drawing.Point(1, 182);
             this.panelNode.Name = "panelNode";
-            this.panelNode.Size = new System.Drawing.Size(787, 279);
+            this.panelNode.Size = new System.Drawing.Size(787, 333);
             this.panelNode.TabIndex = 5;
             // 
-            // labelNodeTitle
+            // buttonOrchestrateur
             // 
-            this.labelNodeTitle.AutoSize = true;
-            this.labelNodeTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNodeTitle.Location = new System.Drawing.Point(31, 9);
-            this.labelNodeTitle.Name = "labelNodeTitle";
-            this.labelNodeTitle.Size = new System.Drawing.Size(96, 20);
-            this.labelNodeTitle.TabIndex = 0;
-            this.labelNodeTitle.Text = "Select Node";
-            this.labelNodeTitle.Click += new System.EventHandler(this.label1_Click_1);
+            this.buttonOrchestrateur.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.buttonOrchestrateur.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonOrchestrateur.Location = new System.Drawing.Point(31, 49);
+            this.buttonOrchestrateur.Name = "buttonOrchestrateur";
+            this.buttonOrchestrateur.Size = new System.Drawing.Size(205, 78);
+            this.buttonOrchestrateur.TabIndex = 0;
+            this.buttonOrchestrateur.Text = "Orchestrateur";
+            this.buttonOrchestrateur.UseVisualStyleBackColor = false;
             // 
-            // panelSelectNode
+            // buttonNode
             // 
-            this.panelSelectNode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSelectNode.Controls.Add(this.buttonValidNode);
-            this.panelSelectNode.Controls.Add(this.listBoxNode);
-            this.panelSelectNode.Controls.Add(this.labelNodeTitle);
-            this.panelSelectNode.Location = new System.Drawing.Point(-1, -1);
-            this.panelSelectNode.Name = "panelSelectNode";
-            this.panelSelectNode.Size = new System.Drawing.Size(182, 279);
-            this.panelSelectNode.TabIndex = 1;
-            // 
-            // listBoxNode
-            // 
-            this.listBoxNode.FormattingEnabled = true;
-            this.listBoxNode.Items.AddRange(new object[] {
-            "Node1",
-            "Node2"});
-            this.listBoxNode.Location = new System.Drawing.Point(25, 56);
-            this.listBoxNode.Name = "listBoxNode";
-            this.listBoxNode.Size = new System.Drawing.Size(112, 17);
-            this.listBoxNode.TabIndex = 2;
-            // 
-            // buttonValidNode
-            // 
-            this.buttonValidNode.Location = new System.Drawing.Point(24, 73);
-            this.buttonValidNode.Name = "buttonValidNode";
-            this.buttonValidNode.Size = new System.Drawing.Size(72, 26);
-            this.buttonValidNode.TabIndex = 2;
-            this.buttonValidNode.Text = "Submit";
-            this.buttonValidNode.UseVisualStyleBackColor = true;
-            this.buttonValidNode.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // panelStatNode
-            // 
-            this.panelStatNode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelStatNode.Controls.Add(this.labelNameCurrentNode);
-            this.panelStatNode.Controls.Add(this.labelStatTitre);
-            this.panelStatNode.Controls.Add(this.pictureBox1);
-            this.panelStatNode.Location = new System.Drawing.Point(180, -1);
-            this.panelStatNode.Name = "panelStatNode";
-            this.panelStatNode.Size = new System.Drawing.Size(602, 279);
-            this.panelStatNode.TabIndex = 2;
-            this.panelStatNode.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(188, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(409, 268);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // labelStatTitre
-            // 
-            this.labelStatTitre.AutoSize = true;
-            this.labelStatTitre.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatTitre.Location = new System.Drawing.Point(91, 15);
-            this.labelStatTitre.Name = "labelStatTitre";
-            this.labelStatTitre.Size = new System.Drawing.Size(81, 17);
-            this.labelStatTitre.TabIndex = 1;
-            this.labelStatTitre.Text = "Statistiques";
-            // 
-            // labelNameCurrentNode
-            // 
-            this.labelNameCurrentNode.AutoSize = true;
-            this.labelNameCurrentNode.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNameCurrentNode.Location = new System.Drawing.Point(29, 16);
-            this.labelNameCurrentNode.Name = "labelNameCurrentNode";
-            this.labelNameCurrentNode.Size = new System.Drawing.Size(46, 17);
-            this.labelNameCurrentNode.TabIndex = 2;
-            this.labelNameCurrentNode.Text = "label1";
-            // 
-            // buttonModule1
-            // 
-            this.buttonModule1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonModule1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonModule1.Location = new System.Drawing.Point(110, 101);
-            this.buttonModule1.Name = "buttonModule1";
-            this.buttonModule1.Size = new System.Drawing.Size(92, 27);
-            this.buttonModule1.TabIndex = 3;
-            this.buttonModule1.Text = "Module 1";
-            this.buttonModule1.UseVisualStyleBackColor = false;
-            this.buttonModule1.UseWaitCursor = true;
-            this.buttonModule1.Visible = false;
-            this.buttonModule1.Click += new System.EventHandler(this.buttonModule1_Click);
-            // 
-            // buttonNodePanel
-            // 
-            this.buttonNodePanel.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonNodePanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonNodePanel.Location = new System.Drawing.Point(224, 101);
-            this.buttonNodePanel.Name = "buttonNodePanel";
-            this.buttonNodePanel.Size = new System.Drawing.Size(134, 28);
-            this.buttonNodePanel.TabIndex = 4;
-            this.buttonNodePanel.Text = "Node Window";
-            this.buttonNodePanel.UseVisualStyleBackColor = false;
-            this.buttonNodePanel.UseWaitCursor = true;
-            this.buttonNodePanel.Visible = false;
-            this.buttonNodePanel.Click += new System.EventHandler(this.buttonNodePanel_Click);
+            this.buttonNode.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.buttonNode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonNode.Location = new System.Drawing.Point(511, 49);
+            this.buttonNode.Name = "buttonNode";
+            this.buttonNode.Size = new System.Drawing.Size(209, 78);
+            this.buttonNode.TabIndex = 1;
+            this.buttonNode.Text = "Noeux";
+            this.buttonNode.UseVisualStyleBackColor = false;
             // 
             // Form1
             // 
@@ -325,7 +241,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(790, 637);
             this.Controls.Add(this.panelNode);
-            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.panelModule1);
             this.Controls.Add(this.panelBrowse);
             this.Controls.Add(this.panelTitre);
@@ -337,11 +252,6 @@
             this.panelBrowse.PerformLayout();
             this.panelModule1.ResumeLayout(false);
             this.panelNode.ResumeLayout(false);
-            this.panelSelectNode.ResumeLayout(false);
-            this.panelSelectNode.PerformLayout();
-            this.panelStatNode.ResumeLayout(false);
-            this.panelStatNode.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -354,7 +264,6 @@
         private System.Windows.Forms.Button buttonBrowse;
         private System.Windows.Forms.TextBox textBoxPathFile;
         private System.Windows.Forms.Panel panelModule1;
-        private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.ListView listViewModule1;
         private System.Windows.Forms.ColumnHeader paireDeBase;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -363,16 +272,10 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Button buttonLaunch;
         private System.Windows.Forms.Panel panelNode;
-        private System.Windows.Forms.Label labelNodeTitle;
-        private System.Windows.Forms.Panel panelSelectNode;
-        private System.Windows.Forms.ListBox listBoxNode;
-        private System.Windows.Forms.Button buttonValidNode;
-        private System.Windows.Forms.Panel panelStatNode;
-        private System.Windows.Forms.Label labelStatTitre;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label labelNameCurrentNode;
         private System.Windows.Forms.Button buttonModule1;
         private System.Windows.Forms.Button buttonNodePanel;
+        private System.Windows.Forms.Button buttonNode;
+        private System.Windows.Forms.Button buttonOrchestrateur;
     }
 }
 

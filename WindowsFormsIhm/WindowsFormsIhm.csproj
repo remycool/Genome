@@ -87,6 +87,10 @@
       <Project>{c342a2b5-be96-4690-a8b5-543abb7ce4a3}</Project>
       <Name>FileManagement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Genome\Genome\Genome.csproj">
+      <Project>{e647228a-c07d-477a-be8a-0f5bf706182b}</Project>
+      <Name>Genome</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
