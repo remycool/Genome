@@ -17,8 +17,10 @@ namespace Genome
     {
          
         private string filetPathLog = @"E:\Projet_Cesi\DNA\logs\";
+        private List<string> newList = new ArrayList<string>();
         public delegate void splitFileEvent();
-        
+        private string verifFile;
+        private string[] Lines;
         public delegate void filePickUpEvent();
         public event splitFileEvent OnFileSplit;
    
@@ -40,12 +42,59 @@ namespace Genome
                 {
                     tbFilePath.Text = fileDialog.FileName;
                 }
-            }catch(Exception e)
+                tranformToArray(tbFilePath.Text);
+            }
+            catch(Exception e)
             {
                 File.AppendAllText(filetPathLog + "logPathFile.txt", "Erreur sur le chemin du fichier");
             }                     
             return tbFilePath.Text;
         }
+
+        //Cette méthode permet de vérifier si le fichier chargé est correcte et transform le fichier sous forme de tableau
+        public List<string> tranformToArray(string file)
+        {
+            verifFile = Path.GetExtension(file);
+            try
+            {
+                if (verifFile == ".txt")
+                {
+                    Lines = File.ReadAllLines(file);
+                    if (Lines.First().Contains("\t"))
+                    {
+                        if (Lines.First().Contains("genotype"))
+                        {
+                            Lines = Lines.Skip(1).ToArray();
+                            int i = 0;
+                            foreach (string line in Lines)
+                            {
+                                //récupère les derniers caractère d'une ligne
+                                string t = line.Substring(line.Length - 2, 2).Trim();
+                                newList.Add(t);
+                                //Console.WriteLine($"{t}\t : " + i);
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Avertissement : Votre fichier n'est pas valide manque d'en-tête");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Avertissement : Votre fichier n'est pas valide - manque te tabulation");
+                    }
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("Le chemin vers le fichier est null");
+            }
+            return newList;
+        }
+
+
+
 
     
       //Cette méthode permet de notifier si les fichier séparer ont été modifier
