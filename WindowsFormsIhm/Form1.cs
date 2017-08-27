@@ -38,13 +38,11 @@ namespace WindowsFormsIhm
             Lazy<LazyLoading> lazy = new Lazy<LazyLoading>();
             MessageBox.Show("Data Loaded : " + lazy.IsValueCreated);
             LazyLoading lazyLoading = lazy.Value;
-
-           /* foreach (string tmp in lazyLoading.Names)
-            {
-                MessageBox.Show(tmp);
-            }   */     
-
-
+            MessageBox.Show("Lazy value : " + lazy.Value);
+            /* foreach (string tmp in lazyLoading.Names)
+             {
+                 MessageBox.Show(tmp);
+             }   */
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -58,7 +56,7 @@ namespace WindowsFormsIhm
             s.listFileFolder_Node(s.Get_listFile(), s.GetV_nameFile());
            /* meth = new DisplayIhm.DisplayIhm();
             meth.listFileFolder_Node();*/
-           //meth.isEmpty(@"E:\Projet_Cesi\DNA\DNA-Data\SplitFile");
+           meth.isEmpty(@"E:\Projet_Cesi\DNA\DNA-Data\SplitFile");
 
             /* meth.OnFileSplit += new DisplayIhm.DisplayIhm.splitFileEvent(a_FileSplit);
              string[] transformFile =  File.ReadLines(textBoxPathFile.Text).ToArray();

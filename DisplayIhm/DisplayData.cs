@@ -29,6 +29,7 @@ namespace DisplayIhm
             Console.WriteLine("List Generated:");
             fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
             sizeFile = new System.IO.FileInfo(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").Length;
+
         }
 
         //Cette méthode permet de charger un fichier
@@ -40,7 +41,7 @@ namespace DisplayIhm
             if (dialogResult == DialogResult.OK)
             {
                 tbFilePath.Text = fileDialog.FileName;
-                splitFile(File.ReadLines(tbFilePath.Text).ToArray());            
+                splitFile(File.ReadLines(tbFilePath.Text).ToList());            
             }
             
             return tbFilePath.Text;
@@ -57,7 +58,7 @@ namespace DisplayIhm
 
         }
       //Cette méthode permet de divisier le fichien entré par l'utilisateur en plusieurs parties et écris les fichiers dans un dossier spécifique
-      public void splitFile(string[] fileTransform)
+      public void splitFile(List<string> fileTransform)
       {
            
            int tour = 1;
@@ -87,7 +88,7 @@ namespace DisplayIhm
            
       }
     
-        //Cette méthode permet de notifier si les fichier séparer ont été modifier
+      //Cette méthode permet de notifier si les fichier séparer ont été modifier
       public void pickUpFile()
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
@@ -112,20 +113,22 @@ namespace DisplayIhm
                 if (OnFileSplit != null)
                 {
                     a_FileSplit();
+                    MessageBox.Show("Folder is empty");
                 }
-                MessageBox.Show("Folder is empty");
+               
             }
             else
             {
                 if (OnFileSplit != null)
                 {
                     a_FileSplit();
+                    MessageBox.Show("File exists");
                 }
-                MessageBox.Show("File exists");
+               
             }
         }
 
-
+        //test
         public List<string>  listFileFolder_Node()
         {
             allSplitFile = new ArrayList<string>();

@@ -13,12 +13,12 @@ namespace FileManagement
     {
 
         DisplayIhm.DisplayIhm meth;
-        private string[] fileTransform = null;
+        private List<string> fileTransform = null;
 
         public LazyLoading()
         {
             meth = new DisplayIhm.DisplayIhm();
-            fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToArray();
+            fileTransform = File.ReadLines(@"E:\Projet_Cesi\DNA\DNA-Data\test.txt").ToList();
             meth.splitFile(fileTransform);
         }
 
@@ -27,7 +27,7 @@ namespace FileManagement
         {
             get
             {
-                return meth.splitFile(fileTransform);
+                return fileTransform;
             }
         }
 

@@ -41,10 +41,7 @@ namespace FileManagement
             foreach (var tmp in listFile)
             {
                 MessageBox.Show("Bien");
-
-            }
-           
-          
+            }              
         }
 
         public void listFileFolder_Node(IList<string> list, string v)
