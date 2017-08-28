@@ -1,4 +1,6 @@
-﻿namespace Cluster.Classes
+﻿using System.Collections.Generic;
+
+namespace Cluster.Classes
 {
     public interface IBusinessFactory
     {

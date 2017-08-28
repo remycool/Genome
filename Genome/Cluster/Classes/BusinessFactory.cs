@@ -1,4 +1,6 @@
-﻿using Cluster.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Cluster.Interfaces;
 
 namespace Cluster.Classes
 {
@@ -19,6 +21,11 @@ namespace Cluster.Classes
         public Resultat GetCalcul2(string chunckFile)
         {
             return _clusterizableBusiness.Calcul2(chunckFile);
+        }
+
+        public Resultat GetCalcul3(List<string> chunckFile)
+        {
+            return _clusterizableBusiness.Calcul3(chunckFile);
         }
     }
 }

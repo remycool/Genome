@@ -11,6 +11,6 @@ namespace Cluster.Interfaces
     {
         Resultat Calcul1(string chunkFile);
         Resultat Calcul2(string chunkfile);
-        Resultat Calcul3(string chunkfile);
+        Resultat Calcul3(List<string> chunkfile);
     }
 }
