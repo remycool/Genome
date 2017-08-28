@@ -16,7 +16,7 @@ namespace Genome.GenomeBusiness
         /// <returns> un objet Operation qui contient le résultat</returns>
         Resultat IClusterizableBusiness.Calcul1(string chunk)
         {
-            char charToCount = 'C';
+            char charToCount = '-';
             //opération
             int count = chunk.Count(c => c == charToCount);
             return new Resultat {Valeur = count, TempsExecution = 0 };

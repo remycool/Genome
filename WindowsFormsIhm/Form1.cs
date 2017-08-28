@@ -1,4 +1,5 @@
 ﻿using Cluster;
+using Cluster.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,67 +17,41 @@ namespace WindowsFormsIhm
 
     public partial class Form1 : Form
     {
-        Cluster.DisplayData meth;
-        private string filetPathLog = @"E:\Projet_Cesi\DNA\logs\";
+        DisplayData meth;
+        
         public Form1()
         {
             InitializeComponent();
             meth = new DisplayData();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
 
-        }
 
+        /// <summary>
+        /// Effectue le chargement du fichier, transforme le fichier initial et répartit dans plusieurs fichiers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
+
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            DialogResult dialogResult = fileDialog.ShowDialog();
            
-            meth.loadFile(textBoxPathFile);
-          
-            this.panelButton.Visible = true;
-        }
-
-        
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.panelModule1.Visible = true;
-            Lazy<LazyLoad> lazy = new Lazy<LazyLoad>();
-
-            //Vérifie si la varibl lazy contient des donées
-            Console.WriteLine("Data Loaded : " + lazy.IsValueCreated);
-            LazyLoad lazyLoadingValue = lazy.Value;
             try
             {
-                if (lazyLoadingValue != null)
+                if (dialogResult == DialogResult.OK)
                 {
-                    foreach (string tmp in lazyLoadingValue.Names)
-                    {
-                       
-                        MessageBox.Show("Data présente : " + tmp);                       
-                    }
+                    List<string> fichiersDecoupes = meth.tranformToArray(fileDialog.FileName);
+                    meth.SplitFile(fichiersDecoupes);
                 }
             }
             catch (Exception ex)
             {
-                File.AppendAllText(filetPathLog + "logCsharp.txt", "Erreur sur la veleur du lazy");
+                File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", "Erreur sur le chemin du fichier");
             }
-                   
+            panelButton.Visible = true;
         }
-
-
-
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-                    
-        }
-     
 
         private void buttonModule1_Click(object sender, EventArgs e)
         {
@@ -85,11 +60,7 @@ namespace WindowsFormsIhm
             
         }
 
-        private void buttonNodePanel_Click(object sender, EventArgs e)
-        {
-            this.panelNode.Visible = true;
-            this.panelModule1.Visible = false;
-        }
+      
 
         private void buttonPaireDeBase_Click(object sender, EventArgs e)
         {
@@ -113,31 +84,6 @@ namespace WindowsFormsIhm
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = " Nombre d’occurrence de la séquence de 4 bases la plus fréquente ";
-        }
-
-        private void button1_Click_2(object sender, EventArgs e)
-        {
-            Lazy<LazyLoad> lazy = new Lazy<LazyLoad>();
-
-            //Vérifie si la varibl lazy contient des donées
-            Console.WriteLine("Data Loaded : " + lazy.IsValueCreated);
-            LazyLoad lazyLoadingValue = lazy.Value;
-            try
-            {
-                if (lazyLoadingValue != null)
-                {
-                    foreach (string tmp in lazyLoadingValue.Names)
-                    {
-                        MessageBox.Show("Data présente : " + tmp);
-                        //meth.tranformToArray(tmp);
-  
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                File.AppendAllText(filetPathLog + "logCsharp.txt", "Erreur sur la veleur du lazy");
-            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Cluster.Utils
         public const int ROLE_NOEUD = 1;
         public const int ETAT_CONNECTED = 4;
         public const int ETAT_NOT_CONNECTED = 7;
-       
+        public const string LOG_DIR = "C:/";
+        
     }
 }
