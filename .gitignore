@@ -240,3 +240,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Genome/Cluster_DAL/App.config
+/Genome/Cluster_UI/App.config
