@@ -5,13 +5,15 @@ using System.Net;
 using System;
 using System.Linq;
 using Cluster.Events;
+using System.IO;
+using System.Net.Sockets;
 
 namespace Cluster.Classes
 {
     public class Orchestrateur
     {
         #region PROPRIETES
-        public const string NOEUD = "192.168.0.25";
+        public const string NOEUD = "";
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
         public Communication<Operation, Resultat> com { get; set; }
@@ -19,7 +21,7 @@ namespace Cluster.Classes
         public IDALFactory DALService { get; set; }
         //public MapReduce<Operation, Operation> MapRed { get; set; }
         public Resultat Result { get; set; }
-
+        //public Lazy<LazyLoading> Lazy { get; set; }
 
         #endregion
 
@@ -48,7 +50,7 @@ namespace Cluster.Classes
                 Result += e.Op;
             
             Console.WriteLine($"Retour operation {e.Op.Id} Résultat reçu de {e.Op.Valeur} reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
-            SignalerNouveauResultat(Result);
+            SignalerNouveauResultat(e.Op);
         }
 
         public Orchestrateur(IDALFactory DalService)
@@ -58,7 +60,16 @@ namespace Cluster.Classes
             com = new Communication<Operation, Resultat>(AdresseIP, 8888, 9999);
             com.NouvelleReception += onNouvelleReception;
             DALService = DalService;
+            //Lazy = new Lazy<LazyLoading>();
             Initialize();
+
+            //string pathUser = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //string finalPath = pathUser + "/SplitFile"; 
+            //if (!Directory.Exists(finalPath))
+            //{
+            //    DirectoryInfo di = Directory.CreateDirectory(finalPath);
+            //}
+
         }
 
         /// <summary>
@@ -87,11 +98,25 @@ namespace Cluster.Classes
         /// <param name="methode"></param>
         public void RepartirCalcul(string fileText, string methode)
         {
+            ////Lazy Loading
+            //LazyLoad Loaded = Lazy.Value;
+            //try
+            //{
+            //    if (Loaded != null)
+            //    {
+            //        foreach (string path in Loaded.Names)
+            //        {
+            //            string fichier = GetFile(path);
+            //            ChunkFactory(fileText, methode);
+            //        }
+            //    }
+            //}
+
+
             //TEST
             int expectedCount = fileText.Count(c => c == 'C');
             Console.WriteLine($"Résultat attendu = {expectedCount}");
             //
-
             ChunkFactory(fileText, methode);
         }
 
@@ -119,7 +144,7 @@ namespace Cluster.Classes
             int startPos = 0;
             int tailleChunk = 100000;
             int posListeNoeud = 0;
-            int posDernierNoeudDansListe = 2;
+            int posDernierNoeudDansListe = 1;
             int tailleFichier = fileText.Length;
             int totalTailleFichierEnvoyee = 0;
             bool decoupageTermine = false;
@@ -152,10 +177,11 @@ namespace Cluster.Classes
                     posListeNoeud++;
 
                 startPos += tailleChunk;
-                IdOperation++;
                 //TEST
                 Console.WriteLine($" Operation : {IdOperation} envoyée");
                 //
+                IdOperation++;
+                
             }
            //TEST
             Console.WriteLine($"Tous les morceaux de fichier ont été envoyés total envoyé : {totalTailleFichierEnvoyee} Octets taille du dernier fichier {tailleChunk}");
@@ -168,6 +194,8 @@ namespace Cluster.Classes
         /// </summary>
         public void Initialize()
         {
+            
+           
             //Mettre à jour info du noeud courant dans le registre
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
             Console.WriteLine(DALService.GetClusterView());
@@ -175,10 +203,39 @@ namespace Cluster.Classes
             AdressesNoeuds = DALService.GetAllNodeIPs();
         }
 
+        /// <summary>
+        /// Méthode qui va chercher le fichier et le charger en mémoire
+        /// </summary>
+        /// <returns></returns>
+        //private string GetFile(string cheminVersFichier)
+        //{
+        //    string emplacement = Assembly.GetExecutingAssembly().Location;
+        //    string repertoire = Path.GetDirectoryName(emplacement);
+        //    string cheminVersFichier = Path.Combine(repertoire, @"genome-kukushkin.txt");
+        //    string fileContent = string.Empty;
+
+        //    try
+        //    {
+        //        using (FileStream fs = new FileStream(cheminVersFichier, FileMode.Open, FileAccess.Read))
+        //        using (StreamReader reader = new StreamReader(fs, Encoding.UTF8))
+        //        {
+        //            fileContent = reader.ReadToEnd();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string err = $"{ex.Message} \n{ex.StackTrace}";
+        //        MessageBox.Show(err);
+        //    }
+        //    return fileContent;
+        //}
+
+        
         private IPAddress SelectNoeud(int i)
         {
             //TEST
-            List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("192.168.0.25"), IPAddress.Parse("192.168.0.21"), IPAddress.Parse("192.168.0.23") };
+            //List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("192.168.0.25"), IPAddress.Parse("192.168.0.21"), IPAddress.Parse("192.168.0.23") };
+            List<IPAddress> add = new List<IPAddress>() { IPAddress.Parse("10.131.128.74"), IPAddress.Parse("10.131.128.90") };
             //
             if (i > add.Count - 1)
                 throw new Exception($"Aucun noeud trouvé a l'emplacement {i} de la liste");

@@ -29,7 +29,7 @@ namespace Cluster.Classes
         {
             AdresseIP = IpConfig.GetLocalIP();
             Com = new Communication<Resultat, Operation>(AdresseIP, 9999, 8888);
-           
+
             Com.NouvelleReception += onNouvelleReception;
            
             BusinessService = BuService;
@@ -51,6 +51,7 @@ namespace Cluster.Classes
         {
             string compressedChunk = e.Op.Chunck;
             string decompressedChunk = compressedChunk.Decompress();
+            e.Op.Chunck = decompressedChunk;
             Resultat res = (Resultat)ExecuterCalcul(e.Op);
             res.Id = e.Op.Id;
             Envoyer(res);
@@ -111,9 +112,9 @@ namespace Cluster.Classes
         {
             result.IpNoeud = AdresseIP.ToString();
             //On envoie la réponse
-            Com.Envoyer(IPAddress.Parse("192.168.0.25"), result);
+            Com.Envoyer(IPAddress.Parse("10.131.128.74"), result);
         }
-       
+
     }
 }
 

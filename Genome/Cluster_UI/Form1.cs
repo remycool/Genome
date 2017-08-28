@@ -69,7 +69,7 @@ namespace Cluster_UI
         /// <param name="e"></param>
         public void onResultatChanged(object sender, ResultatEventArgs e)
         {
-            Invoke(new MethodInvoker(() => { Resultat_Lbl.Text = $"Total Calcul 1 :{e.Op.Valeur}";}));
+            Invoke(new MethodInvoker(() => { richTextBox_Result.AppendText($"{e.Op.ToString()}");}));
         }
 
         private void Calcul1_Btn_Click(object sender, EventArgs e)

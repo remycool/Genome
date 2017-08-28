@@ -22,7 +22,7 @@ namespace Cluster.Classes
 
         public override string ToString()
         {
-            return $">>> Résultat : {Valeur} effectué par {IpNoeud} en {TempsExecution} ms";
+            return $"\n>>> Opération {Id} effectué par {IpNoeud} --> Résultat du comptage : {Valeur} ";
         }
     }
 }
