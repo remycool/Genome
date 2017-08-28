@@ -58,7 +58,6 @@
     <Compile Include="Base.cs" />
     <Compile Include="classes\DisplayData.cs" />
     <Compile Include="classes\GenomeMethod.cs" />
-    <Compile Include="classes\LazyLoad.cs" />
     <Compile Include="GenomeBusiness.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using DisplayIhm;
-using FileManagement;
+﻿using Cluster;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,12 +16,12 @@ namespace WindowsFormsIhm
 
     public partial class Form1 : Form
     {
-        DisplayIhm.DisplayIhm meth;
+        Cluster.DisplayData meth;
         private string filetPathLog = @"E:\Projet_Cesi\DNA\logs\";
         public Form1()
         {
             InitializeComponent();
-           
+            meth = new DisplayData();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -32,7 +31,7 @@ namespace WindowsFormsIhm
 
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            meth = new DisplayIhm.DisplayIhm();
+           
             meth.loadFile(textBoxPathFile);
           
             this.panelButton.Visible = true;
@@ -42,19 +41,20 @@ namespace WindowsFormsIhm
         private void button1_Click(object sender, EventArgs e)
         {
             this.panelModule1.Visible = true;
-            Lazy<Genome.LazyLoad> lazy = new Lazy<Genome.LazyLoad>();
+            Lazy<LazyLoad> lazy = new Lazy<LazyLoad>();
 
             //Vérifie si la varibl lazy contient des donées
             Console.WriteLine("Data Loaded : " + lazy.IsValueCreated);
-            Genome.LazyLoad lazyLoadingValue = lazy.Value;
+            LazyLoad lazyLoadingValue = lazy.Value;
             try
             {
                 if (lazyLoadingValue != null)
                 {
-                    /*foreach (string tmp in lazyLoadingValue.Names)
+                    foreach (string tmp in lazyLoadingValue.Names)
                     {
+                       
                         MessageBox.Show("Data présente : " + tmp);                       
-                    }*/
+                    }
                 }
             }
             catch (Exception ex)
@@ -113,6 +113,31 @@ namespace WindowsFormsIhm
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = " Nombre d’occurrence de la séquence de 4 bases la plus fréquente ";
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            Lazy<LazyLoad> lazy = new Lazy<LazyLoad>();
+
+            //Vérifie si la varibl lazy contient des donées
+            Console.WriteLine("Data Loaded : " + lazy.IsValueCreated);
+            LazyLoad lazyLoadingValue = lazy.Value;
+            try
+            {
+                if (lazyLoadingValue != null)
+                {
+                    foreach (string tmp in lazyLoadingValue.Names)
+                    {
+                        MessageBox.Show("Data présente : " + tmp);
+                        //meth.tranformToArray(tmp);
+  
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText(filetPathLog + "logCsharp.txt", "Erreur sur la veleur du lazy");
+            }
         }
     }
 }

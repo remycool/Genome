@@ -79,17 +79,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DisplayIhm\DisplayIhm.csproj">
-      <Project>{70716426-3379-4479-89A8-EBD73DE34908}</Project>
-      <Name>DisplayIhm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileManagement\FileManagement.csproj">
-      <Project>{c342a2b5-be96-4690-a8b5-543abb7ce4a3}</Project>
-      <Name>FileManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Genome\Genome\Genome.csproj">
-      <Project>{e647228a-c07d-477a-be8a-0f5bf706182b}</Project>
-      <Name>Genome</Name>
+    <ProjectReference Include="..\Genome\Cluster\Cluster.csproj">
+      <Project>{382344ef-7a01-49dd-8b95-5a7b60643490}</Project>
+      <Name>Cluster</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

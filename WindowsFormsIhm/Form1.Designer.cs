@@ -45,6 +45,7 @@
             this.buttonPaireDeBase = new System.Windows.Forms.Button();
             this.buttonBaseInconnue = new System.Windows.Forms.Button();
             this.buttonOccurence = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.panelTitre.SuspendLayout();
             this.panelBrowse.SuspendLayout();
             this.panelNode.SuspendLayout();
@@ -78,6 +79,7 @@
             // panelBrowse
             // 
             this.panelBrowse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBrowse.Controls.Add(this.button1);
             this.panelBrowse.Controls.Add(this.buttonBrowse);
             this.panelBrowse.Controls.Add(this.textBoxPathFile);
             this.panelBrowse.Location = new System.Drawing.Point(0, 50);
@@ -234,6 +236,16 @@
             this.buttonOccurence.UseVisualStyleBackColor = true;
             this.buttonOccurence.Click += new System.EventHandler(this.buttonOccurence_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(33, 102);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(88, 27);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -277,6 +289,7 @@
         private System.Windows.Forms.Label labelButtonClick;
         private System.Windows.Forms.Panel panelButton;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
