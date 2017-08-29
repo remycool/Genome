@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Genome;
 
 namespace WindowsFormsIhm
 {
@@ -18,6 +19,7 @@ namespace WindowsFormsIhm
     public partial class Form1 : Form
     {
         DisplayData meth;
+       
         
         public Form1()
         {
@@ -84,6 +86,11 @@ namespace WindowsFormsIhm
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = " Nombre d’occurrence de la séquence de 4 bases la plus fréquente ";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+           
         }
     }
 }

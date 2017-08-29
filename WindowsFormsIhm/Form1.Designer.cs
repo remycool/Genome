@@ -77,7 +77,6 @@
             this.panelBrowse.Name = "panelBrowse";
             this.panelBrowse.Size = new System.Drawing.Size(847, 131);
             this.panelBrowse.TabIndex = 2;
-            this.panelBrowse.UseWaitCursor = true;
             // 
             // buttonBrowse
             // 

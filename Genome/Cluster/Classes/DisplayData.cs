@@ -1,5 +1,8 @@
+
 ﻿using System;
 using System.Drawing;
+﻿using Cluster.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +16,7 @@ namespace Cluster
     public class DisplayData
     {
 
-        private List<string> newList = new List<string>();
+        private List<string> newList = new List<string>();  
         public delegate void splitFileEvent();
         private string _verifFile;
         private StreamWriter _writeInFile;
@@ -51,8 +54,8 @@ namespace Cluster
                 File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", "Erreur sur le chemin du fichier");
             }
             return tbFilePath;
-        }
-
+            }                     
+       
         /// <summary>
         /// Cette méthode permet de vérifier si le fichier chargé est correct, 
         /// enlève toutes les informations inutiles et garde les données exploitables
@@ -181,7 +184,9 @@ namespace Cluster
             }
             return pathLog;
         }
-
-
+      
     }
+
+    
+
 }
