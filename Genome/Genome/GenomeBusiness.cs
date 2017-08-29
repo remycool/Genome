@@ -9,6 +9,11 @@ namespace Genome.GenomeBusiness
 {
     public class GenomeBusiness : IClusterizableBusiness
     {
+        public Resultat Calcul4(string chunkfile)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// méthode qui compte le nombre de charactère contenu dans la chaine de caractère passé en paramètre 
         /// </summary>

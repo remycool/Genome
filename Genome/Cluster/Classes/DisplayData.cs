@@ -1,5 +1,10 @@
+<<<<<<< 7f769da17dc72f8757e18471477c286ebef17581
 ﻿using System;
 using System.Drawing;
+=======
+﻿using Cluster.Utils;
+using System;
+>>>>>>> cluster et genome
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +18,7 @@ namespace Cluster
     public class DisplayData
     {
 
-        private List<string> newList = new List<string>();
+        private List<string> newList = new List<string>();  
         public delegate void splitFileEvent();
         private string _verifFile;
         private StreamWriter _writeInFile;
@@ -51,6 +56,8 @@ namespace Cluster
                 File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", "Erreur sur le chemin du fichier");
             }
             return tbFilePath;
+            }                     
+            return tbFilePath.Text;
         }
 
         /// <summary>
@@ -181,7 +188,9 @@ namespace Cluster
             }
             return pathLog;
         }
-
-
+      
     }
+
+    
+
 }
