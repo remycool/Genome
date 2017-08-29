@@ -71,8 +71,11 @@
     <Compile Include="Classes\LazyLoad.cs" />
     <Compile Include="Classes\MapReduce.cs" />
     <Compile Include="Classes\Resultat.cs" />
+    <Compile Include="Events\NoeudConnecteEventArgs.cs" />
     <Compile Include="Events\OperationEventArgs.cs" />
+    <Compile Include="Events\ReceptionEventArgs.cs" />
     <Compile Include="Events\ResultatEventArgs.cs" />
+    <Compile Include="Events\TraitementTermineEventArgs.cs" />
     <Compile Include="Interfaces\IBusinessFactory.cs" />
     <Compile Include="Classes\IDALFactory.cs" />
     <Compile Include="Classes\Operation.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="Classes\Orchestrateur.cs" />
     <Compile Include="Interfaces\IClusterizableDAL.cs" />
     <Compile Include="Interfaces\INoeud.cs" />
+    <Compile Include="Interfaces\ResultatAbstract.cs" />
     <Compile Include="Logs\GestionLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocole\Communication.cs" />

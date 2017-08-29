@@ -10,5 +10,10 @@
         #endregion
 
         public Operation() { }
+
+        public override string ToString()
+        {
+            return $"\n>>> Operation {Id} reçue ";
+        }
     }
 }

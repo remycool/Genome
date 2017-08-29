@@ -1,5 +1,9 @@
 ﻿using Cluster;
+using Cluster.Classes;
+using Cluster.Events;
+using Cluster.Exceptions;
 using Cluster.Utils;
+using Cluster_DAL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,25 +11,42 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsIhm
 {
-    public delegate void dgPointer(string[] transformFile);
 
     public partial class Form1 : Form
     {
-        DisplayData meth;
-        
+        #region PROPRIETES
+        public DisplayData meth { get; set; }
+        public Orchestrateur Orch { get; set; }
+        IDALFactory ServiceDAL { get; set; }
+        #endregion
+
         public Form1()
         {
             InitializeComponent();
-            meth = new DisplayData();
+            try
+            {
+                meth = new DisplayData();
+                ServiceDAL = new DALFactory(new ClusterDAL());
+                Orch = new Orchestrateur(ServiceDAL);
+                //Abonnement à l'évènement
+                Orch.NouveauResultat += onResultatChanged;
+                Orch.TraitementTermine += onTraitementTermine;
+                Orch.NouveauNoeud += onNouveauNoeudConnecte;
+            }
+            catch (ClusterException ex)
+            {
+                string message = "Erreur à l'initialisation de l'orchestrateur - Veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(message, ex.StackTrace);
+                MessageBox.Show(message);
+            }
         }
-
-
 
         /// <summary>
         /// Effectue le chargement du fichier, transforme le fichier initial et répartit dans plusieurs fichiers
@@ -37,53 +58,139 @@ namespace WindowsFormsIhm
 
             OpenFileDialog fileDialog = new OpenFileDialog();
             DialogResult dialogResult = fileDialog.ShowDialog();
-           
+
             try
             {
                 if (dialogResult == DialogResult.OK)
                 {
+                    FichierSelectionne.Text = fileDialog.FileName;
                     List<string> fichiersDecoupes = meth.tranformToArray(fileDialog.FileName);
                     meth.SplitFile(fichiersDecoupes);
+                    panelButton.Visible = true;
                 }
             }
-            catch (Exception ex)
+            catch (ClusterException ex)
             {
-                File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", "Erreur sur le chemin du fichier");
+                string message = "L'ouverture du fichier n'a pas fonctionné, veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(ex.Message, ex.StackTrace);
+                MessageBox.Show(message);
             }
-            panelButton.Visible = true;
+
         }
 
-        private void buttonModule1_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Dés que l'event résultant d'un calcul est receptionné on met à jour l'affichage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void onResultatChanged(object sender, ResultatEventArgs e)
         {
-            this.panelModule1.Visible = true;
-            this.panelNode.Visible = false;
-            
+            Invoke(new MethodInvoker(() => { richTextBox_result.AppendText($"{e.Op.ToString()}"); }));
         }
 
-      
+        /// <summary>
+        /// On notifie à la vue dès que le le traitement est terminé
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void onTraitementTermine(object sender, TraitementTermineEventArgs e)
+        {
+            Invoke(new MethodInvoker(() => { TraitementTermine_label.Text = $"Traitement terminé! Résultat = {Orch.Result.Valeur}"; }));
+        }
 
+        /// <summary>
+        /// On notifie la vue des noeuds connectés
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void onNouveauNoeudConnecte(object sender, NoeudConnecteEventArgs e)
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                NbNoeudConnecte_label.Text = string.Empty;
+                NbNoeudConnecte_label.Text = $"Noeuds connectes {e.Noeuds.Count}";
+                foreach (IPAddress a in e.Noeuds)
+                {
+                    listeNoeud_label.Text += $"\n{a.ToString()}";
+                }
+            }));
+        }
+
+        /// <summary>
+        /// Lance le comptage des paires de bases dans le fichier chargé
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonPaireDeBase_Click(object sender, EventArgs e)
         {
-            this.panelAffichResult.Visible = true;
-            this.labelButtonClick.Text = "Nombre total de paires de bases";
+            panelAffichResult.Visible = true;
+            labelButtonClick.Text = "Nombre total de paires de bases";
+            richTextBox_result.Clear();
+            try
+            {
+                Orch.RepartirCalcul("GetCalcul1");
+            }
+            catch (ClusterException ex)
+            {
+                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(message, ex.StackTrace);
+                MessageBox.Show(message);
+            }
+
         }
 
+        /// <summary>
+        /// Lance le comptage du nombre de bases A,T,G,C contenu dans le fichier génome
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonOccurence_Click(object sender, EventArgs e)
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = "Nombre d’occurrence des bases A, T, G ou C dans le génome et pourcentage relatif au total ";
         }
 
+        /// <summary>
+        /// Lance le comptage du nombre de bases inconnues contenu dans le fichier génome
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonBaseInconnue_Click(object sender, EventArgs e)
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = " Nombre de bases inconnues(le tiret)";
         }
 
+        /// <summary>
+        /// lance le comptage du nombre d’occurrence de la séquence de 4 bases la plus fréquente
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
             this.panelAffichResult.Visible = true;
-            this.labelButtonClick.Text = " Nombre d’occurrence de la séquence de 4 bases la plus fréquente ";
+            this.labelButtonClick.Text = "Nombre d’occurrence de la séquence de 4 bases la plus fréquente";
+        }
+
+        /// <summary>
+        /// A la fermeture du form on appelle la méthode dispose de la classe Orchestrateur
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Orch != null)
+                Orch.Dispose();
+        }
+
+        /// <summary>
+        /// A l'ouverture du form on initialise l'objet Orchestrateur
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            Orch.Initialize();
         }
     }
 }

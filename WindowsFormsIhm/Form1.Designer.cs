@@ -31,10 +31,15 @@
             this.adnTitle = new System.Windows.Forms.Label();
             this.panelTitre = new System.Windows.Forms.Panel();
             this.panelBrowse = new System.Windows.Forms.Panel();
+            this.listeNoeud_label = new System.Windows.Forms.Label();
+            this.NbNoeudConnecte_label = new System.Windows.Forms.Label();
+            this.FichierSelectionne = new System.Windows.Forms.Label();
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.panelModule1 = new System.Windows.Forms.Panel();
             this.panelNode = new System.Windows.Forms.Panel();
             this.panelAffichResult = new System.Windows.Forms.Panel();
+            this.TraitementTermine_label = new System.Windows.Forms.Label();
+            this.richTextBox_result = new System.Windows.Forms.RichTextBox();
             this.labelButtonClick = new System.Windows.Forms.Label();
             this.panelButton = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
@@ -72,25 +77,51 @@
             // panelBrowse
             // 
             this.panelBrowse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBrowse.Controls.Add(this.listeNoeud_label);
+            this.panelBrowse.Controls.Add(this.NbNoeudConnecte_label);
+            this.panelBrowse.Controls.Add(this.FichierSelectionne);
             this.panelBrowse.Controls.Add(this.buttonBrowse);
             this.panelBrowse.Location = new System.Drawing.Point(0, 50);
             this.panelBrowse.Name = "panelBrowse";
             this.panelBrowse.Size = new System.Drawing.Size(847, 131);
             this.panelBrowse.TabIndex = 2;
-            this.panelBrowse.UseWaitCursor = true;
+            // 
+            // listeNoeud_label
+            // 
+            this.listeNoeud_label.AutoSize = true;
+            this.listeNoeud_label.Location = new System.Drawing.Point(11, 51);
+            this.listeNoeud_label.Name = "listeNoeud_label";
+            this.listeNoeud_label.Size = new System.Drawing.Size(0, 13);
+            this.listeNoeud_label.TabIndex = 4;
+            // 
+            // NbNoeudConnecte_label
+            // 
+            this.NbNoeudConnecte_label.AutoSize = true;
+            this.NbNoeudConnecte_label.Location = new System.Drawing.Point(11, 28);
+            this.NbNoeudConnecte_label.Name = "NbNoeudConnecte_label";
+            this.NbNoeudConnecte_label.Size = new System.Drawing.Size(97, 13);
+            this.NbNoeudConnecte_label.TabIndex = 3;
+            this.NbNoeudConnecte_label.Text = "Noeuds connectés";
+            // 
+            // FichierSelectionne
+            // 
+            this.FichierSelectionne.AutoSize = true;
+            this.FichierSelectionne.Location = new System.Drawing.Point(312, 96);
+            this.FichierSelectionne.Name = "FichierSelectionne";
+            this.FichierSelectionne.Size = new System.Drawing.Size(0, 13);
+            this.FichierSelectionne.TabIndex = 2;
             // 
             // buttonBrowse
             // 
             this.buttonBrowse.BackColor = System.Drawing.SystemColors.MenuBar;
             this.buttonBrowse.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonBrowse.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.buttonBrowse.Location = new System.Drawing.Point(315, 26);
+            this.buttonBrowse.Location = new System.Drawing.Point(557, 28);
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(211, 58);
             this.buttonBrowse.TabIndex = 1;
             this.buttonBrowse.Text = "Sélectionner un fichier";
             this.buttonBrowse.UseVisualStyleBackColor = false;
-            this.buttonBrowse.UseWaitCursor = true;
             this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
             // 
             // panelModule1
@@ -115,12 +146,32 @@
             // 
             this.panelAffichResult.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panelAffichResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelAffichResult.Controls.Add(this.TraitementTermine_label);
+            this.panelAffichResult.Controls.Add(this.richTextBox_result);
             this.panelAffichResult.Controls.Add(this.labelButtonClick);
             this.panelAffichResult.Location = new System.Drawing.Point(208, 0);
             this.panelAffichResult.Name = "panelAffichResult";
             this.panelAffichResult.Size = new System.Drawing.Size(637, 422);
             this.panelAffichResult.TabIndex = 0;
             this.panelAffichResult.Visible = false;
+            // 
+            // TraitementTermine_label
+            // 
+            this.TraitementTermine_label.AutoSize = true;
+            this.TraitementTermine_label.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TraitementTermine_label.ForeColor = System.Drawing.Color.Lime;
+            this.TraitementTermine_label.Location = new System.Drawing.Point(349, 26);
+            this.TraitementTermine_label.Name = "TraitementTermine_label";
+            this.TraitementTermine_label.Size = new System.Drawing.Size(0, 19);
+            this.TraitementTermine_label.TabIndex = 2;
+            // 
+            // richTextBox_result
+            // 
+            this.richTextBox_result.Location = new System.Drawing.Point(10, 52);
+            this.richTextBox_result.Name = "richTextBox_result";
+            this.richTextBox_result.Size = new System.Drawing.Size(616, 352);
+            this.richTextBox_result.TabIndex = 1;
+            this.richTextBox_result.Text = "";
             // 
             // labelButtonClick
             // 
@@ -197,9 +248,11 @@
             this.Controls.Add(this.panelTitre);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panelTitre.ResumeLayout(false);
             this.panelTitre.PerformLayout();
             this.panelBrowse.ResumeLayout(false);
+            this.panelBrowse.PerformLayout();
             this.panelNode.ResumeLayout(false);
             this.panelAffichResult.ResumeLayout(false);
             this.panelAffichResult.PerformLayout();
@@ -223,6 +276,11 @@
         private System.Windows.Forms.Button buttonPaireDeBase;
         private System.Windows.Forms.Label labelButtonClick;
         private System.Windows.Forms.Panel panelButton;
+        private System.Windows.Forms.RichTextBox richTextBox_result;
+        private System.Windows.Forms.Label FichierSelectionne;
+        private System.Windows.Forms.Label TraitementTermine_label;
+        private System.Windows.Forms.Label NbNoeudConnecte_label;
+        private System.Windows.Forms.Label listeNoeud_label;
     }
 }
 

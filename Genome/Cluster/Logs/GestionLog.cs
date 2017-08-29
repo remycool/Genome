@@ -9,7 +9,7 @@ namespace Cluster.Logs
 {
     class GestionLog
     {
-        private string _filetPathLog = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        private string _filetPathLog;
 
         public GestionLog()
         {
@@ -31,7 +31,7 @@ namespace Cluster.Logs
                     DirectoryInfo dir = Directory.CreateDirectory(pathLog);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
             }

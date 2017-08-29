@@ -16,8 +16,8 @@ namespace Cluster.Classes
 {
     public class Noeud
     {
-        public const int PORT = 8888;
-        public const string ORCHESTRATEUR = "192.168.0.21";
+        public const int PORT_ECOUTE = 9999;
+        public const int PORT_ENVOIE = 8888;
 
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
@@ -25,10 +25,22 @@ namespace Cluster.Classes
         public IBusinessFactory BusinessService { get; set; }
         public IDALFactory DALService { get; set; }
 
+        #region EVENT
+        public delegate void OperationHandler(object sender, OperationEventArgs resultatEventArgs);
+        public event OperationHandler NouvelleOperation;
+
+        public void SignalerNouvelleOperation(Operation o)
+        {
+           OperationEventArgs e = new OperationEventArgs(o);
+            NouvelleOperation?.Invoke(this, e);
+        }
+        #endregion
+
+
         public Noeud(IBusinessFactory BuService, IDALFactory DalService)
         {
             AdresseIP = IpConfig.GetLocalIP();
-            Com = new Communication<Resultat, Operation>(AdresseIP, 9999, 8888);
+            Com = new Communication<Resultat, Operation>(AdresseIP, PORT_ECOUTE, PORT_ENVOIE);
 
             Com.NouvelleReception += onNouvelleReception;
            
@@ -54,7 +66,9 @@ namespace Cluster.Classes
             e.Op.Chunck = decompressedChunk;
             Resultat res = (Resultat)ExecuterCalcul(e.Op);
             res.Id = e.Op.Id;
+
             Envoyer(res);
+            SignalerNouvelleOperation(e.Op);
         }
 
         /// <summary>
@@ -112,7 +126,7 @@ namespace Cluster.Classes
         {
             result.IpNoeud = AdresseIP.ToString();
             //On envoie la réponse
-            Com.Envoyer(IPAddress.Parse("10.131.128.74"), result);
+            Com.Envoyer(OrchestrateurIP, result);
         }
 
     }

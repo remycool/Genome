@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cluster.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,11 @@ namespace Cluster.Classes
         public int Id { get; set; }
         public int Valeur { get; set; }
         public long TempsExecution { get; set; }
+
+        public Resultat()
+        {
+
+        }
 
         public static Resultat operator +(Resultat a, Resultat b)
         {

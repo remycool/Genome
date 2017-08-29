@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Cluster.Events
 {
-    public class OperationEventArgs
+    public class ReceptionEventArgs<T>
     {
-        public Operation Op;
-        public OperationEventArgs(Operation o) { Op = o; }
+        public T Op;
+        public ReceptionEventArgs(T o) { Op = o; }
     }
 }

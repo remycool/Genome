@@ -4,26 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Cluster.Utils;
 
 namespace Cluster.Exceptions
 {
     public class ClusterException : Exception
     {
-        public string Erreur { get; set; }
-        public ClusterException():base()
+        public string ErreurOrigine { get; set; }
+
+        public ClusterException(string message):base()
         {
-            Erreur = $"Une erreur a eu lieu dans le composant Cluster : {Message}";
+            ErreurOrigine = $"{Message}\n";
         }
 
-        public void Log()
+        /// <summary>
+        /// Notifie l'exception dans un fichier texte 
+        /// </summary>
+        public void Log(string message,string stackTrace)
         {
-            EventLog clusterLog = new EventLog();
-            if (!EventLog.SourceExists("Cluster"))
-                EventLog.CreateEventSource("Cluster", "Application");
+            //EventLog clusterLog = new EventLog();
+            //if (!EventLog.SourceExists("Cluster"))
+            //    EventLog.CreateEventSource("Cluster", "Application");
 
-            clusterLog.Source = "Cluster";
-            clusterLog.WriteEntry(Erreur);
+            //clusterLog.Source = "Cluster";
+            //clusterLog.WriteEntry(Erreur);
+            string messageBuilder = $"\n{DateTime.Now} - {message}\n" + ErreurOrigine +  StackTrace;
+            File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", messageBuilder);
         }
-              
     }
 }

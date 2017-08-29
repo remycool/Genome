@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Cluster.Utils;
 using System.Threading.Tasks;
+using Cluster.Exceptions;
 
 namespace Cluster
 {
@@ -39,17 +38,12 @@ namespace Cluster
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             DialogResult dialogResult = fileDialog.ShowDialog();
-            try
+
+            if (dialogResult == DialogResult.OK)
             {
-                if (dialogResult == DialogResult.OK)
-                {
-                    SplitFile(tranformToArray(tbFilePath));
-                }
+                SplitFile(tranformToArray(tbFilePath));
             }
-            catch (Exception e)
-            {
-                File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", "Erreur sur le chemin du fichier");
-            }
+
             return tbFilePath;
         }
 
@@ -61,19 +55,17 @@ namespace Cluster
         /// <returns></returns>
         public List<string> tranformToArray(string file)
         {
-
             IEnumerable<string> lines;
-            if (IsFichierCorrect(file))
+            VerifierFichier(file);
+            lines = File.ReadLines(file).Skip(1);
+            Parallel.ForEach(lines, (line) =>
             {
-                lines = File.ReadLines(file).Skip(1);
-                Parallel.ForEach(lines, (line) =>
-                {
                     //récupère les derniers caractère d'une ligne
                     string t = line.Substring(line.Length - 2, 2).Trim();
-                    newList.Add(t);
+                newList.Add(t);
 
-                });
-            }
+            });
+
             Console.WriteLine("Processing complete.");
             return newList;
         }
@@ -83,17 +75,19 @@ namespace Cluster
         /// </summary>
         /// <param name="fichier"></param>
         /// <returns></returns>
-        private bool IsFichierCorrect(string fichier)
+        private void VerifierFichier(string fichier)
         {
             _verifFile = Path.GetExtension(fichier);
             string premiereLigne = File.ReadLines(fichier).First();
-            bool isCorrect = true;
             //Test de l'extension
             if (_verifFile != ".txt")
-                isCorrect = false;
+            {
+                throw new ClusterException("Le fichier sélectionné n'est pas un fichier .txt");
+            }
             if (!premiereLigne.Contains("\t") || !premiereLigne.Contains("genotype"))
-                isCorrect = false;
-            return isCorrect;
+            {
+                throw new ClusterException("Le fichier sélectionné n'est pas au bon format");
+            }
         }
 
         /// <summary>
@@ -149,7 +143,7 @@ namespace Cluster
                     DirectoryInfo dir = Directory.CreateDirectory(_pathSplitFile);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
             }
@@ -175,7 +169,7 @@ namespace Cluster
                     DirectoryInfo dir = Directory.CreateDirectory(pathLog);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
             }
