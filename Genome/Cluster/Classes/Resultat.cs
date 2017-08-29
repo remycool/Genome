@@ -11,7 +11,10 @@ namespace Cluster.Classes
         public string IpNoeud { get; set; }
         public int Id { get; set; }
         public int Valeur { get; set; }
+        public double ValeurPrcent { get; set; }
+        public string ValeurString { get; set; }
         public long TempsExecution { get; set; }
+        public Exception Erreur { get; set; }
 
         public static Resultat operator +(Resultat a, Resultat b)
         {

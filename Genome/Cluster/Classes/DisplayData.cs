@@ -1,10 +1,8 @@
-<<<<<<< 7f769da17dc72f8757e18471477c286ebef17581
+
 ﻿using System;
 using System.Drawing;
-=======
 ﻿using Cluster.Utils;
 using System;
->>>>>>> cluster et genome
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,9 +55,7 @@ namespace Cluster
             }
             return tbFilePath;
             }                     
-            return tbFilePath.Text;
-        }
-
+       
         /// <summary>
         /// Cette méthode permet de vérifier si le fichier chargé est correct, 
         /// enlève toutes les informations inutiles et garde les données exploitables
