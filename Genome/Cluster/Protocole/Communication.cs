@@ -2,6 +2,7 @@
 using Cluster.Events;
 using Cluster.Exceptions;
 using Cluster.Interfaces;
+using Cluster.Logs;
 using Cluster.Utils;
 using System;
 using System.Net;
@@ -66,7 +67,7 @@ namespace Cluster.Protocole
             }
             catch (Exception ex)
             {
-
+                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
             }
 
         }

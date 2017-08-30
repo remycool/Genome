@@ -1,5 +1,6 @@
 ﻿using Cluster.Classes;
 using Cluster.Interfaces;
+using Cluster.Logs;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -52,6 +53,7 @@ namespace Cluster.Utils
             }
             catch (Exception ex)
             {
+                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
             }
 
             return result;

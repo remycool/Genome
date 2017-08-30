@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cluster.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,22 +10,16 @@ namespace Cluster.Logs
 {
     class GestionLog
     {
-        private string _filetPathLog;
-
-        public GestionLog()
+        public static void Log(string message)
         {
-             Initialiser();
-             _filetPathLog = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        }
-
-        public string Initialiser()
-        {
-            string pathLog = _filetPathLog + "/adnLogs/";
-                if (!Directory.Exists(pathLog))
-                {
-                    DirectoryInfo dir = Directory.CreateDirectory(pathLog);
-                }
-            return pathLog;
+            string messageBuilder = $"\n{DateTime.Now} {message}";
+            string filetPathLog = ClusterConstantes.LOG_DIR;
+            string pathLog = filetPathLog + "/adnLogs/";
+            if (!Directory.Exists(pathLog))
+            {
+                DirectoryInfo dir = Directory.CreateDirectory(pathLog);
+            }
+            File.AppendAllText(pathLog + "logPathFile.txt", messageBuilder);
         }
     }
 }
