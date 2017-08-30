@@ -159,6 +159,17 @@ namespace WindowsFormsIhm
         {
             this.panelAffichResult.Visible = true;
             this.labelButtonClick.Text = " Nombre de bases inconnues(le tiret)";
+            richTextBox_result.Clear();
+            try
+            {
+                Orch.RepartirCalcul("GetCalcul5");
+            }
+            catch (ClusterException ex)
+            {
+                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(message, ex.StackTrace);
+                MessageBox.Show(message);
+            }
         }
 
         /// <summary>
@@ -173,6 +184,16 @@ namespace WindowsFormsIhm
         }
 
         /// <summary>
+        /// A l'ouverture du form on initialise l'objet Orchestrateur
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            Orch.Initialize();
+        }
+
+        /// <summary>
         /// A la fermeture du form on appelle la méthode dispose de la classe Orchestrateur
         /// </summary>
         /// <param name="sender"></param>
@@ -181,16 +202,6 @@ namespace WindowsFormsIhm
         {
             if (Orch != null)
                 Orch.Dispose();
-        }
-
-        /// <summary>
-        /// A l'ouverture du form on initialise l'objet Orchestrateur
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            Orch.Initialize();
         }
     }
 }

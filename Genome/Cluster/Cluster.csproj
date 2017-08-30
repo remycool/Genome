@@ -71,6 +71,7 @@
     <Compile Include="Classes\LazyLoad.cs" />
     <Compile Include="Classes\MapReduce.cs" />
     <Compile Include="Classes\Resultat.cs" />
+    <Compile Include="Classes\TcpListenerCluster.cs" />
     <Compile Include="Events\NoeudConnecteEventArgs.cs" />
     <Compile Include="Events\OperationEventArgs.cs" />
     <Compile Include="Events\ReceptionEventArgs.cs" />

@@ -248,6 +248,7 @@
             this.Controls.Add(this.panelTitre);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panelTitre.ResumeLayout(false);
             this.panelTitre.PerformLayout();

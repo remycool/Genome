@@ -1,5 +1,6 @@
 ﻿using Cluster.Classes;
 using Cluster.Events;
+using Cluster.Exceptions;
 using Cluster.Interfaces;
 using Cluster.Utils;
 using System;
@@ -15,8 +16,8 @@ namespace Cluster.Protocole
         public IPAddress AdresseIpLocale { get; set; }
         public int PortEcoute { get; set; }
         public int PortEnvoie { get; set; }
-        public TcpListener LocalListener { get; set; }
-        
+        public TcpListenerCluster LocalListener { get; set; }
+
 
         #region GESTION EVENEMENT
         public delegate void ReceptionHandler(object sender, ReceptionEventArgs<U> operationEventArgs);
@@ -35,7 +36,7 @@ namespace Cluster.Protocole
 
             PortEcoute = portIn;
             PortEnvoie = portOut;
-            LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
+            LocalListener = new TcpListenerCluster(AdresseIpLocale, PortEcoute);
             LocalListener.Start();
             RecevoirAsync();
         }
@@ -100,48 +101,46 @@ namespace Cluster.Protocole
 
         public void OnClientConnected(IAsyncResult asyncResult)
         {
-            try
+            if (LocalListener.Active)
             {
                 TcpClient client = LocalListener.EndAcceptTcpClient(asyncResult);
                 if (client != null)
                     TraitementRequete(client);
+                RecevoirAsync();
             }
-            catch
-            {
-
-            }
-            RecevoirAsync();
+            
         }
 
         /// <summary>
         /// Initialise un TcpListener et créé un nouveau thread
         /// </summary>
-        public void Recevoir()
-        {
-            LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
-            LocalListener.Start();
+        //public void Recevoir()
+        //{
+        //    LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
+        //    LocalListener.Start();
 
-            try
-            {
-                while (true)
-                {
-                    TcpClient remote = LocalListener.AcceptTcpClient();
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(TraitementRequete), remote);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message + ex.StackTrace);
-            }
-            finally
-            {
-                LocalListener.Stop();
-            }
-        }
+        //    try
+        //    {
+        //        while (true)
+        //        {
+        //            TcpClient remote = LocalListener.AcceptTcpClient();
+        //            ThreadPool.QueueUserWorkItem(new WaitCallback(TraitementRequete), remote);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Write(ex.Message + ex.StackTrace);
+        //    }
+        //    finally
+        //    {
+        //        LocalListener.Stop();
+        //    }
+        //}
 
         public void RecevoirAsync()
         {
-            LocalListener.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
+            if (LocalListener.Active)
+                LocalListener.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
         }
     }
 
