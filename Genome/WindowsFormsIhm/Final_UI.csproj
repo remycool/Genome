@@ -79,11 +79,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Genome\Cluster\Cluster.csproj">
+    <ProjectReference Include="..\Cluster\Cluster.csproj">
       <Project>{382344ef-7a01-49dd-8b95-5a7b60643490}</Project>
       <Name>Cluster</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Genome\Cluster_DAL\Cluster_DAL.csproj">
+    <ProjectReference Include="..\Cluster_DAL\Cluster_DAL.csproj">
       <Project>{EE9C865A-1544-4175-91B1-C9EE43C980DB}</Project>
       <Name>Cluster_DAL</Name>
     </ProjectReference>
