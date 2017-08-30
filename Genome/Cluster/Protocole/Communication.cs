@@ -66,7 +66,7 @@ namespace Cluster.Protocole
             }
             catch (Exception ex)
             {
-                Console.Write(ex.Message + ex.StackTrace);
+
             }
 
         }

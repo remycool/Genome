@@ -16,7 +16,6 @@ namespace Cluster_DAL
         {
             using (ClusterDAL dal = new ClusterDAL())
             {
-                Console.WriteLine("Récupération des IP du cluster");
 
                 //etat du cluster
                 Console.WriteLine(dal.GetClusterRegistry());

@@ -15,7 +15,7 @@ namespace Cluster.Classes
         public double ValeurPrcent { get; set; }
         public string ValeurString { get; set; }
         public long TempsExecution { get; set; }
-        public Exception Erreur { get; set; }
+        public string Erreur { get; set; }
 
         public Resultat()
         {
@@ -25,13 +25,15 @@ namespace Cluster.Classes
         public static Resultat operator +(Resultat a, Resultat b)
         {
             a.Valeur += b.Valeur;
+            a.TempsExecution += b.TempsExecution;
+            a.ValeurPrcent += b.ValeurPrcent;
+            a.ValeurString += b.ValeurString;
             return a;
-           // return new Resultat() {  Valeur = a.Valeur + b.Valeur };
-        }
+    }
 
         public override string ToString()
         {
-            return $"\n>>> Opération {Id} effectué par {IpNoeud} --> Résultat du comptage : {Valeur} ";
+            return $"\n>>> Opération {Id} effectué par {IpNoeud} --> Résultat du comptage : {Valeur} {ValeurPrcent} {ValeurString}";
         }
     }
 }

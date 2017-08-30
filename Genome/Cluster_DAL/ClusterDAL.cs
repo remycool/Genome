@@ -11,6 +11,7 @@ namespace Cluster_DAL
 {
     public class ClusterDAL : DAL,IClusterizableDAL
     {
+        public bool IsConnectionOpened  { get; set; }
         public ClusterDAL()
         {
         }

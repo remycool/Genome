@@ -85,7 +85,13 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         public void onResultatChanged(object sender, ResultatEventArgs e)
         {
-            Invoke(new MethodInvoker(() => { richTextBox_result.AppendText($"{e.Op.ToString()}"); }));
+            Invoke(new MethodInvoker(() =>
+            {
+                if (string.IsNullOrEmpty(e.Op.Erreur))
+                    richTextBox_result.AppendText($"{e.Op.ToString()}");
+                else
+                    richTextBox_result.AppendText($"{e.Op.Erreur}");
+            }));
         }
 
         /// <summary>
@@ -95,7 +101,11 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         public void onTraitementTermine(object sender, TraitementTermineEventArgs e)
         {
-            Invoke(new MethodInvoker(() => { TraitementTermine_label.Text = $"Traitement terminé! Résultat = {Orch.Result.Valeur}"; }));
+            Invoke(new MethodInvoker(() =>
+            {
+                TraitementTermine_label.Text = $"Traitement terminé! ";
+                MessageBox.Show($"Résultat = {Orch.Result.Valeur} en {Orch.Result.TempsExecution} ms");
+            }));
         }
 
         /// <summary>
@@ -124,11 +134,10 @@ namespace WindowsFormsIhm
         private void buttonPaireDeBase_Click(object sender, EventArgs e)
         {
             panelAffichResult.Visible = true;
-            labelButtonClick.Text = "Nombre total de paires de bases";
             richTextBox_result.Clear();
             try
             {
-                Orch.RepartirCalcul("GetCalcul1");
+                Orch.RepartirCalcul("GetCalcul4");
             }
             catch (ClusterException ex)
             {
@@ -146,8 +155,7 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void buttonOccurence_Click(object sender, EventArgs e)
         {
-            this.panelAffichResult.Visible = true;
-            this.labelButtonClick.Text = "Nombre d’occurrence des bases A, T, G ou C dans le génome et pourcentage relatif au total ";
+            panelAffichResult.Visible = true;
         }
 
         /// <summary>
@@ -157,8 +165,7 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void buttonBaseInconnue_Click(object sender, EventArgs e)
         {
-            this.panelAffichResult.Visible = true;
-            this.labelButtonClick.Text = " Nombre de bases inconnues(le tiret)";
+            panelAffichResult.Visible = true;
             richTextBox_result.Clear();
             try
             {
@@ -179,8 +186,17 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
-            this.panelAffichResult.Visible = true;
-            this.labelButtonClick.Text = "Nombre d’occurrence de la séquence de 4 bases la plus fréquente";
+            panelAffichResult.Visible = true;
+            try
+            {
+                Orch.RepartirCalcul("GetCalcul10");
+            }
+            catch (ClusterException ex)
+            {
+                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(message, ex.StackTrace);
+                MessageBox.Show(message);
+            }
         }
 
         /// <summary>
@@ -203,5 +219,6 @@ namespace WindowsFormsIhm
             if (Orch != null)
                 Orch.Dispose();
         }
+
     }
 }

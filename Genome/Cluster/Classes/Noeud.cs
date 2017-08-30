@@ -95,7 +95,6 @@ namespace Cluster.Classes
 
             //Mettre à jour info du noeud courant dans le registre
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
-            Console.WriteLine(DALService.GetClusterView());
             //obtenir l'IP de l'orchestrateur
             string ip = DALService.GetOrchestrateurIP();
 
@@ -113,7 +112,6 @@ namespace Cluster.Classes
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
             if (Com.LocalListener != null)
                 Com.LocalListener.Stop();
-            Console.WriteLine(DALService.GetClusterView());
 
         }
 

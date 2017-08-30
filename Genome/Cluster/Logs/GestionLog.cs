@@ -20,21 +20,10 @@ namespace Cluster.Logs
         public string Initialiser()
         {
             string pathLog = _filetPathLog + "/adnLogs/";
-            try
-            {
-                if (Directory.Exists(pathLog))
-                {
-                    Console.WriteLine("Le dossier existe");
-                }
-                else
+                if (!Directory.Exists(pathLog))
                 {
                     DirectoryInfo dir = Directory.CreateDirectory(pathLog);
                 }
-            }
-            catch
-            {
-                Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
-            }
             return pathLog;
         }
     }

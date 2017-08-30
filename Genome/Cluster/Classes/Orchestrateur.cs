@@ -66,7 +66,6 @@ namespace Cluster.Classes
             else
                 Result += e.Op;
             NbResultatRecus++;
-            Console.WriteLine($"Retour operation {e.Op.Id} Résultat reçu de {e.Op.Valeur} reçu de {e.Op.IpNoeud} Total = {Result.Valeur}");
             SignalerNouveauResultat(e.Op);
             if (NbResultatRecus == NbOperationEnvoyes)
                 SignalerTraitementTermine();
@@ -197,17 +196,10 @@ namespace Cluster.Classes
                     posListeNoeud++;
 
                 startPos += tailleChunk;
-                //TEST
-                //Console.WriteLine($" Operation : {IdOperation} envoyée");
-                //
                 IdOperation++;
 
             }
             NbOperationEnvoyes = IdOperation;
-            //TEST
-            //Console.WriteLine($"Tous les morceaux de fichier ont été envoyés total envoyé : {totalTailleFichierEnvoyee} Octets taille du dernier fichier {tailleChunk}");
-            //
-
         }
 
         /// <summary>
@@ -218,7 +210,6 @@ namespace Cluster.Classes
         {
             //Mettre à jour info du noeud courant dans le registre
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            Console.WriteLine(DALService.GetClusterView());
             //obtenir l'IP des noeuds connectés
             VerifierNoeudConnectes();
         }
@@ -258,7 +249,6 @@ namespace Cluster.Classes
                 com.LocalListener.Stop();
             //Mettre à jour info du noeud courant dans le registre
             DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            Console.WriteLine(DALService.GetClusterView());
             DALService.Dispose();
         }
 

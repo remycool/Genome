@@ -60,13 +60,11 @@ namespace Cluster
             lines = File.ReadLines(file).Skip(1);
             Parallel.ForEach(lines, (line) =>
             {
-                    //récupère les derniers caractère d'une ligne
-                    string t = line.Substring(line.Length - 2, 2).Trim();
+                //récupère les derniers caractère d'une ligne
+                string t = line.Substring(line.Length - 2, 2).Trim();
                 newList.Add(t);
 
             });
-
-            Console.WriteLine("Processing complete.");
             return newList;
         }
 
@@ -121,7 +119,6 @@ namespace Cluster
                     OnFileSplit?.Invoke();
                 }
             }
-            Console.WriteLine("Split complete.");
 
         }
 
@@ -131,24 +128,10 @@ namespace Cluster
         /// <returns></returns>
         private void DirCreate()
         {
-
-            try
+            if (!Directory.Exists(_pathSplitFile))
             {
-                if (Directory.Exists(_pathSplitFile))
-                {
-                    Console.WriteLine("Le dossier existe");
-                }
-                else
-                {
-                    DirectoryInfo dir = Directory.CreateDirectory(_pathSplitFile);
-                }
+                DirectoryInfo dir = Directory.CreateDirectory(_pathSplitFile);
             }
-            catch
-            {
-                Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
-            }
-
-
         }
 
         /// <summary>
@@ -158,21 +141,12 @@ namespace Cluster
         public string dirLog()
         {
             string pathLog = _pathUser + "/adnLogs/";
-            try
+
+            if (!Directory.Exists(pathLog))
             {
-                if (Directory.Exists(pathLog))
-                {
-                    Console.WriteLine("Le dossier existe");
-                }
-                else
-                {
-                    DirectoryInfo dir = Directory.CreateDirectory(pathLog);
-                }
+                DirectoryInfo dir = Directory.CreateDirectory(pathLog);
             }
-            catch
-            {
-                Console.WriteLine("Erreur : Le chemin spécifié n'existe pas");
-            }
+
             return pathLog;
         }
 

@@ -17,7 +17,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation qui contient le résultat</returns>
         Resultat IClusterizableBusiness.Calcul4(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = string.Empty;
             int count = 0;
             Stopwatch sw = Stopwatch.StartNew();
             try
@@ -41,7 +41,7 @@ namespace Genome.GenomeBusiness
                 }
             catch (Exception ex)
                 {
-                erreur = ex;
+                erreur = ex.Message;
                 }
                 sw.Stop();
             return new Resultat { Valeur = count, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };          
@@ -67,7 +67,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul2(string chunck)
         {
-            Exception erreur = null;
+            string erreur = null;
             string brin1 = string.Empty;
             string brin2 = string.Empty;
             char[] arrayChar = chunck.ToCharArray();
@@ -111,7 +111,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;
+                erreur = ex.Message;
             }
             sw.Stop();
 
@@ -126,7 +126,7 @@ namespace Genome.GenomeBusiness
         Resultat IClusterizableBusiness.Calcul3(string chunkFile)
         {
             Base b = new Base();
-            Exception erreur = null;
+            string erreur = null;
             try
             {
                 for (int i = 0; i < chunkFile.Length; i++)
@@ -155,7 +155,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;
+                erreur = ex.Message;
             }
             
             return new Resultat {Valeur=0, Erreur= erreur};
@@ -168,7 +168,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul5(string chunkfile)
         {
-            Exception erreur= null;
+            string erreur= string.Empty;
             int baseInconnue = 0;
             Stopwatch sw = Stopwatch.StartNew();
             try
@@ -194,7 +194,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;               
+                erreur = $"{ex.Message}";               
             }
             sw.Stop();
             return new Resultat { Valeur = baseInconnue, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -207,7 +207,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul6(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = null;
             int nbA = 0;
             List<string> concatColonne = new List<string>();
             Stopwatch sw = Stopwatch.StartNew();
@@ -232,7 +232,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;
+                erreur = ex.Message;
             }
             sw.Stop();
             return new Resultat { Valeur = nbA, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -245,7 +245,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul7(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = string.Empty;
             int nbT = 0;
             List<string> concatColonne = new List<string>();
             Stopwatch sw = Stopwatch.StartNew();
@@ -269,7 +269,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;               
+                erreur = ex.Message;               
             }
             sw.Stop();
             return new Resultat { Valeur = nbT, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur  };
@@ -282,7 +282,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul8(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = string.Empty;
             int nbG = 0;
             List<string> concatColonne = new List<string>();
             Stopwatch sw = Stopwatch.StartNew();
@@ -306,7 +306,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;           
+                erreur = ex.Message;           
             }
             sw.Stop();
             return new Resultat { Valeur = nbG, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur};
@@ -319,7 +319,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul9(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = string.Empty;
             int nbC = 0;
             List<string> concatColonne = new List<string>();
             Stopwatch sw = Stopwatch.StartNew();
@@ -343,7 +343,7 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex;             
+                erreur = ex.Message;             
             }
             sw.Stop();
             return new Resultat { Valeur = nbC, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -356,7 +356,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul10(string chunkfile)
         {
-            Exception erreur = null;
+            string erreur = string.Empty;
             int total = 0;
             int totalChar = 0;
             double pourcentage = 0;
@@ -398,11 +398,10 @@ namespace Genome.GenomeBusiness
                 }
                 pourcentage = (total / Convert.ToDouble(totalChar));
 
-                Console.WriteLine("Pourcentage : " + pourcentage);
             }
             catch (Exception ex)
             {
-                erreur = ex;
+                erreur = ex.Message;
             }
             sw.Stop();
             return new Resultat { ValeurPrcent = pourcentage, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };

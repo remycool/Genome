@@ -14,7 +14,7 @@ namespace Cluster_DAL
         public static string Bdd { get; set; }
         protected static IDbConnection Connection { get; set; }
         #endregion
-
+       
         /// <summary>
         /// Permet de gérer la connexion aux bases de données MySQL / SQLite
         /// </summary>

@@ -25,7 +25,6 @@ namespace Cluster.Utils
             try
             {
                 serializedObject = js.Serialize(c);
-               // Console.WriteLine(serializedObject);
                 b = Encoding.UTF8.GetBytes(serializedObject);
 
             }
@@ -53,7 +52,6 @@ namespace Cluster.Utils
             }
             catch (Exception ex)
             {
-                Console.Write(ex.Message + ex.StackTrace);
             }
 
             return result;

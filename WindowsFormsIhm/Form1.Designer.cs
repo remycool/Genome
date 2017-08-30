@@ -40,7 +40,6 @@
             this.panelAffichResult = new System.Windows.Forms.Panel();
             this.TraitementTermine_label = new System.Windows.Forms.Label();
             this.richTextBox_result = new System.Windows.Forms.RichTextBox();
-            this.labelButtonClick = new System.Windows.Forms.Label();
             this.panelButton = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.buttonPaireDeBase = new System.Windows.Forms.Button();
@@ -148,7 +147,6 @@
             this.panelAffichResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelAffichResult.Controls.Add(this.TraitementTermine_label);
             this.panelAffichResult.Controls.Add(this.richTextBox_result);
-            this.panelAffichResult.Controls.Add(this.labelButtonClick);
             this.panelAffichResult.Location = new System.Drawing.Point(208, 0);
             this.panelAffichResult.Name = "panelAffichResult";
             this.panelAffichResult.Size = new System.Drawing.Size(637, 422);
@@ -160,7 +158,7 @@
             this.TraitementTermine_label.AutoSize = true;
             this.TraitementTermine_label.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TraitementTermine_label.ForeColor = System.Drawing.Color.Lime;
-            this.TraitementTermine_label.Location = new System.Drawing.Point(349, 26);
+            this.TraitementTermine_label.Location = new System.Drawing.Point(255, 17);
             this.TraitementTermine_label.Name = "TraitementTermine_label";
             this.TraitementTermine_label.Size = new System.Drawing.Size(0, 19);
             this.TraitementTermine_label.TabIndex = 2;
@@ -172,16 +170,6 @@
             this.richTextBox_result.Size = new System.Drawing.Size(616, 352);
             this.richTextBox_result.TabIndex = 1;
             this.richTextBox_result.Text = "";
-            // 
-            // labelButtonClick
-            // 
-            this.labelButtonClick.AutoSize = true;
-            this.labelButtonClick.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelButtonClick.Location = new System.Drawing.Point(7, 21);
-            this.labelButtonClick.Name = "labelButtonClick";
-            this.labelButtonClick.Size = new System.Drawing.Size(46, 18);
-            this.labelButtonClick.TabIndex = 0;
-            this.labelButtonClick.Text = "label1";
             // 
             // panelButton
             // 
@@ -275,7 +263,6 @@
         private System.Windows.Forms.Button buttonBaseInconnue;
         private System.Windows.Forms.Button buttonOccurence;
         private System.Windows.Forms.Button buttonPaireDeBase;
-        private System.Windows.Forms.Label labelButtonClick;
         private System.Windows.Forms.Panel panelButton;
         private System.Windows.Forms.RichTextBox richTextBox_result;
         private System.Windows.Forms.Label FichierSelectionne;

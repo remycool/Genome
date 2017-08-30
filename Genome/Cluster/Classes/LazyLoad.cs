@@ -20,7 +20,6 @@ namespace Cluster
         {
             _pathUser = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             _targetDirectory = (_pathUser + "\\SplitFile\\");
-            Console.WriteLine("List files : ");
             _fileEntries = Directory.GetFiles(this._targetDirectory);
         }
 
