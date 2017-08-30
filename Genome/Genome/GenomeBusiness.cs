@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Genome.GenomeBusiness
 {
@@ -18,33 +19,40 @@ namespace Genome.GenomeBusiness
         Resultat IClusterizableBusiness.Calcul4(string chunkfile)
         {
             string erreur = string.Empty;
-            int count = 0;
+            string res = string.Empty;
+            //int count = 0;
             Stopwatch sw = Stopwatch.StartNew();
+            int paireAT = 0;
+            int paireCG = 0;
             try
-                {
-                string[]  Lines = File.ReadAllLines(chunkfile);
-                
-                foreach (string line in Lines)
-                    {
-                        switch (line)
-                        {
-                            case "AT":
-                                count++;
-                                break;
+            {
+                Char[] concatColonne = chunkfile.ToCharArray();
 
-                            case "CG":
-                                count++;
-                                break;
-                        }
-                    }
-                
-                }
+                paireAT = Regex.Matches(chunkfile, "AT").Cast<Match>().Count();
+                paireCG = Regex.Matches(chunkfile, "CG").Cast<Match>().Count();
+                //for (int i = 0; i < concatColonne.Count(); i++)
+                //{
+                //    switch (concatColonne[i])
+                //    {
+                //        case 'AT':
+                //            count++;
+                //            break;
+
+                //        case 'CG':
+                //            count++;
+                //            break;
+                //    }
+                //}
+
+                res = "\n Paire AT : " + Convert.ToString(paireAT) + "Paire CG : " + Convert.ToString(paireCG);
+            }
             catch (Exception ex)
-                {
-                erreur = ex.Message;
-                }
-                sw.Stop();
-            return new Resultat { Valeur = count, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };          
+            {
+                erreur = $"{ ex.Message}";
+            }
+            sw.Stop();
+
+            return new Resultat {ValeurString = res, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
         }
 
         /// <summary>
@@ -57,7 +65,7 @@ namespace Genome.GenomeBusiness
             char charToCount = '-';
             //opération
             int count = chunk.Count(c => c == charToCount);
-            return new Resultat {Valeur = count, TempsExecution = 0 };
+            return new Resultat { Valeur = count, TempsExecution = 0 };
         }
 
         /// <summary>
@@ -67,7 +75,7 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul2(string chunck)
         {
-            string erreur = null;
+            string erreur = string.Empty;
             string brin1 = string.Empty;
             string brin2 = string.Empty;
             char[] arrayChar = chunck.ToCharArray();
@@ -111,11 +119,11 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
 
-            return new Resultat { TempsExecution = sw.ElapsedMilliseconds, Erreur =  erreur};
+            return new Resultat { TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
         }
 
         /// <summary>
@@ -125,8 +133,8 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul3(string chunkFile)
         {
+            string erreur = string.Empty;
             Base b = new Base();
-            string erreur = null;
             try
             {
                 for (int i = 0; i < chunkFile.Length; i++)
@@ -155,10 +163,10 @@ namespace Genome.GenomeBusiness
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;
+                erreur = $"{ex.Message}";
             }
-            
-            return new Resultat {Valeur=0, Erreur= erreur};
+
+            return new Resultat { Valeur = 0, Erreur = erreur };
         }
 
         /// <summary>
@@ -168,33 +176,19 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul5(string chunkfile)
         {
-            string erreur= string.Empty;
+            string erreur = string.Empty;
             int baseInconnue = 0;
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string[]  Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    //première colone du fichier
-                    if (Convert.ToString(Lines[i][0]).Contains("-"))
-                    {
-                        baseInconnue++;
-                    }
-                }
+                char charToCount = '-';
+                //opération
+                baseInconnue = chunkfile.Count(c => c == charToCount);
 
-                //deuxième colone du fichier
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    if (Convert.ToString((Lines[i]).Substring(1)).Contains("-"))
-                    {
-                        baseInconnue++;
-                    }
-                }
             }
             catch (Exception ex)
             {
-                erreur = $"{ex.Message}";               
+                erreur = $"{ ex.Message}";
             }
             sw.Stop();
             return new Resultat { Valeur = baseInconnue, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -207,32 +201,19 @@ namespace Genome.GenomeBusiness
         /// <returns>un objet Operation contenant le résultat et le temps d'éxéution du cacul</returns>
         Resultat IClusterizableBusiness.Calcul6(string chunkfile)
         {
-            string erreur = null;
+            string erreur = string.Empty;
             int nbA = 0;
             List<string> concatColonne = new List<string>();
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string [] Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    //Rassemble les deux colonne du fichier en une seul
-                    concatColonne.Add(Convert.ToString(Lines[i][0]));
-                    concatColonne.Add(Convert.ToString(Lines[i]).Substring(1));
-                }
-                foreach (string val in concatColonne)
-                {
-                    switch (val)
-                    {
-                        case "A":
-                            nbA++;
-                            break;
-                    }
-                }
+                char charToCount = 'A';
+                //opération
+                nbA = chunkfile.Count(c => c == charToCount);
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
             return new Resultat { Valeur = nbA, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -251,28 +232,16 @@ namespace Genome.GenomeBusiness
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string [] Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    concatColonne.Add(Convert.ToString(Lines[i][0]));
-                    concatColonne.Add(Convert.ToString(Lines[i]).Substring(1));
-                }
-                foreach (string val in concatColonne)
-                {
-                    switch (val)
-                    {
-                        case "T":
-                            nbT++;
-                            break;
-                    }
-                }
+                char charToCount = 'T';
+                //opération
+                nbT = chunkfile.Count(c => c == charToCount);
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;               
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
-            return new Resultat { Valeur = nbT, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur  };
+            return new Resultat { Valeur = nbT, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
         }
 
         /// <summary>
@@ -288,28 +257,16 @@ namespace Genome.GenomeBusiness
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string []Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    concatColonne.Add(Convert.ToString(Lines[i][0]));
-                    concatColonne.Add(Convert.ToString(Lines[i]).Substring(1));
-                }
-                foreach (string val in concatColonne)
-                {
-                    switch (val)
-                    {
-                        case "G":
-                            nbG++;
-                            break;
-                    }
-                }
+                char charToCount = 'G';
+                //opération
+                nbG = chunkfile.Count(c => c == charToCount);
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;           
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
-            return new Resultat { Valeur = nbG, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur};
+            return new Resultat { Valeur = nbG, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
         }
 
         /// <summary>
@@ -325,25 +282,13 @@ namespace Genome.GenomeBusiness
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string [] Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
-                {
-                    concatColonne.Add(Convert.ToString(Lines[i][0]));
-                    concatColonne.Add(Convert.ToString(Lines[i]).Substring(1));
-                }
-                foreach (string val in concatColonne)
-                {
-                    switch (val)
-                    {
-                        case "C":
-                            nbC++;
-                            break;
-                    }
-                }
+                char charToCount = 'C';
+                //opération
+                nbC = chunkfile.Count(c => c == charToCount);
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;             
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
             return new Resultat { Valeur = nbC, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
@@ -357,54 +302,63 @@ namespace Genome.GenomeBusiness
         Resultat IClusterizableBusiness.Calcul10(string chunkfile)
         {
             string erreur = string.Empty;
-            int total = 0;
+            string result = string.Empty;
+            int totalA = 0;
+            int totalC = 0;
+            int totalG = 0;
+            int totalT = 0;
             int totalChar = 0;
-            double pourcentage = 0;
-            List<string> concatColonne = new List<string>();
+            double pourcentageA = 0;
+            double pourcentageT = 0;
+            double pourcentageG = 0;
+            double pourcentageC = 0;
+            Char[] concatColonne = chunkfile.ToCharArray();
+
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                string [] Lines = File.ReadAllLines(chunkfile);
-                for (int i = 0; i < Lines.Count(); i++)
+                for (int i = 0; i < concatColonne.Count(); i++)
                 {
-                    concatColonne.Add(Convert.ToString(Lines[i][0]));
-                    concatColonne.Add(Convert.ToString(Lines[i]).Substring(1));
-                }
-                foreach (string val in concatColonne)
-                {
-                    switch (val)
+                    switch (concatColonne[i])
                     {
-                        case "A":
-                            total++;
+                        case 'A':
+                            totalA++;
                             break;
 
-                        case "T":
-                            total++;
+                        case 'T':
+                            totalT++;
                             break;
 
-                        case "G":
-                            total++;
+                        case 'G':
+                            totalG++;
                             break;
 
-                        case "C":
-                            total++;
+                        case 'C':
+                            totalC++;
                             break;
                     }
                 }
 
-                foreach (string val in concatColonne)
+
+                for (int i = 0; i < concatColonne.Count(); i++)
                 {
                     totalChar++;
                 }
-                pourcentage = (total / Convert.ToDouble(totalChar));
+
+                pourcentageA = (totalA * 100 / Convert.ToDouble(totalChar));
+                pourcentageT = (totalT * 100 / Convert.ToDouble(totalChar));
+                pourcentageG = (totalG * 100 / Convert.ToDouble(totalChar));
+                pourcentageC = (totalC * 100 / Convert.ToDouble(totalChar));
+
+                result = "\n % A : " + Convert.ToString(pourcentageA) + " % T : " + Convert.ToString(pourcentageT) + " % G : " + Convert.ToString(pourcentageG) + "% C : " + Convert.ToString(pourcentageC);
 
             }
             catch (Exception ex)
             {
-                erreur = ex.Message;
+                erreur = $"{ex.Message}";
             }
             sw.Stop();
-            return new Resultat { ValeurPrcent = pourcentage, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
+            return new Resultat { ValeurString = result, TempsExecution = sw.ElapsedMilliseconds, Erreur = erreur };
         }
     }
 }
