@@ -15,7 +15,7 @@ namespace Cluster.Classes
         public double ValeurPrcent { get; set; }
         public string ValeurString { get; set; }
         public long TempsExecution { get; set; }
-        public Exception Erreur { get; set; }
+        public string Erreur { get; set; }
 
         public Resultat()
         {
