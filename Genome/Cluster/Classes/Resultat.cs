@@ -16,10 +16,11 @@ namespace Cluster.Classes
         public string ValeurString { get; set; }
         public long TempsExecution { get; set; }
         public string Erreur { get; set; }
+        public Etat_noeud Etat { get; set; }
+        public bool HasValue { get; set; }
 
         public Resultat()
         {
-
         }
 
         public static Resultat operator +(Resultat a, Resultat b)

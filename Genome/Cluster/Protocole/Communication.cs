@@ -5,6 +5,7 @@ using Cluster.Interfaces;
 using Cluster.Logs;
 using Cluster.Utils;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -15,9 +16,12 @@ namespace Cluster.Protocole
     public class Communication<T, U>
     {
         public IPAddress AdresseIpLocale { get; set; }
-        public int PortEcoute { get; set; }
-        public int PortEnvoie { get; set; }
-        public TcpListenerCluster LocalListener { get; set; }
+        public int PortEcouteTCP { get; set; }
+        public int PortEnvoieTCP { get; set; }
+        public int PortEcouteUDP { get; set; }
+        public int PortEnvoieUDP { get; set; }
+        public TcpListenerCluster LocalTcpListener { get; set; }
+        public UdpClientCluster LocalUdpListener { get; set; }
 
 
         #region GESTION EVENEMENT
@@ -31,14 +35,18 @@ namespace Cluster.Protocole
         }
         #endregion
 
-        public Communication(IPAddress adressIpLocale, int portIn, int portOut)
+        public Communication(IPAddress adressIpLocale, int portIn, int portOut, int portUdpIn, int portUdpOut)
         {
             AdresseIpLocale = adressIpLocale;
-
-            PortEcoute = portIn;
-            PortEnvoie = portOut;
-            LocalListener = new TcpListenerCluster(AdresseIpLocale, PortEcoute);
-            LocalListener.Start();
+            
+            PortEcouteTCP = portIn;
+            PortEnvoieTCP = portOut;
+            PortEcouteUDP = portUdpIn;
+            PortEnvoieUDP = portUdpOut;
+            LocalUdpListener = new UdpClientCluster(PortEcouteUDP);
+            
+            LocalTcpListener = new TcpListenerCluster(AdresseIpLocale, PortEcouteTCP);
+            LocalTcpListener.Start();
             RecevoirAsync();
         }
 
@@ -49,10 +57,9 @@ namespace Cluster.Protocole
         /// <param name="obj"></param>
         public void Envoyer(IPAddress remote, T obj)
         {
-
             try
             {
-                IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoie);
+                IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoieTCP);
                 TcpClient local = new TcpClient();
                 local.Connect(remoteEP);
                 byte[] ba = Utility<T>.Serialize(obj);
@@ -102,47 +109,64 @@ namespace Cluster.Protocole
 
         public void OnClientConnected(IAsyncResult asyncResult)
         {
-            if (LocalListener.Active)
+            if (LocalTcpListener.Active)
             {
-                TcpClient client = LocalListener.EndAcceptTcpClient(asyncResult);
+                TcpClient client = LocalTcpListener.EndAcceptTcpClient(asyncResult);
                 if (client != null)
                     TraitementRequete(client);
                 RecevoirAsync();
             }
-            
+
         }
-
-        /// <summary>
-        /// Initialise un TcpListener et créé un nouveau thread
-        /// </summary>
-        //public void Recevoir()
-        //{
-        //    LocalListener = new TcpListener(AdresseIpLocale, PortEcoute);
-        //    LocalListener.Start();
-
-        //    try
-        //    {
-        //        while (true)
-        //        {
-        //            TcpClient remote = LocalListener.AcceptTcpClient();
-        //            ThreadPool.QueueUserWorkItem(new WaitCallback(TraitementRequete), remote);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.Write(ex.Message + ex.StackTrace);
-        //    }
-        //    finally
-        //    {
-        //        LocalListener.Stop();
-        //    }
-        //}
 
         public void RecevoirAsync()
         {
-            if (LocalListener.Active)
-                LocalListener.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
+            if (LocalTcpListener.Active)
+                LocalTcpListener.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
         }
+
+        #region BROADCAST
+
+        public IPAddress EnvoyerBroadcast()
+        {
+       
+            byte [] donneesEnvoyees = Encoding.ASCII.GetBytes("Orchestrateur connecte!!!");
+            IPEndPoint distant = new IPEndPoint(IPAddress.Any, PortEnvoieUDP);
+
+            LocalUdpListener.EnableBroadcast = true;
+            LocalUdpListener.Send(donneesEnvoyees, donneesEnvoyees.Length, new IPEndPoint(IPAddress.Broadcast, PortEnvoieUDP));
+
+            byte[] donneesDistantes = LocalUdpListener.Receive(ref distant);
+            string ServerResponse = Encoding.ASCII.GetString(donneesDistantes);
+
+            return distant.Address;
+        }
+
+        public void RecevoirBroadcastAsync()
+        {
+
+            try
+            {
+                LocalUdpListener.BeginReceive(new AsyncCallback(OnAnswerToBroadcast), null);
+            }
+            catch (Exception ex)
+            {
+                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
+            }
+        }
+
+        private void OnAnswerToBroadcast(IAsyncResult result)
+        {
+            
+                IPEndPoint distant = new IPEndPoint(IPAddress.Any, PortEnvoieUDP);
+                byte[] donneesRecues = LocalUdpListener.EndReceive(result, ref distant);
+                byte[] donneesrenvoyees = Encoding.ASCII.GetBytes("Ok bien reçu!");
+                LocalUdpListener.Send(donneesrenvoyees, donneesrenvoyees.Length, distant);
+                LocalUdpListener.BeginReceive(new AsyncCallback(OnAnswerToBroadcast), null);
+
+        }
+
+        #endregion
     }
 
 

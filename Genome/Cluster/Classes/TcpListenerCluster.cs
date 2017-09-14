@@ -27,7 +27,7 @@ namespace Cluster.Classes
         }
 
         /// <summary>
-        /// Donne lm'information si l'écoute est active ou pas
+        /// Donne l'information si l'écoute est active ou pas
         /// </summary>
         public new bool Active
         {

@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using Cluster.Exceptions;
+using System.Collections.Concurrent;
 
 namespace Cluster.Classes
 {
@@ -20,6 +21,7 @@ namespace Cluster.Classes
         public const int PORT_ENVOIE = 9999;
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
+        public ConcurrentDictionary<IPAddress, Etat_noeud> Noeuds { get; set; }
         public Communication<Operation, Resultat> com { get; set; }
         public List<string> Chuncks { get; set; }
         public IDALFactory DALService { get; set; }
@@ -46,6 +48,7 @@ namespace Cluster.Classes
             NoeudConnecteEventArgs e = new NoeudConnecteEventArgs(n);
             NouveauNoeud?.Invoke(this, e);
         }
+
         public void SignalerTraitementTermine()
         {
             TraitementTermineEventArgs e = new TraitementTermineEventArgs();
@@ -61,21 +64,60 @@ namespace Cluster.Classes
         /// <param name="e"></param>
         public void onNouvelleReception(object sender, ReceptionEventArgs<Resultat> e)
         {
-            if (Result == null)
-                Result = e.Op;
+            //On cherche à savoir si c'est une reception indiquant une connexion
+            //ou une deconnexion de noeud
+            if (!e.Op.HasValue)
+            {
+                IPAddress adresseNoeud = IPAddress.Parse(e.Op.IpNoeud);
+                MettreAJourNoeudsConnectes(adresseNoeud, e.Op.Etat);
+            }
             else
-                Result += e.Op;
-            NbResultatRecus++;
-            SignalerNouveauResultat(e.Op);
-            if (NbResultatRecus == NbOperationEnvoyes)
-                SignalerTraitementTermine();
+            {
+                if (Result == null)
+                    Result = e.Op;
+                else
+                    Result += e.Op;
+                NbResultatRecus++;
+                SignalerNouveauResultat(e.Op);
+                if (NbResultatRecus == NbOperationEnvoyes)
+                    SignalerTraitementTermine();
+            }
+        }
+
+        /// <summary>
+        /// Met à jour le dictionnaire des noeuds ou ajoute un noeud au dictionnaire et le signale à la vue
+        /// </summary>
+        /// <param name="ipNoeud"></param>
+        /// <param name="etat"></param>
+        public void MettreAJourNoeudsConnectes(IPAddress ipNoeud, Etat_noeud etat)
+        {
+            if (ipNoeud == null)
+                throw new ClusterException("Impossible d'ajouter le noeud dans la liste");
+            //Si c'est un nouveau noeud on l'ajoute au dictionnaire sinon on met à jour la liste
+            Noeuds?.AddOrUpdate(ipNoeud, etat, (k, v) => v = etat);
+            var noeuds = Noeuds.ToArray();
+            List<IPAddress> noeudsConnectes = new List<IPAddress>();
+            foreach(var item in noeuds)
+            {
+                if(item.Value == Etat_noeud.Connecte)
+                {
+                    noeudsConnectes.Add(item.Key);
+                } 
+            }
+            SignalerNoeudConnecte(noeudsConnectes);
+
         }
 
         public Orchestrateur(IDALFactory DalService)
         {
             AdressesNoeuds = new List<IPAddress>();
+            Noeuds = new ConcurrentDictionary<IPAddress, Etat_noeud>();
             AdresseIP = IpConfig.GetLocalIP();
-            com = new Communication<Operation, Resultat>(AdresseIP, 8888, 9999);
+            com = new Communication<Operation, Resultat>(AdresseIP,
+                                                        ClusterConstantes.PORT_ENVOIE_TCP, 
+                                                        ClusterConstantes.PORT_ECOUTE_TCP,
+                                                        ClusterConstantes.PORT_ENVOIE_UDP,
+                                                        ClusterConstantes.PORT_ECOUTE_UDP);
             com.NouvelleReception += onNouvelleReception;
             DALService = DalService;
             Lazy = new Lazy<LazyLoad>();
@@ -161,7 +203,7 @@ namespace Cluster.Classes
             int startPos = 0;
             int tailleChunk = 100000;
             int posListeNoeud = 0;
-            int posDernierNoeudDansListe = AdressesNoeuds.Count-1;
+            int posDernierNoeudDansListe = AdressesNoeuds.Count - 1;
             int tailleFichier = fileText.Length;
             int totalTailleFichierEnvoyee = 0;
             bool decoupageTermine = false;
@@ -208,9 +250,9 @@ namespace Cluster.Classes
         /// </summary>
         public void Initialize()
         {
-            //Mettre à jour info du noeud courant dans le registre
-            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            //obtenir l'IP des noeuds connectés
+            ////Mettre à jour info du noeud courant dans le registre
+            //DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
+            ////obtenir l'IP des noeuds connectés
             VerifierNoeudConnectes();
         }
 
@@ -219,8 +261,11 @@ namespace Cluster.Classes
         /// </summary>
         private void VerifierNoeudConnectes()
         {
-            AdressesNoeuds = DALService.GetAllNodeIPs();
-            SignalerNoeudConnecte(AdressesNoeuds);
+            //AdressesNoeuds = DALService.GetAllNodeIPs();
+            //SignalerNoeudConnecte(AdressesNoeuds);
+            IPAddress IpNoeudDejeConnecte= com.EnvoyerBroadcast();
+            MettreAJourNoeudsConnectes(IpNoeudDejeConnecte, Etat_noeud.Connecte);
+
         }
 
         /// <summary>
@@ -245,11 +290,11 @@ namespace Cluster.Classes
         public void Dispose()
         {
 
-            if (com.LocalListener != null)
-                com.LocalListener.Stop();
+            if (com.LocalTcpListener != null)
+                com.LocalTcpListener.Stop();
             //Mettre à jour info du noeud courant dans le registre
-            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            DALService.Dispose();
+            //DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
+            //DALService.Dispose();
         }
 
 

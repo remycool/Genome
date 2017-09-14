@@ -16,8 +16,7 @@ namespace Cluster.Classes
 {
     public class Noeud
     {
-        public const int PORT_ECOUTE = 9999;
-        public const int PORT_ENVOIE = 8888;
+       
 
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
@@ -31,7 +30,7 @@ namespace Cluster.Classes
 
         public void SignalerNouvelleOperation(Operation o)
         {
-           OperationEventArgs e = new OperationEventArgs(o);
+            OperationEventArgs e = new OperationEventArgs(o);
             NouvelleOperation?.Invoke(this, e);
         }
         #endregion
@@ -40,10 +39,14 @@ namespace Cluster.Classes
         public Noeud(IBusinessFactory BuService, IDALFactory DalService)
         {
             AdresseIP = IpConfig.GetLocalIP();
-            Com = new Communication<Resultat, Operation>(AdresseIP, PORT_ECOUTE, PORT_ENVOIE);
+            Com = new Communication<Resultat, Operation>(AdresseIP,
+                                                        ClusterConstantes.PORT_ECOUTE_TCP, 
+                                                        ClusterConstantes.PORT_ENVOIE_TCP,
+                                                        ClusterConstantes.PORT_ECOUTE_UDP,
+                                                        ClusterConstantes.PORT_ENVOIE_UDP);
 
             Com.NouvelleReception += onNouvelleReception;
-           
+
             BusinessService = BuService;
             DALService = DalService;
             Initialize();
@@ -61,14 +64,21 @@ namespace Cluster.Classes
         /// <param name="e"></param>
         public void onNouvelleReception(object sender, ReceptionEventArgs<Operation> e)
         {
-            string compressedChunk = e.Op.Chunck;
-            string decompressedChunk = compressedChunk.Decompress();
-            e.Op.Chunck = decompressedChunk;
-            Resultat res = (Resultat)ExecuterCalcul(e.Op);
-            res.Id = e.Op.Id;
-
-            Envoyer(res);
-            SignalerNouvelleOperation(e.Op);
+            if (e.Op.Methode == string.Empty)
+                SignalerConnexion();
+            else
+            {
+                string compressedChunk = e.Op.Chunck;
+                string decompressedChunk = compressedChunk.Decompress();
+                e.Op.Chunck = decompressedChunk;
+                Resultat res = (Resultat)ExecuterCalcul(e.Op);
+                res.Id = e.Op.Id;
+                res.HasValue = true;
+                Envoyer(res);
+                //On signale à la vue l'operation réceptionnée par le noeud
+                SignalerNouvelleOperation(e.Op);
+            }
+            
         }
 
         /// <summary>
@@ -94,12 +104,14 @@ namespace Cluster.Classes
         {
 
             //Mettre à jour info du noeud courant dans le registre
-            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
+            //DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
             //obtenir l'IP de l'orchestrateur
-            string ip = DALService.GetOrchestrateurIP();
+            //string ip = DALService.GetOrchestrateurIP();
 
-            if (!string.IsNullOrEmpty(ip))
-                OrchestrateurIP = IPAddress.Parse(ip);
+            //if (!string.IsNullOrEmpty(ip))
+            OrchestrateurIP = IPAddress.Parse("10.131.128.74");
+            SignalerConnexion();
+            Com.RecevoirBroadcastAsync();
         }
 
         /// <summary>
@@ -107,12 +119,24 @@ namespace Cluster.Classes
         /// </summary>
         public void Dispose()
         {
-
             //Mettre à jour info du noeud courant dans le registre
-            DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
-            if (Com.LocalListener != null)
-                Com.LocalListener.Stop();
+            // DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_NOEUD);
+            SignalerDeconnexion();
+            if (Com.LocalTcpListener != null)
+                Com.LocalTcpListener.Stop();
+            Com.LocalUdpListener?.Close();
+        }
 
+        private void SignalerDeconnexion()
+        {
+            Resultat deconnexion = new Resultat() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Deconnecte, HasValue = false };
+            Envoyer(deconnexion);
+        }
+
+        private void SignalerConnexion()
+        {
+            Resultat connexion = new Resultat() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Connecte, HasValue = false };
+            Envoyer(connexion);
         }
 
         /// <summary>

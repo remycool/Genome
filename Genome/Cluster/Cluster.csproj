@@ -68,6 +68,7 @@
     <Compile Include="Classes\BusinessFactory.cs" />
     <Compile Include="Classes\DALFactory.cs" />
     <Compile Include="Classes\DisplayData.cs" />
+    <Compile Include="Classes\Etat_noeud.cs" />
     <Compile Include="Classes\LazyLoad.cs" />
     <Compile Include="Classes\MapReduce.cs" />
     <Compile Include="Classes\Resultat.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Logs\GestionLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocole\Communication.cs" />
+    <Compile Include="Protocole\UdpClientCluster.cs" />
     <Compile Include="Utils\ClusterConstantes.cs" />
     <Compile Include="Utils\IpConfig.cs" />
     <Compile Include="Utils\Utility.cs" />

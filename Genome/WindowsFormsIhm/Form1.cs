@@ -119,6 +119,7 @@ namespace WindowsFormsIhm
             {
                 NbNoeudConnecte_label.Text = string.Empty;
                 NbNoeudConnecte_label.Text = $"Noeuds connectes {e.Noeuds.Count}";
+                listeNoeud_label.ResetText();
                 foreach (IPAddress a in e.Noeuds)
                 {
                     listeNoeud_label.Text += $"\n{a.ToString()}";

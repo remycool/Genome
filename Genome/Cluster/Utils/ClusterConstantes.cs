@@ -13,6 +13,10 @@ namespace Cluster.Utils
         public const int ETAT_CONNECTED = 4;
         public const int ETAT_NOT_CONNECTED = 7;
         public const string LOG_DIR = "C:/";
-        
+        public const int PORT_ECOUTE_TCP = 9999;
+        public const int PORT_ENVOIE_TCP = 8888;
+        public const int PORT_ECOUTE_UDP = 9998;
+        public const int PORT_ENVOIE_UDP = 8887;
+
     }
 }
