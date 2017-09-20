@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Cluster.Protocole
 {
-    public class Communication<T, U>
+    public class Communication
     {
         public IPAddress AdresseIpLocale { get; set; }
         public int PortEcouteTCP { get; set; }
@@ -25,12 +25,12 @@ namespace Cluster.Protocole
 
 
         #region GESTION EVENEMENT
-        public delegate void ReceptionHandler(object sender, ReceptionEventArgs<U> operationEventArgs);
+        public delegate void ReceptionHandler(object sender, ReceptionEventArgs operationEventArgs);
         public event ReceptionHandler NouvelleReception;
 
-        public void SignalerNouvelleReception(U o)
+        public void SignalerNouvelleReception(TcpClient noeud)
         {
-            ReceptionEventArgs<U> e = new ReceptionEventArgs<U>(o);
+            ReceptionEventArgs e = new ReceptionEventArgs(noeud);
             NouvelleReception?.Invoke(this, e);
         }
         #endregion
@@ -44,7 +44,6 @@ namespace Cluster.Protocole
             PortEcouteUDP = portUdpIn;
             PortEnvoieUDP = portUdpOut;
             LocalUdpListener = new UdpClientCluster(PortEcouteUDP);
-            
             LocalTcpListener = new TcpListenerCluster(AdresseIpLocale, PortEcouteTCP);
             LocalTcpListener.Start();
             RecevoirAsync();
@@ -55,67 +54,70 @@ namespace Cluster.Protocole
         /// </summary>
         /// <param name="remote"></param>
         /// <param name="obj"></param>
-        public void Envoyer(IPAddress remote, T obj)
-        {
-            try
-            {
-                IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoieTCP);
-                TcpClient local = new TcpClient();
-                local.Connect(remoteEP);
-                byte[] ba = Utility<T>.Serialize(obj);
-                using (NetworkStream ns = local.GetStream())
-                {
-                    ns.Write(ba, 0, ba.Length);
-                    ns.Close();
-                };
+        //public void Envoyer(IPAddress remote, T obj)
+        //{
+        //    try
+        //    {
+        //        IPEndPoint remoteEP = new IPEndPoint(remote, PortEnvoieTCP);
+        //        TcpClient local = new TcpClient();
+        //        local.Connect(remoteEP);
+        //        byte[] ba = Utility<T>.Serialize(obj);
+        //        using (NetworkStream ns = local.GetStream())
+        //        {
+        //            ns.Write(ba, 0, ba.Length);
+        //            ns.Close();
+        //        };
 
-                local.Close();
+        //        local.Close();
 
-            }
-            catch (Exception ex)
-            {
-                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// Lit le flux de donnée, désérialise l'objet transmit et signale sa présence
         /// </summary>
         /// <param name="remote"></param>
-        public void TraitementRequete(object remote)
-        {
-            TcpClient client = (TcpClient)remote;
-            U obj = default(U);
-            using (NetworkStream ns = client.GetStream())
-            {
-                int i = 0;
-                byte[] remoteData = new byte[1024];
-                string data = string.Empty;
-                //Lecture du flux
-                if (ns.CanRead)
-                {
-                    while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
-                    {
-                        data += Encoding.UTF8.GetString(remoteData, 0, i);
-                    }
-                    obj = Utility<U>.Deserialize(data);
-                }
-                ns.Close();
-                client.Close();
-                SignalerNouvelleReception(obj);
-            }
-        }
+        //public void TraitementRequete(TcpClient remote)
+        //{
+   
+        //    U obj = default(U);
+        //    using (NetworkStream ns = remote.GetStream())
+        //    {
+        //        int i = 0;
+        //        byte[] remoteData = new byte[1024];
+        //        string data = string.Empty;
+        //        //Lecture du flux
+        //        if (ns.CanRead)
+        //        {
+        //            while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+        //            {
+        //                data += Encoding.UTF8.GetString(remoteData, 0, i);
+        //            }
+        //            obj = Utility<U>.Deserialize(data);
+        //        }
+        //        ns.Close();
+        //        remote.Close();
+        //        SignalerNouvelleReception(obj);
+        //    }
+        //}
 
         public void OnClientConnected(IAsyncResult asyncResult)
         {
-            if (LocalTcpListener.Active)
-            {
-                TcpClient client = LocalTcpListener.EndAcceptTcpClient(asyncResult);
-                if (client != null)
-                    TraitementRequete(client);
-                RecevoirAsync();
-            }
+            //if (LocalTcpListener.Active)
+            //{
+            //    TcpClient client = LocalTcpListener.EndAcceptTcpClient(asyncResult);
+            //    if (client != null)
+            //        TraitementRequete(client);
+            //    RecevoirAsync();
+            //}
+            TcpClient client = LocalTcpListener.EndAcceptTcpClient(asyncResult);
+            SignalerNouvelleReception(client);
+            RecevoirAsync();
 
         }
 

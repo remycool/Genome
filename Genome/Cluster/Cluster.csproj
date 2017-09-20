@@ -87,6 +87,7 @@
     <Compile Include="Classes\Orchestrateur.cs" />
     <Compile Include="Interfaces\IClusterizableDAL.cs" />
     <Compile Include="Interfaces\INoeud.cs" />
+    <Compile Include="Interfaces\IResultat.cs" />
     <Compile Include="Interfaces\ResultatAbstract.cs" />
     <Compile Include="Logs\GestionLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

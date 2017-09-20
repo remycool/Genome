@@ -59,6 +59,7 @@
     <Compile Include="GenomeBusiness.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Module1Business.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

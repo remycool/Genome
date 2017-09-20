@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Genome
 {
-    class Base
+    public class Base
     {
         public int NbBaseA { get; set; }
         public int NbBaseT { get; set; }

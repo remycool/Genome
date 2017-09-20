@@ -13,13 +13,14 @@ namespace Cluster.Logs
         public static void Log(string message)
         {
             string messageBuilder = $"\n{DateTime.Now} {message}";
-            string filetPathLog = ClusterConstantes.LOG_DIR;
+            string filetPathLog = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string pathLog = filetPathLog + "/adnLogs/";
             if (!Directory.Exists(pathLog))
             {
                 DirectoryInfo dir = Directory.CreateDirectory(pathLog);
             }
-            File.AppendAllText(pathLog + "logPathFile.txt", messageBuilder);
+            string finalPath = Path.Combine(filetPathLog, "logPathFile.txt");
+            File.AppendAllText(finalPath , messageBuilder);
         }
     }
 }

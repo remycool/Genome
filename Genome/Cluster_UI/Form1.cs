@@ -20,15 +20,14 @@ namespace Cluster_UI
        
         public Noeud N { get; set; }
         IBusinessFactory ServiceBusiness { get; set; }
-        IDALFactory ServiceDAL { get; set; }
 
         public Form1()
         {
             ServiceBusiness = new BusinessFactory(new GenomeBusiness());
-            ServiceDAL = new DALFactory(new ClusterDAL());
+           
             try
             {
-                N = new Noeud(ServiceBusiness, ServiceDAL);
+                N = new Noeud(ServiceBusiness);
                 N.NouvelleOperation += onOperationReceived;
             }
             catch(ClusterException ex)

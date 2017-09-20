@@ -11,18 +11,20 @@ using System.Threading.Tasks;
 using System.Linq;
 using Cluster.Events;
 using System.Net.Sockets;
+using Cluster.Logs;
+using System.Text;
 
 namespace Cluster.Classes
 {
     public class Noeud
     {
-       
-
+        public const int PORT_ECOUTE = 9999;
+        public const int PORT_ENVOIE = 8888;
         public IPAddress AdresseIP { get; set; }
         public IPAddress OrchestrateurIP { get; set; }
-        public Communication<Resultat, Operation> Com { get; set; }
+        public Communication Com { get; set; }
         public IBusinessFactory BusinessService { get; set; }
-        public IDALFactory DALService { get; set; }
+       
 
         #region EVENT
         public delegate void OperationHandler(object sender, OperationEventArgs resultatEventArgs);
@@ -36,10 +38,10 @@ namespace Cluster.Classes
         #endregion
 
 
-        public Noeud(IBusinessFactory BuService, IDALFactory DalService)
+        public Noeud(IBusinessFactory BuService)
         {
             AdresseIP = IpConfig.GetLocalIP();
-            Com = new Communication<Resultat, Operation>(AdresseIP,
+            Com = new Communication(AdresseIP,
                                                         ClusterConstantes.PORT_ECOUTE_TCP, 
                                                         ClusterConstantes.PORT_ENVOIE_TCP,
                                                         ClusterConstantes.PORT_ECOUTE_UDP,
@@ -48,7 +50,7 @@ namespace Cluster.Classes
             Com.NouvelleReception += onNouvelleReception;
 
             BusinessService = BuService;
-            DALService = DalService;
+ 
             Initialize();
         }
 
@@ -62,21 +64,23 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void onNouvelleReception(object sender, ReceptionEventArgs<Operation> e)
+        public void onNouvelleReception(object sender, ReceptionEventArgs e)
         {
-            if (e.Op.Methode == string.Empty)
+            Operation op = TraitementRequete(e.Noeud);
+
+            if (op.Methode == string.Empty)
                 SignalerConnexion();
             else
             {
-                string compressedChunk = e.Op.Chunck;
+                string compressedChunk = op.Chunck;
                 string decompressedChunk = compressedChunk.Decompress();
-                e.Op.Chunck = decompressedChunk;
-                Resultat res = (Resultat)ExecuterCalcul(e.Op);
-                res.Id = e.Op.Id;
+                op.Chunck = decompressedChunk;
+                IResultat res = (IResultat)ExecuterCalcul(op);
+                res.Id = op.Id;
                 res.HasValue = true;
-                Envoyer(res);
+                Envoyer(OrchestrateurIP, res);
                 //On signale à la vue l'operation réceptionnée par le noeud
-                SignalerNouvelleOperation(e.Op);
+                SignalerNouvelleOperation(op);
             }
             
         }
@@ -129,14 +133,14 @@ namespace Cluster.Classes
 
         private void SignalerDeconnexion()
         {
-            Resultat deconnexion = new Resultat() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Deconnecte, HasValue = false };
-            Envoyer(deconnexion);
+            Resultat<string> deconnexion = new Resultat<string>() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Deconnecte, HasValue = false };
+            Envoyer(OrchestrateurIP, deconnexion);
         }
 
         private void SignalerConnexion()
         {
-            Resultat connexion = new Resultat() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Connecte, HasValue = false };
-            Envoyer(connexion);
+            Resultat<string> connexion = new Resultat<string>() { IpNoeud = AdresseIP.ToString(), Etat = Etat_noeud.Connecte, HasValue = false };
+            Envoyer(OrchestrateurIP, connexion);
         }
 
         /// <summary>
@@ -144,12 +148,52 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="operation"></param>
         /// <returns>Un objet Operation</returns>
-        public void Envoyer(Resultat result)
+        public void Envoyer(IPAddress remote,IResultat result)
         {
-            result.IpNoeud = AdresseIP.ToString();
-            //On envoie la réponse
-            Com.Envoyer(OrchestrateurIP, result);
+            GestionLog.Log($"Envoie du résultat {result.ToString()}");
+            try
+            {
+                IPEndPoint remoteEP = new IPEndPoint(remote, PORT_ENVOIE);
+                TcpClient local = new TcpClient();
+                local.Connect(remoteEP);
+                byte[] ba = Utility<IResultat>.Serialize(result);
+                using (NetworkStream ns = local.GetStream())
+                {
+                    ns.Write(ba, 0, ba.Length);
+                    ns.Close();
+                };
+                local.Close();
+            }
+            catch (Exception ex)
+            {
+                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
+            }
         }
+
+        public Operation TraitementRequete(TcpClient remote)
+        {
+            Operation op = new Operation();
+            using (NetworkStream ns = remote.GetStream())
+            {
+                int i = 0;
+                byte[] remoteData = new byte[1024];
+                string data = string.Empty;
+                //Lecture du flux
+                if (ns.CanRead)
+                {
+                    while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+                    {
+                        data += Encoding.UTF8.GetString(remoteData, 0, i);
+                    }
+                    op = Utility<Operation>.Deserialize(data);
+                }
+                ns.Close();
+                remote.Close();
+
+            }
+            return op;
+        }
+
 
     }
 }

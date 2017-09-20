@@ -87,6 +87,10 @@
       <Project>{EE9C865A-1544-4175-91B1-C9EE43C980DB}</Project>
       <Name>Cluster_DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Genome\Genome.csproj">
+      <Project>{e647228a-c07d-477a-be8a-0f5bf706182b}</Project>
+      <Name>Genome</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

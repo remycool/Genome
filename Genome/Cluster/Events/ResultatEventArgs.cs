@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Cluster.Events
 {
-    public class ResultatEventArgs
+    public class ResultatEventArgs<T>
     {
-        public Resultat Op;
-        public ResultatEventArgs(Resultat r) { Op = r; }
+        public Resultat<T> Result;
+        public ResultatEventArgs(Resultat<T> r) { Result = r; }
     }
 }

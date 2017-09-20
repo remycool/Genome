@@ -2,14 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cluster.Events
 {
-    public class ReceptionEventArgs<T>
+    public class ReceptionEventArgs
     {
-        public T Op;
-        public ReceptionEventArgs(T o) { Op = o; }
+        public TcpClient Noeud;
+        public ReceptionEventArgs(TcpClient n) { Noeud = n; }
     }
 }

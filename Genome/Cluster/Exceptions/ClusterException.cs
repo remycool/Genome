@@ -14,7 +14,7 @@ namespace Cluster.Exceptions
         public string ErreurOrigine { get; set; }
         public string MessageSpec { get; set; }
 
-        public ClusterException(string message):base()
+        public ClusterException(string message) : base()
         {
             ErreurOrigine = $"{Message}\n";
             MessageSpec = message;
@@ -23,10 +23,15 @@ namespace Cluster.Exceptions
         /// <summary>
         /// Notifie l'exception dans un fichier texte 
         /// </summary>
-        public void Log(string message,string stackTrace)
+        public void Log(string message, string stackTrace)
         {
-            string messageBuilder = $"\n{DateTime.Now} - {MessageSpec}\n {message}\n" + ErreurOrigine +  StackTrace;
-            File.AppendAllText(ClusterConstantes.LOG_DIR + "logPathFile.txt", messageBuilder);
+            string erreur = $"{message} \n {stackTrace}";
+            EventLog clusterLog = new EventLog();
+            if (!EventLog.SourceExists("Cluster"))
+                EventLog.CreateEventSource("Cluster", "Application");
+
+            clusterLog.Source = "Cluster";
+            clusterLog.WriteEntry(erreur);
         }
     }
 }

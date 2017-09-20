@@ -11,10 +11,11 @@ using System.Reflection;
 using System.Text;
 using Cluster.Exceptions;
 using System.Collections.Concurrent;
+using Cluster.Logs;
 
 namespace Cluster.Classes
 {
-    public class Orchestrateur
+    public class Orchestrateur<T>
     {
         #region PROPRIETES
         public const int PORT_ECOUTE = 8888;
@@ -22,25 +23,24 @@ namespace Cluster.Classes
         public IPAddress AdresseIP { get; set; }
         public List<IPAddress> AdressesNoeuds { get; set; }
         public ConcurrentDictionary<IPAddress, Etat_noeud> Noeuds { get; set; }
-        public Communication<Operation, Resultat> com { get; set; }
+        public Communication Com { get; set; }
         public List<string> Chuncks { get; set; }
-        public IDALFactory DALService { get; set; }
-        public Resultat Result { get; set; }
+        public Resultat<T> ResultatGlobal { get; set; }
         public Lazy<LazyLoad> Lazy { get; set; }
         public int NbResultatRecus { get; set; }
         public int NbOperationEnvoyes { get; set; }
         #endregion
 
         #region EVENT
-        public delegate void ResultatHandler(object sender, ResultatEventArgs resultatEventArgs);
+        public delegate void ResultatHandler(object sender, ResultatEventArgs<T> resultatEventArgs);
         public delegate void NoeudConnecteHandler(object sender, NoeudConnecteEventArgs resultatEventArgs);
         public delegate void TraitementTermineHandler(object sender, TraitementTermineEventArgs resultatEventArgs);
         public event ResultatHandler NouveauResultat;
         public event NoeudConnecteHandler NouveauNoeud;
         public event TraitementTermineHandler TraitementTermine;
-        public void SignalerNouveauResultat(Resultat r)
+        public void SignalerNouveauResultat(Resultat<T> r)
         {
-            ResultatEventArgs e = new ResultatEventArgs(r);
+            ResultatEventArgs<T> e = new ResultatEventArgs<T>(r);
             NouveauResultat?.Invoke(this, e);
         }
         public void SignalerNoeudConnecte(List<IPAddress> n)
@@ -62,23 +62,26 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void onNouvelleReception(object sender, ReceptionEventArgs<Resultat> e)
+        public void onNouvelleReception(object sender, ReceptionEventArgs e)
         {
+            Resultat<T> nouveauResultat = TraitementRequete(e.Noeud);
+
+
             //On cherche à savoir si c'est une reception indiquant une connexion
             //ou une deconnexion de noeud
-            if (!e.Op.HasValue)
+            if (!nouveauResultat.HasValue)
             {
-                IPAddress adresseNoeud = IPAddress.Parse(e.Op.IpNoeud);
-                MettreAJourNoeudsConnectes(adresseNoeud, e.Op.Etat);
+                IPAddress adresseNoeud = IPAddress.Parse(nouveauResultat.IpNoeud);
+                MettreAJourNoeudsConnectes(adresseNoeud, nouveauResultat.Etat);
             }
             else
             {
-                if (Result == null)
-                    Result = e.Op;
+                if (ResultatGlobal == null)
+                    ResultatGlobal = nouveauResultat;
                 else
-                    Result += e.Op;
+                    ResultatGlobal += nouveauResultat;
                 NbResultatRecus++;
-                SignalerNouveauResultat(e.Op);
+                //SignalerNouveauResultat(nouveauResultat);
                 if (NbResultatRecus == NbOperationEnvoyes)
                     SignalerTraitementTermine();
             }
@@ -108,18 +111,13 @@ namespace Cluster.Classes
 
         }
 
-        public Orchestrateur(IDALFactory DalService)
+        public Orchestrateur(Communication com)
         {
             AdressesNoeuds = new List<IPAddress>();
             Noeuds = new ConcurrentDictionary<IPAddress, Etat_noeud>();
             AdresseIP = IpConfig.GetLocalIP();
-            com = new Communication<Operation, Resultat>(AdresseIP,
-                                                        ClusterConstantes.PORT_ENVOIE_TCP, 
-                                                        ClusterConstantes.PORT_ECOUTE_TCP,
-                                                        ClusterConstantes.PORT_ENVOIE_UDP,
-                                                        ClusterConstantes.PORT_ECOUTE_UDP);
-            com.NouvelleReception += onNouvelleReception;
-            DALService = DalService;
+            Com = com; 
+            Com.NouvelleReception += onNouvelleReception;
             Lazy = new Lazy<LazyLoad>();
         }
 
@@ -137,10 +135,10 @@ namespace Cluster.Classes
         /// </summary>
         /// <param name="op">L'objet Operation qui contient la fonction à invoquer et le morceau de fichier</param>
         /// <returns>Le résultat de l'opération demandée depuis le noeud distant</returns>
-        public void Envoyer(Operation op)
-        {
-            com.Envoyer(IPAddress.Parse(op.IpNoeud), op);
-        }
+        //public void Envoyer(Operation op)
+        //{
+        //    Com.Envoyer(IPAddress.Parse(op.IpNoeud), op);
+        //}
 
         /// <summary>
         /// Appelle la méthode qui distribue un morceau du fichier passé en paramètre au noeuds 
@@ -230,7 +228,7 @@ namespace Cluster.Classes
                 //On réupère l'adresse du noeud auquel envoyer l'opération 
                 IPAddress adresseNoeud = SelectNoeud(posListeNoeud);
                 //On envoie l'opération au noeud
-                com.Envoyer(adresseNoeud, new Operation() { Id = IdOperation, IpNoeud = adresseNoeud.ToString(), Chunck = compressedChunk, Methode = methode });
+                Envoyer(adresseNoeud, new Operation() { Id = IdOperation, IpNoeud = adresseNoeud.ToString(), Chunck = compressedChunk, Methode = methode });
                 //On précise ici parmi la liste des noeuds quel sera le prochain à recevoir une opération
                 if (posListeNoeud == posDernierNoeudDansListe)
                     posListeNoeud = 0;
@@ -250,9 +248,7 @@ namespace Cluster.Classes
         /// </summary>
         public void Initialize()
         {
-            ////Mettre à jour info du noeud courant dans le registre
-            //DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            ////obtenir l'IP des noeuds connectés
+            //obtenir l'IP des noeuds connectés
             VerifierNoeudConnectes();
         }
 
@@ -261,11 +257,8 @@ namespace Cluster.Classes
         /// </summary>
         private void VerifierNoeudConnectes()
         {
-            //AdressesNoeuds = DALService.GetAllNodeIPs();
-            //SignalerNoeudConnecte(AdressesNoeuds);
-            IPAddress IpNoeudDejeConnecte= com.EnvoyerBroadcast();
+            IPAddress IpNoeudDejeConnecte= Com.EnvoyerBroadcast();
             MettreAJourNoeudsConnectes(IpNoeudDejeConnecte, Etat_noeud.Connecte);
-
         }
 
         /// <summary>
@@ -290,13 +283,65 @@ namespace Cluster.Classes
         public void Dispose()
         {
 
-            if (com.LocalTcpListener != null)
-                com.LocalTcpListener.Stop();
-            //Mettre à jour info du noeud courant dans le registre
-            //DALService.UpdateNode(AdresseIP.ToString(), ClusterConstantes.ETAT_NOT_CONNECTED, ClusterConstantes.ROLE_ORCHESTRATEUR);
-            //DALService.Dispose();
+            if (Com.LocalTcpListener != null)
+                Com.LocalTcpListener.Stop();
         }
 
+        /// <summary>
+        /// Sérialise un objet et le transmet à l'adresse passée en paramètre via TCP
+        /// </summary>
+        /// <param name="remote"></param>
+        /// <param name="obj"></param>
+        public void Envoyer(IPAddress remote, Operation op)
+        {
+            GestionLog.Log($"Envoie de l'opération {op.ToString()}");
+            try
+            {
+                IPEndPoint remoteEP = new IPEndPoint(remote, PORT_ENVOIE);
+                TcpClient local = new TcpClient();
+                local.Connect(remoteEP);
+                byte[] ba = Utility<Operation>.Serialize(op);
+                using (NetworkStream ns = local.GetStream())
+                {
+                    ns.Write(ba, 0, ba.Length);
+                    ns.Close();
+                };
+                local.Close();
+            }
+            catch (Exception ex)
+            {
+                GestionLog.Log($"{ex.Message} \n {ex.StackTrace}");
+            }
+
+        }
+
+        /// <summary>
+        /// Lit le flux de donnée, désérialise l'objet transmit et signale sa présence
+        /// </summary>
+        /// <param name="remote"></param>
+        public Resultat<T> TraitementRequete(TcpClient remote)
+        {
+            Resultat<T> res = new Resultat<T>();
+            using (NetworkStream ns = remote.GetStream())
+            {
+                int i = 0;
+                byte[] remoteData = new byte[1024];
+                string data = string.Empty;
+                //Lecture du flux
+                if (ns.CanRead)
+                {
+                    while ((i = ns.Read(remoteData, 0, remoteData.Length)) != 0)
+                    {
+                        data += Encoding.UTF8.GetString(remoteData, 0, i);
+                    }
+                    res = Utility<Resultat<T>>.Deserialize(data);
+                }
+                ns.Close();
+                remote.Close();
+               
+            }
+            return res;
+        }
 
     }
 

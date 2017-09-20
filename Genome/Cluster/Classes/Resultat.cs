@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace Cluster.Classes
 {
-    public class Resultat
+    public class Resultat<T>:IResultat
     {
         public string IpNoeud { get; set; }
         public int Id { get; set; }
-        public int Valeur { get; set; }
-        public double ValeurPrcent { get; set; }
-        public string ValeurString { get; set; }
+        public T Valeur { get; set; }
         public long TempsExecution { get; set; }
         public string Erreur { get; set; }
         public Etat_noeud Etat { get; set; }
@@ -23,18 +21,18 @@ namespace Cluster.Classes
         {
         }
 
-        public static Resultat operator +(Resultat a, Resultat b)
+        public static Resultat<T> operator +(Resultat<T> res1,Resultat<T> res2)
         {
-            a.Valeur += b.Valeur;
-            a.TempsExecution += b.TempsExecution;
-            a.ValeurPrcent += b.ValeurPrcent;
-            a.ValeurString += b.ValeurString;
-            return a;
-    }
+            dynamic a = res1.Valeur;
+            dynamic b = res2.Valeur;
+            res2.Valeur = a + b;
+
+            return res2;
+        }
 
         public override string ToString()
         {
-            return $"\n>>> Opération {Id} effectué par {IpNoeud} --> Résultat du comptage : {Valeur} {ValeurPrcent} {ValeurString}";
+            return $"\n>>> Opération {Id} effectué par {IpNoeud} ";
         }
     }
 }

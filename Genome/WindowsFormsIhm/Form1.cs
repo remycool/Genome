@@ -2,18 +2,11 @@
 using Cluster.Classes;
 using Cluster.Events;
 using Cluster.Exceptions;
-using Cluster.Utils;
-using Cluster_DAL;
+using Cluster.Protocole;
+using Genome;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsIhm
@@ -23,8 +16,7 @@ namespace WindowsFormsIhm
     {
         #region PROPRIETES
         public DisplayData meth { get; set; }
-        public Orchestrateur Orch { get; set; }
-        IDALFactory ServiceDAL { get; set; }
+        public Communication Com { get; set; } 
         #endregion
 
         public Form1()
@@ -33,12 +25,7 @@ namespace WindowsFormsIhm
             try
             {
                 meth = new DisplayData();
-                ServiceDAL = new DALFactory(new ClusterDAL());
-                Orch = new Orchestrateur(ServiceDAL);
-                //Abonnement à l'évènement
-                Orch.NouveauResultat += onResultatChanged;
-                Orch.TraitementTermine += onTraitementTermine;
-                Orch.NouveauNoeud += onNouveauNoeudConnecte;
+
             }
             catch (ClusterException ex)
             {
@@ -83,16 +70,16 @@ namespace WindowsFormsIhm
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void onResultatChanged(object sender, ResultatEventArgs e)
-        {
-            Invoke(new MethodInvoker(() =>
-            {
-                if (string.IsNullOrEmpty(e.Op.Erreur))
-                    richTextBox_result.AppendText($"{e.Op.ToString()}");
-                else
-                    richTextBox_result.AppendText($"{e.Op.Erreur}");
-            }));
-        }
+        //public void onResultatChanged(object sender, ResultatEventArgs<T> e)
+        //{
+        //    //Invoke(new MethodInvoker(() =>
+        //    //{
+        //    //    if (string.IsNullOrEmpty(e.Op.Erreur))
+        //    //        richTextBox_result.AppendText($"{e.Op.ToString()}");
+        //    //    else
+        //    //        richTextBox_result.AppendText($"{e.Op.Erreur}");
+        //    //}));
+        //}
 
         /// <summary>
         /// On notifie à la vue dès que le le traitement est terminé
@@ -101,11 +88,11 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         public void onTraitementTermine(object sender, TraitementTermineEventArgs e)
         {
-            Invoke(new MethodInvoker(() =>
-            {
-                TraitementTermine_label.Text = $"Traitement terminé! ";
-                MessageBox.Show($"Résultat = {Orch.Result.Valeur} en {Orch.Result.TempsExecution} ms");
-            }));
+            //Invoke(new MethodInvoker(() =>
+            //{
+            //    TraitementTermine_label.Text = $"Traitement terminé! ";
+            //    MessageBox.Show($"Résultat = {Orch.Result.Valeur} en {Orch.Result.TempsExecution} ms");
+            //}));
         }
 
         /// <summary>
@@ -136,16 +123,16 @@ namespace WindowsFormsIhm
         {
             panelAffichResult.Visible = true;
             richTextBox_result.Clear();
-            try
-            {
-                Orch.RepartirCalcul("GetCalcul4");
-            }
-            catch (ClusterException ex)
-            {
-                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
-                ex.Log(message, ex.StackTrace);
-                MessageBox.Show(message);
-            }
+            //try
+            //{
+            //    Orch.RepartirCalcul("GetCalcul4");
+            //}
+            //catch (ClusterException ex)
+            //{
+            //    string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+            //    ex.Log(message, ex.StackTrace);
+            //    MessageBox.Show(message);
+            //}
 
         }
 
@@ -157,6 +144,21 @@ namespace WindowsFormsIhm
         private void buttonOccurence_Click(object sender, EventArgs e)
         {
             panelAffichResult.Visible = true;
+            Orchestrateur<Base> o = new Orchestrateur<Base>(Com);
+            //Abonnement à l'évènement
+            //o.NouveauResultat+= onResultatChanged;
+            o.TraitementTermine += onTraitementTermine;
+            o.NouveauNoeud += onNouveauNoeudConnecte;
+            try
+            {
+                o.RepartirCalcul("GetCalcul");
+            }
+            catch (ClusterException ex)
+            {
+                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+                ex.Log(message, ex.StackTrace);
+                MessageBox.Show(message);
+            }
         }
 
         /// <summary>
@@ -166,18 +168,18 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void buttonBaseInconnue_Click(object sender, EventArgs e)
         {
-            panelAffichResult.Visible = true;
-            richTextBox_result.Clear();
-            try
-            {
-                Orch.RepartirCalcul("GetCalcul5");
-            }
-            catch (ClusterException ex)
-            {
-                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
-                ex.Log(message, ex.StackTrace);
-                MessageBox.Show(message);
-            }
+            //panelAffichResult.Visible = true;
+            //richTextBox_result.Clear();
+            //try
+            //{
+            //    Orch.RepartirCalcul("GetCalcul5");
+            //}
+            //catch (ClusterException ex)
+            //{
+            //    string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+            //    ex.Log(message, ex.StackTrace);
+            //    MessageBox.Show(message);
+            //}
         }
 
         /// <summary>
@@ -188,16 +190,16 @@ namespace WindowsFormsIhm
         private void button5_Click(object sender, EventArgs e)
         {
             panelAffichResult.Visible = true;
-            try
-            {
-                Orch.RepartirCalcul("GetCalcul10");
-            }
-            catch (ClusterException ex)
-            {
-                string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
-                ex.Log(message, ex.StackTrace);
-                MessageBox.Show(message);
-            }
+            //try
+            //{
+            //    Orch.RepartirCalcul("GetCalcul10");
+            //}
+            //catch (ClusterException ex)
+            //{
+            //    string message = "Erreur lors du lancement du calcul - Veuillez consulter le log dans C:/ pour plus d'informations";
+            //    ex.Log(message, ex.StackTrace);
+            //    MessageBox.Show(message);
+            //}
         }
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void Form1_Shown(object sender, EventArgs e)
         {
-            Orch.Initialize();
+            
         }
 
         /// <summary>
@@ -217,8 +219,7 @@ namespace WindowsFormsIhm
         /// <param name="e"></param>
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Orch != null)
-                Orch.Dispose();
+            
         }
 
     }
